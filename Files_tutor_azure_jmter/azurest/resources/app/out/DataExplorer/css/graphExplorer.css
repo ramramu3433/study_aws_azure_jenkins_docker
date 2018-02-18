@@ -1,0 +1,421 @@
+/* Styles for the graph explorer component */
+
+.graphExplorerContainer {
+    margin-left: 6px;
+    overflow: hidden;
+    /* TODO Fix the hardcoded magic number here: 110px is the height of the tabs above */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.graphExplorerContainer .queryContainer {
+    padding: 25px 13px 40px;
+}
+
+
+/* Override bootstrap's nav pills */
+
+.graphExplorerContainer .nav-pills>li.active>a,
+.nav-pills>li.active>a:focus,
+.nav-pills>li.active>a:hover {
+    background-color: #00abec;
+}
+
+.graphExplorerContainer .nav-pills>li>a {
+    border-radius: 0px;
+}
+
+.graphExplorerContainer .nav>li>a {
+    padding: 5px 15px;
+}
+
+.graphExplorerContainer .buttonContainer {
+    padding-bottom: 10px;
+    margin-left: 0px;
+    padding-left: 13px;
+}
+
+.graphExplorerContainer .buttonContainer .disabled {
+    background-color: white;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.graphExplorerContainer .filterclose {
+    vertical-align: middle;
+}
+
+.graphExplorerContainer .queryTypeahead .input-typeahead-container {
+    width: 500px;
+}
+
+.graphExplorerContainer .typeahead__field input {
+    height: 25px !important;
+}
+
+.graphExplorerContainer .typeahead__cancel-button {
+    top: 5px !important;
+    right: .4em !important;
+}
+
+.graphExplorerContainer .graphContainer {
+    overflow: hidden;
+    display: flex;
+    height: 100%;
+}
+
+.graphExplorerContainer .leftPane {
+    width: 200px;
+    padding: 0px 0px 120px 7px;
+}
+
+.graphExplorerContainer .middlePane {
+    flex-grow: 1;
+    border-right: 1px solid #d6d7d8;
+    border-left: 1px solid #d6d7d8;
+    position: relative;
+}
+
+.graphExplorerContainer .rightPane .collapsiblePanel {
+    right: 0px;
+    float: right;
+    width: 440px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 6px;
+    padding-bottom: 23px;
+}
+
+.graphExplorerContainer .queryButton {
+    vertical-align: middle;
+    margin-left: 20px;
+}
+
+.graphExplorerContainer .queryResultNav {
+    margin-left: 20px;
+}
+
+.graphExplorerContainer .graphJsonEditor {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    border: 1px solid #d6d7d8;
+}
+
+.graphExplorerContainer .graphJsonEditor .jsonEditor {
+    flex-grow: 1;
+}
+
+.graphTitle {
+    margin-top: 10px;
+}
+
+.graphExplorerContainer .discardBtn {
+    margin-left: 5px;
+    margin-right: 2px;
+    width: 10px;
+    height: 10px;
+}
+
+.graphModal {
+    background-color: rgba(255, 255, 255, .7);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    padding-top: 50px;
+}
+
+.graphModal img {
+    height: 10px;
+}
+
+.middlePane .expandIcon {
+    margin-right: 5px;
+}
+
+
+/* ****************** Graph styles ************ */
+
+.link.inactive {
+    opacity: 0.1;
+}
+
+.nodes circle.main {
+    stroke: #fff;
+    stroke-width: 2px;
+}
+
+.node .icon-background {
+    display: none;
+    fill: red;
+}
+
+.nodes text {
+    pointer-events: none;
+    font: 12px arial;
+}
+
+.nodes .inactive {
+    stroke-opacity: 0.2;
+    fill-opacity: 0.2;
+}
+
+.node.root circle.main {
+    stroke: blue;
+}
+
+.node.selected circle.main {
+    stroke: red;
+}
+
+.node.selected .icon-background {
+    display: block;
+}
+
+
+/* ******** Right pane ***************** */
+
+.rightPaneHeader {
+    /* TODO: Hack to align the trashbox with the header for now. */
+    margin-top: -28px;
+    white-space: nowrap;
+    margin-bottom: 30px;
+}
+
+.sectionHeader {
+    padding: 2px;
+}
+
+.sectionContent {
+    padding: 10px 10px 20px 25px;
+}
+
+.sectionTitle {
+    cursor: pointer;
+    margin-left: 6px;
+    font-weight: bold;
+}
+
+.editorButtonContainer {
+    margin-top: 15px;
+}
+
+.editorButtonContainer .filterbtnstyle:first-child {
+    margin-left: 10px;
+}
+
+.newVertexLabel {
+    width: 100%;
+    text-align: center;
+}
+
+.edgesTable {
+    width: 100%;
+}
+
+.edgesTable td {
+    padding: 5px 2px 4px 2px;
+}
+
+.roPropertyTable tr {
+    height: 27px;
+}
+
+.actionCol {
+    width: 30px;
+}
+
+.labelCol {
+    width: 72px;
+    min-width: 72px;
+}
+
+.labelCol input {
+    max-width: 65px;
+    padding-left: 4px;
+}
+
+.edgesTable td.valueCol {
+    width: 100%;
+    padding-right: 5px;
+}
+
+.edgeInput {
+    width: 100%;
+    padding-left: 4px;
+}
+
+.typeSelect {
+    height: 23px;
+    width: 70px;
+}
+
+.propertyTableHeader {
+    font-weight: bold;
+    color: #393939;
+    border-bottom: 1px solid #bbb;
+}
+
+.rightPane .collapsiblePanel .panelContent {
+    height: 100%;
+    padding-bottom: 100px;
+    margin-top: 0px;
+}
+
+
+/* Override autocomplete stuff */
+
+.rightPane .typeahead__container {
+    font: 12px 'Segoe UI' !important;
+}
+
+.rightPane .typeahead__container input {
+    font: 12px 'Segoe UI' !important;
+    padding: 0px 4px !important;
+}
+
+.rightPane .typeahead__field input {
+    height: 25px !important;
+}
+
+.rightPane .typeahead__cancel-button {
+    top: 5px !important;
+    right: .4em !important;
+}
+
+.rightPane .deleteConfirm {
+    background-color: white;
+    padding: 5px;
+}
+
+.editPencilAlign {
+    padding-top: 7px;
+}
+
+.rightPaneEditIcon {
+    padding: 1px 5px 5px 5px;
+}
+
+.rightPaneCheckMark {
+    padding: 1px 1px 5px 5px;
+}
+
+.rightPaneDiscardBtn {
+    padding: 1px 4px 5px 2px;
+    margin-right: 13px;
+}
+
+.rightPaneTrashIcon {
+    padding: 4px 5px 4px 5px;
+}
+
+.rightPaneTrashIconImg {
+    vertical-align: top;
+}
+
+.rightPaneHeaderTrashIcon {
+    margin-right: 30px;
+    padding: 1px 5px 6px 5px;
+}
+
+.rightPaneAddPropertyBtn {
+    padding: 7px 7px 8px 8px;
+    margin-left: -8px;
+}
+
+.rightPaneBtns {
+    border: solid 1px #FFF;
+    cursor: pointer;
+}
+
+.rightPaneBtns:hover {
+    background-color: #e6e6e6;
+}
+
+.rightPaneBtns:active {
+    border: 1px solid #00ABEC;
+}
+
+.rightPaneAddPropertyImg {
+    margin-right: 5px;
+    margin-bottom: 4px;
+}
+
+.edgesTable td.rightPaneAddPropertyBtnPadding {
+    padding-top: 14px;
+}
+
+.edgesTable td.edgeLabel {
+    padding-right: 41px;
+}
+
+.rightPaneContainer {
+    width: 410px;
+    padding-left: 5px;
+}
+
+
+/* scroll for leftpane, rightpane and newvertex pane*/
+
+.rightPaneContent {
+    margin-bottom: 5px;
+    height: 100%;
+}
+
+.newVertexPaneContent {
+    height: calc(100vh - 128px);
+    margin-top: 22px;
+}
+
+.contentScroll {
+    overflow-y: auto;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
+
+/* ******** Left pane ***************** */
+
+.leftPaneContent {
+    height: 100%;
+}
+
+.leftPaneContainer {
+    width: 172px;
+    padding-right: 4px;
+}
+
+.leftPaneContent table {
+    table-layout: fixed;
+}
+
+.leftPaneContent .resultItem {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.leftPaneContent .id {
+    padding-left: 0px;
+}
+
+.table-hover>tbody>tr:hover {
+    background-color: #e6f8fe;
+}
+
+.leftPaneContent .disabled {
+    pointer-events: none;
+    background-color: white;
+    opacity: 0.5;
+}
+
+.leftPaneResults {
+    margin-top: 10px;
+    margin-bottom: 7px;
+    margin-left: 0px;
+}

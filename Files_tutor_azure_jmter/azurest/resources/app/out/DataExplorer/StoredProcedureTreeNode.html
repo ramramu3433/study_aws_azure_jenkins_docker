@@ -1,0 +1,46 @@
+<li tabindex="0" data-bind="
+    click: $data.open,
+    event: {
+        keydown: onKeyDown,
+        keypress: onKeyPress,
+        contextmenu: $data.contextMenu.show
+    },
+    clickBubble: false,
+    contextmenuBubble: false,
+    css: {
+        highlight: true,
+        collectionNodeSelected: $root.selectedNode && $root.selectedNode() && $root.selectedNode().rid === $data.rid,
+        contextmenushowing: $data.contextMenu.visible
+    }">
+    <div class="storedChildMenu treeChildMenu">
+        <div class="childMenu" data-bind="
+            attr: {
+                title: $data.id()
+            }">
+            <!--ko text: $data.id--><!--/ko-->
+        </div>
+
+        <span class="context_Menu" data-bind="
+            click: $data.contextMenu.show,
+            clickBubble: false
+        ">&hellip;</span>
+    </div>
+</li>
+<!-- Stored Procedure Node Context Menu - Start -->
+<div class="context-menu-background" data-bind="
+    visible: $data.contextMenu.visible,
+    click: $data.contextMenu.hide">
+</div>
+
+<div class="context-menu" data-bind="
+    attr:{
+        id: $data.contextMenu.elementId
+    },
+    visible: $data.contextMenu.visible">
+
+    <div class="context-menu-option" data-bind="
+        click: $data.delete">
+        <img class="commandIcon" src="images/delete.svg" alt="Delete stored procedure">Delete Stored Procedure
+    </div>
+</div>
+<!-- Stored Procedure Node Context Menu - End -->

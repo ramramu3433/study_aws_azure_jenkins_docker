@@ -1,0 +1,94 @@
+    <div data-bind="visible: visible, event: { keydown: onPaneKeyDown }">
+        <div class="contextual-pane-out" data-bind="
+            click: cancel(),
+            clickBubble: false">
+        </div>
+        <div class="contextual-pane" id="deletedatabaseconfirmationpane">
+
+            <!-- Delete Databaes Confirmation form  -- Start -->
+            <div class="contextual-pane-in" data-bind="
+                visible: !errorDetailsVisible()">
+                <form data-bind="
+                    submit: submit">
+                    <!-- Delete Database Confirmation header - Start -->
+                    <div class="firstdivbg headerline">
+                        Delete Database
+                        <div style="float: right; padding: 0 10px; cursor: pointer;" data-bind="
+                            click: cancel">
+                            <img src="images/close.svg" alt="Cancel">
+                        </div>
+                    </div>
+                    <!-- Delete Database Confirmation header - End -->
+
+                    <div>
+                        <div>
+                            <img style="float: left; width: 50px; padding-left: 5px;" src="images/warning.svg" alt="Warning">
+                            <div style="color: #000; padding-left: 10px; display: -webkit-box; -webkit-box-orient: vertical;">
+                                Warning! The action you are about to take cannot be undone. Continuing will permanently delete this resource and all of its children resources.
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <!-- Delete Database Confirmation errors - Start -->
+                    <div data-bind="
+                        visible: formErrors() && formErrors() !== ''">
+                        <div>
+                            <img style="margin-left: 10px;" src="images/error.svg" alt="Error">
+                        </div>
+                        <div class="form-errors">
+                            <span data-bind="
+                                text: formErrors"></span>
+                        </div>
+                        <div style="padding-left: 55px;">
+                            <a data-bind="
+                                visible: formErrorsDetails() && formErrorsDetails() !== '',
+                                click: showErrorDetails">More details</a>
+                        </div>
+                    </div>
+                    <!-- Delete Database Confirmation errors - End -->
+
+                    <!-- Delete Database Confirmation inputs - Start -->
+                    <div class="seconddivbg paddingspan2">
+                        <div>
+                            <p>Confirm by typing the database id</p>
+                            <p>
+                                <input type="text" name="databaseIdConfirmation" required class="collid" data-bind="value: databaseIdConfirmation, hasFocus: firstFieldHasFocus">
+                            </p>
+                        </div>
+
+                        <div class="paddingspan3">
+                            <div style="padding-left: 20px;">
+                                <input type="submit" value="OK" class="btncreatecoll1">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Delete Database Confirmation inputs - End -->
+                </form>
+            </div>
+            <!-- Delete Database Confirmation form  -- Start -->
+
+            <!-- Delete Database Confirmation Error details tab - Start -->
+            <div data-bind="
+                visible: errorDetailsVisible()">
+                <!-- Delete Database Confirmation Error details header - Start -->
+                <div class="firstdivbg headerline">
+                    <div style="float: left; cursor: pointer;" data-bind="
+                        click: hideErrorDetails">
+                        <img style="width: 32px; height: 32px;" src="images/imgarrowlefticon-white.svg" alt="Hide error details">
+                    </div>
+                    <div style="float: left;">More details</div>
+                    <div style="float: right; padding: 0 10px; cursor: pointer;" data-bind="
+                        click: cancel">
+                        <img src="images/close.svg" alt="Cancel">
+                    </div>
+                </div>
+                <!-- Delete Database Confirmation Error details header - End -->
+
+                <div class="seconddivbg paddingspan2" data-bind="
+                    text: formErrorsDetails">
+                </div>
+            </div>
+            <!-- Delete Database Confirmation Error details tab - End -->
+        </div>
+    </div>

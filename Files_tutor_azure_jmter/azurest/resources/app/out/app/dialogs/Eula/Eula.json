@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 640,
+        "width": 640
+    },
+    "view": "app/dialogs/Eula/EulaView.html",
+    "viewModel": "app/dialogs/Eula/EulaViewModel"
+}

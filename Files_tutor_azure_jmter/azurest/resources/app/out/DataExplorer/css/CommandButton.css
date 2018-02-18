@@ -1,0 +1,35 @@
+.commandIcon {
+    margin: 0 5px 0 0;
+    vertical-align: text-top;
+    width: 18px;
+    height: 18px;
+}
+
+.commandButton {
+    padding: 8px;
+}
+
+.commandButton:hover:not(.commandDisabled) {
+    background-color: #E6E6E6;
+    cursor: pointer;
+    padding-bottom: 12px;
+}
+
+.commandButton:active:not(.commandDisabled) {
+    background-color: #CCCCCC;
+    border: solid 1px #00ABEC;
+}
+
+.commandButton.commandDisabled {
+    color: #9C9C9C;
+    opacity: 0.5;
+}
+
+.commandButton:focus:not(.commandDisabled) {
+    padding: 7px 8px 11px 8px;
+    border: solid 1px #00ABEC;
+}
+
+.commandButton[tabindex]:focus {
+    outline: none;
+}

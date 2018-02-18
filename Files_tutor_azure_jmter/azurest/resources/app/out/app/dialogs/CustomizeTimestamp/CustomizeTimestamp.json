@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 350,
+        "width": 500
+    },
+    "view": "app/dialogs/CustomizeTimestamp/CustomizeTimestampView.html",
+    "viewModel": "app/dialogs/CustomizeTimestamp/CustomizeTimestampViewModel"
+}

@@ -1,0 +1,154 @@
+.dirty {
+    border: 1px solid #9b4f96;
+}
+
+.dirty:focus {
+    outline: 1px solid #9b4f96;
+}
+
+.div-padding {
+    padding: 20px;
+}
+
+.tabForm {
+    padding: 12px 20px 20px 20px;
+    margin-left: 3px;
+}
+
+.scaleSettingScrollable {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: calc(100vh - 121px);
+}
+
+.scaleDivison {
+    padding-top: 12px;
+}
+
+.scaleSettingTitle {
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.ssExpandCollapseIcon {
+    width: 10px;
+    height: 10px;
+}
+
+.ssCollapseIcon {
+    margin-bottom: 5px;
+}
+
+.ssTextAllignment {
+    padding-left: 19px;
+}
+
+.throughputStorageBlock {
+    border-top: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    background-color: #ccc;
+    padding-left: 10px;
+    width: 315px;
+}
+
+.throughputPadding {
+    padding-top: 5px;
+    padding-bottom: 6px;
+}
+
+.throughputStorageValue {
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.storagePadding {
+    padding-top: 6px;
+    padding-bottom: 14px;
+}
+
+.dirtyTextbox {
+    width: 176px;
+    margin-top: 7px;
+    padding-left: 5px;
+}
+
+.formTitleFirst {
+    padding-top: 12px;
+    padding-bottom: 8px;
+}
+
+.formTree {
+    border: 1px solid inherit;
+    color: inherit;
+    padding: 0px 12px 1px 8px;
+}
+
+.formTree:hover {
+    border: 1px solid inherit;
+}
+
+.formTree:active {
+    border: 1px solid inherit;
+}
+
+.scaleForm {
+    padding-left: 8px;
+    color: #969696;
+    border: 1px solid #969696;
+    min-width: 184px;
+}
+
+.scaleForm:hover {
+    padding-left: 8px;
+    background-color: #e6f8fe;
+    border: 1px solid #969696;
+    min-width: 184px;
+}
+
+.formTitle {
+    margin-top: 16px;
+    margin-bottom: 4px;
+}
+
+.unselectedRadio {
+    background-color: white;
+    border-color: #EEE!important;
+    color: black!important;
+}
+
+.selectedRadio {
+    background-color: #00abec;
+    border-color: #EEE!important;
+    color: white!important;
+    cursor: pointer;
+}
+
+.selectedRadio:hover {
+    background-color: #00abec;
+    border-color: #EEE!important;
+    color: white!important;
+    cursor: pointer;
+}
+
+.selectedRadio:active {
+    background-color: #0072c6;
+    border-color: #EEE!important;
+    color: white!important;
+    cursor: pointer;
+    border: 1px solid #0072c6;
+}
+
+.selectedRadio.dirty {
+    background-color: #9b4f96;
+}
+
+.tabs {
+    margin: 0;
+}
+
+.formReadOnly {
+    background-color: #ddd;
+    border: 1px solid #969696;
+    min-width: 184px;
+    padding-left: 8px;
+}

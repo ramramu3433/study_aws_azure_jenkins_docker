@@ -1,0 +1,188 @@
+<div class="tab-pane" data-bind="
+    attr:{
+        id: tabId
+    },
+    visible: isActive">
+
+    <div class="spanmenupaddingleft documentMenu" data-bind="foreach: $data.commandBarOptions.options">
+        <command-button params="{ buttonProps: $data }"></command-button>
+    </div>
+
+    <!-- Errors - Start -->
+    <div class="div-padding" data-bind="
+            visible: displayedError()">
+        <div data-bind="
+                text: displayedError"></div>
+    </div>
+    <!-- Errors - End -->
+
+    <div class="tabForm scaleSettingScrollable">
+        <div class="scaleDivison" data-bind="click:toggleScale, event: { keypress: onScaleKeyPress }"  tabindex="0" >
+            <span class="themed-images" type="text/html" id="ExpandChevronRightScale" data-bind="visible: !scaleExpanded()">
+                <img class="imgiconwidth ssExpandCollapseIcon ssCollapseIcon " src="images/Triangle-right.svg" alt="Show scale properties" />
+            </span>
+
+            <span class="themed-images" type="text/html" id="ExpandChevronDownScale" data-bind="visible: scaleExpanded">
+                <img class="imgiconwidth ssExpandCollapseIcon " src="images/Triangle-down.svg" alt="Hide scale properties" />
+            </span>
+
+            <span class="scaleSettingTitle">Scale</span>
+        </div>
+        <div class="ssTextAllignment" data-bind="visible: scaleExpanded">
+            <div class="formTitle" data-bind="text: throughputTitle"></div>
+            <div>
+                <input class="scaleForm dirty" type="number" required value="400" step="100" class="collid-white" data-bind="
+                        css: {
+                            dirty: throughput.editableIsDirty
+                        },
+                        textInput: throughput,
+                        attr: {
+                            min: minRUs,
+                            max: maxRUs
+                        }">
+            </div>
+            <div data-bind="visible: rupmVisible">
+                <div class="formTitle">RU/m</div>
+                <div class="tabs">
+                    <div class="tab">
+                        <label data-bind="
+                            attr:{
+                                for: rupmOnId
+                            },
+                            css: {
+                                dirty: rupm.editableIsDirty,
+                                selectedRadio: rupm() === 'on',
+                                unselectedRadio: rupm() !== 'on'
+                            }">On</label>
+                        <input type="radio" name="rupm" value="on" class="radio" data-bind="
+                            attr:{
+                                id: rupmOnId
+                            },
+                            checked: rupm">
+                    </div>
+                    <div class="tab">
+                        <label data-bind="
+                            attr:{
+                                for: rupmOffId
+                            },
+                            css:  {
+                                dirty: rupm.editableIsDirty,
+                                selectedRadio: rupm() === 'off',
+                                unselectedRadio: rupm() !== 'off'
+                            }">Off</label>
+                        <input type="radio" name="rupm" value="off" class="radio" data-bind="
+                                attr:{
+                                    id: rupmOffId
+                                },
+                                checked: rupm">
+                    </div>
+                </div>
+            </div>
+            <div data-bind="visible: costsVisible">
+                <div class="formTitle">Estimated Hourly Cost</div>
+                <div class="throughputStorageBlock">
+                    <div class="throughputPadding">Throughput:
+                        <div class="throughputStorageValue" data-bind="text: requestUnitsUsageCost"></div>
+                    </div>
+                    <div class="storagePadding">Storage:
+                        <div class="throughputStorageValue" data-bind="text: storageUsageCost"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="formTitle" data-bind="click:toggleSettings, event: { keypress: onSettingsKeyPress }"  tabindex="0">
+            <span class="themed-images" type="text/html" id="ExpandChevronRightSettings" data-bind="visible: !settingsExpanded()">
+                <img class="imgiconwidth ssExpandCollapseIcon ssCollapseIcon" src="images/Triangle-right.svg" alt="Show settings" />
+            </span>
+
+            <span class="themed-images" type="text/html" id="ExpandChevronDownSettings" data-bind="visible: settingsExpanded">
+                <img class="imgiconwidth ssExpandCollapseIcon" src="images/Triangle-down.svg" alt="Show settings" />
+            </span>
+            <span class="scaleSettingTitle">Settings</span>
+        </div>
+        <div class="ssTextAllignment" data-bind="visible: settingsExpanded">
+            <div class="formTitle">Time to Live</div>
+            <div class="tabs">
+                <div class="tab">
+                    <label tabindex="0" data-bind="
+                        attr:{
+                            for: ttlOffId
+                        },
+                        css: {
+                            dirty: timeToLive.editableIsDirty,
+                            selectedRadio: timeToLive() === 'off',
+                            unselectedRadio: timeToLive() !== 'off'
+                        },
+                        event: { 
+                            keypress: onTtlOffKeyPress 
+                        }">Off</label> 
+                    <input type="radio" name="ttl" value="off" class="radio" data-bind="
+                        attr:{
+                            id: ttlOffId
+                        },
+                        checked: timeToLive">
+                </div>
+
+                <div class="tab">
+                    <label tabindex="0" data-bind="
+                        attr:{
+                            for: ttlOnNoDefaultId
+                        },
+                        css:  {
+                            dirty: timeToLive.editableIsDirty,
+                            selectedRadio: timeToLive() === 'on-nodefault',
+                            unselectedRadio: timeToLive() !== 'on-nodefault'
+                        },
+                        event: { 
+                            keypress: onTtlOnNoDefaultKeyPress  
+                        }">On (no default)</label>
+                    <input type="radio" name="ttl" value="on-nodefault" class="radio" data-bind="
+                        attr:{
+                            id: ttlOnNoDefaultId
+                        },
+                        checked: timeToLive">
+                </div>
+
+                <div class="tab">
+                    <label tabindex="0" for="ttl3" data-bind="
+                        attr:{
+                            for: ttlOnId
+                        },
+                        css:  {
+                            dirty: timeToLive.editableIsDirty,
+                            selectedRadio: timeToLive() === 'on',
+                            unselectedRadio: timeToLive() !== 'on'
+                        },
+                        event: { 
+                            keypress: onTtlOnKeyPress  
+                        }">On</label>
+                    <input type="radio" name="ttl" value="on" class="radio" data-bind="
+                            attr:{
+                                id: ttlOnId
+                            },
+                            checked: timeToLive">
+                </div>
+            </div>
+            <div data-bind="
+                    visible: timeToLive() === 'on'">
+                <input class="dirtyTextbox" type="number" required min="1" max="2147483647" data-bind="
+                        css: {
+                            dirty: timeToLive.editableIsDirty
+                        },
+                        textInput: timeToLiveSeconds,
+                        enable: timeToLive() === 'on'"> second(s)
+            </div>
+            <div data-bind="visible: partitionKeyVisible">
+                <div class="formTitle">Partition Key</div>
+                <input class="formReadOnly collid-white" data-bind="textInput: partitionKeyValue" readonly>
+            </div>
+            <div class="formTitle">Indexing Policy</div>
+            <div style="width:100%; height:calc(100vh - 400px);" data-bind="
+                setTemplateReady: true,
+                attr:{
+                    id: indexingPolicyEditorId
+                }">
+            </div>
+        </div>
+    </div>
+</div>

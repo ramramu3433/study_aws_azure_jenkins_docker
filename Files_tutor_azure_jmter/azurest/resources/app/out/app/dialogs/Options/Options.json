@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 370,
+        "width": 500
+    },
+    "view": "app/dialogs/Options/OptionsView.html",
+    "viewModel": "app/dialogs/Options/OptionsViewModel"
+}

@@ -1,0 +1,241 @@
+<div style="display:none;" data-bind="visible: visible, event: { keydown: onPaneKeyDown }">
+    <div class="contextual-pane-out" data-bind="click: cancel, clickBubble: false"></div>
+    <div class="contextual-pane" data-bind="attr: { id: id }">
+        <!-- Add collection form  -- Start -->
+        <div class="contextual-pane-in" data-bind="visible: !errorDetailsVisible()">
+                <!-- Add collection header - Start -->
+                <div class="firstdivbg headerline">
+                    <span data-bind="text: title"></span>
+                    <div class="closeImg" data-bind="click: cancel, event: { keypress: onCloseKeyPress }" tabfocus="0">
+                        <img src="images/close.svg" alt="Cancel">
+                    </div>
+                </div>
+                <!-- Add collection header - End -->
+
+                <!-- Add collection errors - Start -->
+                <div data-bind="visible: formErrors() && formErrors() !== ''">
+                    <div>
+                        <img style="margin-left: 10px;" src="images/error.svg" alt="Error">
+                    </div>
+                    <div class="form-errors">
+                        <span data-bind="text: formErrors">
+                        </span>
+                    </div>
+                    <div style="padding-left: 55px;">
+                        <a data-bind="visible: formErrorsDetails() && formErrorsDetails() !== '' , click: showErrorDetails">
+                            More details
+                        </a>
+                    </div>
+                </div>
+                <!-- Add collection errors - End -->
+
+                <!-- Add collection inputs - Start -->
+                <div class="seconddivbg paddingspan2">
+                    <div class="seconddivpadding" data-bind="visible: !isPreferredApiTable()">
+                        <p>
+                            <span class="mandatoryStar">*</span>
+                            Database id
+                            <span class="infoTooltip">
+                                <img class="infoImg" src="images/info-bubble.svg" alt="More information">
+                                <span class="tooltiptext tooltiptextWidthDid">A database is a logical container of one or more collections</span>
+                            </span>
+                        </p>
+
+                        <!-- ko if: isRunningOnDaytona -->
+                        <input 
+                            type="text"
+                            pattern="[^/?#\\]*[^/?# \\]"
+                            title="May not end with space nor contain characters '\' '/' '#' '?'"
+                            placeholder="Type new id"
+                            size="40"
+                            class="collid"
+                            data-bind="textInput: databaseId, enable: !isFixedDatabaseId()"/> 
+                        <!-- /ko -->
+
+                        <!-- ko if: !isRunningOnDaytona -->
+                        <input 
+                            type="text"
+                            autocomplete="off"
+                            pattern="[^/?#\\]*[^/?# \\]"
+                            title="May not end with space nor contain characters '\' '/' '#' '?'"
+                            list="databasesList"
+                            placeholder="Choose existing or type new id"
+                            size="40"
+                            class="collid"
+                            data-bind="textInput: databaseId, hasFocus: firstFieldHasFocus">
+                            
+                        <datalist id="databasesList" data-bind="foreach: databasesIds">
+                            <option data-bind="value: $data">
+                        </datalist> 
+                        <!-- /ko -->
+                    </div>
+
+                    <div class="seconddivpadding">
+                        <p>
+                            <span class="mandatoryStar">*</span>
+                            <span data-bind="text: collectionIdTitle"></span>
+                            <span class="infoTooltip">
+                                <img class="infoImg" src="images/info-bubble.svg" alt="More information">
+                                <span class="tooltiptext tooltiptextWidthDid">Unique identifier for the collection and used for id-based routing through REST and all SDKs</span>
+                            </span>
+                        </p>
+                        <input type="text" required autocomplete="off" pattern="[^/?#\\]*[^/?# \\]" title="May not end with space nor contain characters '\' '/' '#' '?'" placeholder="e.g., Collection1" size="40" class="textfontclr collid" data-bind="value: collectionId">
+                    </div>
+
+                    <p class="seconddivpadding">
+                        <span class="mandatoryStar">*</span> Storage capacity
+                        <span class="infoTooltip">
+                                <img class="infoImg" src="images/info-bubble.svg" alt="More information">
+                                <span class="tooltiptext tooltiptextWidthSc">A database is a logical container of one or more collections</span>
+                        </span>
+                    </p>
+                    <div class="tabs">
+                        <div tabindex="0" data-bind="event: { keydown: onStorageOptionsKeyDown }">
+                            <!-- Fixed option button - Start -->
+                            <div class="tab">
+                                <input type="radio" id="tab1" name="storage" value="10" class="radio" data-bind="checked: storage">
+                                <label for="tab1">Fixed (10 GB)</label>
+                            </div>
+                            <!-- Fixed option button - End -->
+
+                            <!-- Unlimited option button - Start -->
+                            <div class="tab">
+                                <input type="radio" id="tab2" name="storage" value="100" class="radio" data-bind="checked: storage">
+                                <label for="tab2">Unlimited</label>
+                            </div>
+                            <!-- Unlimited option button - End -->
+                        </div>
+
+                        <!-- Fixed Button Content - Start --> 
+                        <div class="tabcontent" data-bind="visible: storage() === '10'">
+                            <p>
+                                <span class="mandatoryStar">*</span> Throughput (400 - 10,000 RU/s)
+                                <span class="infoTooltip">
+                                    <img class="infoImg" src="images/info-bubble.svg" alt="More information">
+                                    <span class="tooltiptext tooltiptextWidthTp">Each collection can be provisioned throughput in Request Units per second (RU/s). 1 RU corresponds to the throughput of a read of a 1 KB document. <br> <a href="https://www.documentdb.com/capacityplanner ">Learn More</a></span>
+                                </span>
+                            </p>
+                            <p>
+                                <input type="number" required value="400" min="400" max="10000" step="100" class="textfontclr collid" data-bind="textInput: throughputSinglePartition, enable: storage() === '10'">
+                                <!--<span class="minusimg-but"></span>-->
+                                <!--<span class="plusimg-but"></span>-->
+                            </p>
+                            <div class="tabs">
+                                <p class="pkPadding">
+                                    <span class="mandatoryStar">*</span>
+                                    RU/m
+                                    <span class="infoTooltip">
+                                        <img class="infoImg" src="images/info-bubble.svg" alt="More information">
+                                        <span class="tooltiptext tooltiptextWidthTp2">
+                                            For each 100 Request Units per second (RU/s) provisioned, 1,000 Request Units per minute (RU/m) can be provisioned. E.g.: for a collection with 5,000 RU/s provisioned with RU/m enabled, the RU/m budget will be 50,000 RU/m.
+                                            <br> 
+                                            <a target="_blank" href="https://aka.ms/docdbrum">Learn More</a>
+                                        </span>
+                                    </span>
+                                </p>
+                                <div tabindex="0" data-bind="event: { keydown: onRupmOptionsKeyDown }">
+                                    <div class="tab">
+                                        <input type="radio" id="rupmOn" name="rupmcoll" value="on" class="radio" data-bind="checked: rupm">
+                                        <label for="rupmOn">ON</label>
+                                    </div>
+                                    <div class="tab">
+                                        <input type="radio" id="rupmOff" name="rupmcoll" value="off" class="radio" data-bind="checked: rupm">
+                                        <label for="rupmOff">OFF</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="pkPadding" data-bind="visible: !isPreferredApiTable()">
+                                <!--<span class="mandatoryStar">*</span> -->
+                                Partition key
+                                <span class="infoTooltip">
+                                    <img class="infoImg" src="images/info-bubble.svg" alt="More information">
+                                    <span class="tooltiptext tooltiptextWidthDid">The Partition Key is used to automatically patition data among multiple servers for scalability. Choose a JSON property name that has a wide range of values and is likely to have evently distributed access patterns. <br> <a href=" https://docs.microsoft.com/en-us/azure/documentdb/documentdb-partition-data"> For more details refer to partitioning documentation here.</a></span>
+                                </span>
+                            </p>
+
+                            <input type="text" placeholder="e.g., /address/zipCode" size="40" class="textfontclr collid" data-bind="textInput: partitionKey, visible: !isPreferredApiTable()">
+                        </div>
+                        <!-- Fixed Button Content - End --> 
+
+                        <!-- Unlimited Button Content - Start --> 
+                        <div class="tabcontent" data-bind="visible: storage() === '100'">
+                            <p>
+                                <span class="mandatoryStar">*</span> Throughput (2500 - 100,000 RU/s)
+                                <span class="infoTooltip">
+                                    <img class="infoImg" src="images/info-bubble.svg" alt="More information">
+                                    <span class="tooltiptext tooltiptextWidthTp2">Each collection can be provisioned throughput in Request Units per second (RU/s). 1 RU corresponds to the throughput of a read of a 1 KB document. <br> <a href="https://www.documentdb.com/capacityplanner ">Learn More</a></span>
+                                </span>
+                            </p>
+                            <p>
+                                <input type="number" required value="2500" min="2500" max="250000" step="100" title="Should be a multiple of 100" size="40" class="textfontclr collid" data-bind="textInput: throughputMultiPartition, enable: storage() === '100'">
+                                <!--<span class="minusimg-but"> </span>-->
+                                <!--<span class="plusimg-but"> </span>-->
+                            </p>
+                            <div class="tabs">
+                                <p class="pkPadding">
+                                    <span class="mandatoryStar">*</span>
+                                    RU/m
+                                    <span class="infoTooltip">
+                                        <img class="infoImg" src="images/info-bubble.svg" alt="More information">
+                                        <span class="tooltiptext tooltiptextWidthTp2">
+                                            For each 100 Request Units per second (RU/s) provisioned, 1,000 Request Units per minute (RU/m) can be provisioned. E.g.: for a collection with 5,000 RU/s provisioned with RU/m enabled, the RU/m budget will be 50,000 RU/m.
+                                            <br>
+                                            <a target="_blank" href="https://aka.ms/docdbrum">Learn More</a>
+                                        </span>
+                                    </span>
+                                </p>
+                                <div tabindex="0" data-bind="event: { keydown: onRupmOptionsKeyDown }">
+                                    <div class="tab">
+                                        <input type="radio" id="rupmOn2" name="rupmcoll2" value="on" class="radio" data-bind="checked: rupm">
+                                        <label for="rupmOn2">ON</label>
+                                    </div>
+                                    <div class="tab">
+                                        <input type="radio" id="rupmOff2" name="rupmcoll2" value="off" class="radio" data-bind="checked: rupm">
+                                        <label for="rupmOff2">OFF</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="pkPadding" data-bind="visible: !isPreferredApiTable()">
+                                <span class="mandatoryStar">*</span>
+                                Partition key
+                                <span class="infoTooltip">
+                                    <img class="infoImg" src="images/info-bubble.svg" alt="More information">
+                                    <span class="tooltiptext tooltiptextWidthDid">The Partition Key is used to automatically patition data among multiple servers for scalability. Choose a JSON property name that has a wide range of values and is likely to have evently distributed access patterns. <br> <a href=" https://docs.microsoft.com/en-us/azure/documentdb/documentdb-partition-data"> For more details refer to partitioning documentation here.</a></span>
+                                </span>
+                            </p>
+                            <input type="text" placeholder="e.g., /address/zipCode" size="40" class="textfontclr collid" data-bind="textInput: partitionKey, visible: !isPreferredApiTable()">
+                        </div>
+                        <!-- Unlimited Button Content - Start --> 
+                    </div>
+
+                    <div class="paddingspan3">
+                        <div class="leftpanel-okbut">
+                            <input type="submit" value="OK" class="btncreatecoll1" data-bind="click: submit">
+                        </div>
+                    </div>
+                </div>
+                <!-- Add collection inputs - End -->
+        </div>
+        <!-- Add collection form  -- End -->
+
+        <!-- Error details tab - Start -->
+        <div data-bind="visible: errorDetailsVisible()">
+            <!-- Error details header - Start -->
+            <div class="firstdivbg headerline">
+                <div style="float: left; cursor: pointer;" data-bind="click: hideErrorDetails">
+                    <img style="width: 32px; height: 32px;" src="images/imgarrowlefticon-white.svg" alt="Hide error details">
+                </div>
+                <div style="float: left;">
+                    More details
+                </div>
+                <div style="float: right; padding: 0 10px; cursor: pointer;" data-bind="click: cancel">
+                    <img src="images/close.svg" alt="Cancel">
+                </div>
+            </div>
+            <!-- Error details header - End -->
+
+            <div class="seconddivbg paddingspan2" data-bind="text: formErrorsDetails"></div>
+        </div>
+        <!-- Error details tab - End -->
+    </div>
+</div>

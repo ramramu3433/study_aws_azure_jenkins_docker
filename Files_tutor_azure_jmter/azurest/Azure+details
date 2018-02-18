@@ -1,0 +1,26 @@
+Azure LB:
+
+
+     Lb creation can be created with availablity sets   
+     Backend pools should be from same avail.set
+     Vm's security group should allow ports to any port 
+     Loadbalancer ip is static...
+     Private subnet creation  - Name your subnet private
+     NAT rule for using as jump server to another private server 
+     Inbound traffic rule for Http internet facing loadbalancer 
+     Probe health first , then Traffic rule
+
+
+Azure storage:
+    
+     Create storage account and add file(or) blob (or) queue 
+     Generate sas key for storage account 
+     az login
+     az storage 
+
+
+Az keys and connection string
+
+
+
+

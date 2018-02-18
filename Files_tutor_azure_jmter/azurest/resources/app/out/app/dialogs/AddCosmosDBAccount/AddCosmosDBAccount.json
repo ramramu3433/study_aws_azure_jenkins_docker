@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 200,
+        "width": 400
+    },
+    "view": "./app/dialogs/AddCosmosDBAccount/AddCosmosDBAccount.html",
+    "viewModel": "./app/dialogs/AddCosmosDBAccount/AddCosmosDBAccountViewModel"
+}

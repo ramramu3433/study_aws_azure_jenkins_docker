@@ -1,0 +1,815 @@
+<!DOCTYPE html public "-//W3C//DTD HTML 4.0//en">
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0">
+    <meta name='robots' content='noindex, nofollow' />
+
+    <title>Azure Cosmos DB</title>
+
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+
+    <script>
+        function getParameterByName(name) {
+            var url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+            var results = regex.exec(url);
+            if (!results) {
+                return null;
+            }
+            if (!results[2]) {
+                return '';
+            }
+
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        cosmosDbDataExplorerVersion = getParameterByName("v") || new Date().getTime();
+
+        function loadCssWithVersion(urls) {
+            var urlsArray = (Array.isArray(urls)) ? urls : [urls];
+
+            for (var i = 0; i < urlsArray.length; i++) {
+                var link = document.createElement("link");
+                link.rel = "stylesheet";
+                link.type = "text/css";
+                link.href = urlsArray[i] + '?v=' + cosmosDbDataExplorerVersion;
+                document.getElementsByTagName("head")[0].appendChild(link);
+            }
+        }
+
+        function loadScriptsWithVersion(urls) {
+            var urlsArray = (Array.isArray(urls)) ? urls : [urls];
+            for (var i = 0; i < urlsArray.length; i++) {
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.src = urlsArray[i] + '?v=' + cosmosDbDataExplorerVersion;
+                document.getElementsByTagName("head")[0].appendChild(script);
+            }
+        }
+    </script>
+
+    <script src="externals/require.js"></script>
+    <script src="externals/jquery.min.js"></script>
+
+    <script>
+        loadCssWithVersion([
+            "externals/bootstrap.css",
+            "css/DocumentDB.css",
+            "css/tree.css",
+            "css/forms.css",
+            "css/menus.css",
+            "css/messagebox.css",
+            "css/InputTypeahead.css",
+            "css/CommandButton.css",
+            "css/ErrorDisplayComponent.css",
+            "css/CollapsiblePanelComponent.css",
+            "css/JsonEditorComponent.css",
+            "css/graphExplorer.css",
+            "css/TableStyles/queryBuilder.css",
+            "externals/jquery.datatables.min.css",
+            "css/TableStyles/fullDatatables.css",
+            "externals/jquery.contextMenu.css",
+            "css/TableStyles/EntityEditor.css",
+            "css/TableStyles/CustomizeColumns.css",
+            "externals/jquery.typeahead.min.css",
+            "css/newVertexComponent.css",
+            "css/GraphStyleComponent.css"
+        ]);
+
+        loadScriptsWithVersion([
+            "built/require-config.js",
+            "externals/documentdbclient-1.14.0.js",
+            "externals/vs/loader.js",
+            "externals/bootstrap.js",
+            "externals/underscore-min.js",
+            "externals/jquery.contextMenu.js",
+            "externals/jquery.typeahead.min.js"
+        ]);
+    </script>
+</head>
+
+<body>
+    <div id="divExplorer" style="display: none">
+        <!-- Main Command Bar - Start -->
+        <div class="commandBar commandBar-ie" data-bind="foreach: mainCommandBarOptions.options" tabindex="0">
+            <command-button params="{buttonProps: $data}"></command-button>
+        </div>
+        <!-- Main Command Bar - End -->
+
+        <!-- Collections Tree and Tabs - Begin -->
+        <div>
+            <!-- Collections Tree - Start -->
+            <div id="resourcetree" class="resourcetree">
+                <div>
+                    <!-- Collections Tree Expanded - Start -->
+                    <div id="main" class="main" data-bind="
+                        visible: isLeftPaneExpanded()">
+                        <!-- Collections Window - - Start -->
+                        <div id="mainslide" class="mainslide">
+                            <!-- Collections Window Title/Command Bar - Start -->
+                            <div class="collectiontitle">
+                                <div class="coltitle">
+                                    <span class="titlepadcol" data-bind="text: collectionTitle"></span>
+                                    <div style="float: right;" class="padimgcolrefresh1" data-bind="
+                                        click: toggleLeftPaneExpanded">
+                                        <img class="refreshcol1" src="images/imgarrowlefticon.svg" alt="Hide">
+                                    </div>
+                                    <div style="float: right;" class="padimgcolrefresh" data-bind="
+                                        click: refreshAllDatabases">
+                                        <img class="refreshcol" src="images/refresh.svg" data-bind="attr: { alt: refreshTreeTitle }"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Collections Window Title/Command Bar - End  -->
+
+                            <resource-tree  params="{data: $data}"></resource-tree>
+
+                                            </div>
+                        <!--  Collections Window - End -->
+
+                    </div>
+                    <!-- Collections Tree Expanded - End -->
+
+                    <!-- Collections Tree Collapsed - Start -->
+                    <div id="mini" class="mini toggle-mini" data-bind="
+                        visible: !isLeftPaneExpanded()">
+                        <div class="main-nav nav">
+                            <ul class="nav">
+                                <li>
+                                    <div class="leftarrowCollapsed" data-bind="
+                                        click: toggleLeftPaneExpanded">
+                                        <img class="arrowCollapsed" src="images/imgarrowlefticon.svg" alt="Expand">
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="collectionCollapsed" data-bind="
+                                        click: toggleLeftPaneExpanded">
+                                        <span data-bind="
+                                            text: collectionTitle"></span>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Collections Tree Collapsed - End -->
+                </div>
+            </div>
+            <!-- Collections Tree - End -->
+
+            <!-- Splitter - Start -->
+            <div class="splitter" id="h_splitter1" data-bind="
+                css: {
+                    colResizePointer: !splitter.isCollapsed()
+                }">
+            </div>
+            <!-- Splitter - End -->
+
+            <!-- Tabs and Tabs Panes - Start -->
+            <div id="content" class="tabsContainer" data-bind="
+                    visible: openedTabs && openedTabs().length > 0">
+                <!-- Tabs - Start -->
+                <div class="nav-tabs-margin" data-bind="visible:!isTabsContentExpanded()">
+                    <ul class="nav nav-tabs level navTabHeight" id="navTabs">
+                        <!-- ko foreach: openedTabs -->
+                        <li class="tabList" data-bind="
+                                attr: {
+                                    title: $data.tabPath
+                                },
+                                css:{
+                                    active: $data.isActive
+                                },
+                                event: { keypress: onKeyPress_Activate },
+                                click: $data.onTabClick" tabindex="0">
+                            <a data-toggle="tab" data-bind="
+                                attr: {
+                                    href: '#' + $data.tabId
+                                }" tabindex="-1">
+                                <div class="tab_Content">
+                                    <div class="tabtext-center" data-bind="
+                                    text: $data.tabTitle"></div>
+                                </div>
+                                <div class="tabIconSection">
+
+                                    <span data-bind="
+                                        click: $data.onCloseTabButtonClick,
+                                        event: { keypress: onKeyPress_Close },
+                                        attr: { tabindex: $data.closeButtonTabIndex }">
+                                        <span class="tabIcon close-Icon" data-bind="
+                                            visible: $data.isActive() || $data.isMouseOver()"></span>
+                                    </span>
+                                </div>
+                            </a>
+                        </li>
+                        <!-- /ko -->
+                    </ul>
+                </div>
+                <!-- Tabs -- End -->
+
+                <!-- Tabs Panes -- Start -->
+                <div class="tab-content">
+                    <!-- ko foreach: openedTabs -->
+                    <div data-bind="visible: $data.isActive">
+                        <!-- ko if: $data.tabKind === 0 -->
+                        <documents-tab params="{data: $data}"></documents-tab>
+                        <!-- /ko -->
+
+                        <!-- ko if: $data.tabKind === 1 -->
+                        <settings-tab params="{data: $data}"></settings-tab>
+                        <!-- /ko -->
+
+                        <!-- ko if: $data.tabKind === 2 -->
+                        <stored-procedure-tab params="{data: $data}"></stored-procedure-tab>
+                        <!-- /ko -->
+
+                        <!-- ko if: $data.tabKind === 3 -->
+                        <user-defined-function-tab params="{data: $data}"></user-defined-function-tab>
+                        <!-- /ko -->
+
+                        <!-- ko if: $data.tabKind === 4 -->
+                        <trigger-tab params="{data: $data}"></trigger-tab>
+                        <!-- /ko -->
+
+                        <!-- ko if: $data.tabKind === 5 -->
+                        <query-tab params="{data: $data}"></query-tab>
+                        <!-- /ko -->
+
+                        <!-- ko if: $data.tabKind === 6 -->
+                        <graph-tab params="{data: $data}"></graph-tab>
+                        <!-- /ko -->
+
+                        <!-- ko if: $data.tabKind === 9 -->
+                        <tables-query-tab params="{data: $data}"></tables-query-tab>
+                        <!-- /ko -->
+
+                        <!-- ko if: $data.tabKind === 10 -->
+                        <mongo-shell-tab params="{data: $data}"></mongo-shell-tab>
+                        <!-- /ko -->
+                    </div>
+                    <!-- /ko -->
+                </div>
+                <!-- Tabs Panes - End -->
+            </div>
+            <!-- Tabs and Tabs Panes - End -->
+        </div>
+        <!-- Collections Tree and Tabs - End -->
+    </div>
+
+    <add-colection-pane params="{data: addCollectionPane}"></add-colection-pane>
+    <delete-colection-confirmation-pane params="{data: deleteCollectionConfirmationPane}"></delete-colection-confirmation-pane>
+    <delete-database-confirmation-pane params="{data: deleteDatabaseConfirmationPane}"></delete-database-confirmation-pane>
+
+    <!-- Graph Styling Pane - Start -->
+    <div style="display:none;" data-bind="
+        visible: graphStylingPane.visible">
+        <div class="contextual-pane-out" data-bind="
+            click: graphStylingPane.clickOutside(),
+            clickBubble: false">
+        </div>
+        <div class="contextual-pane" id="graphstylingpane">
+
+            <!-- Graph Styling form  -- Start -->
+            <div class="contextual-pane-in" data-bind="
+                visible: !graphStylingPane.errorDetailsVisible()">
+
+                <form data-bind="
+                    submit: graphStyling_submit">
+                    <!-- Graph Styling header - Start -->
+                    <div class="firstdivbg headerline">
+                        Graph Styling
+                        <div class="closeImg" data-bind="
+                            click: graphStyling_cancel">
+                            <img src="images/close.svg" alt="Cancel">
+                        </div>
+                    </div>
+                    <!-- Graph Styling header - End -->
+
+                    <!-- Add graph configuration - Start -->
+                    <div class="seconddivbg paddingspan2">
+                        <graph-style id="graphStyleComponent" params="{ config:graphStylingPane.graphConfigUIData }"></graph-style>
+                    </div>
+                    <div class="paddingspan3b">
+                        <div class="leftpanel-okbut">
+                            <input type="submit" value="OK" class="btncreatecoll1">
+                        </div>
+                    </div>
+                    <!-- Add Graph configuration - End -->
+
+                </form>
+            </div>
+            <!-- Graph Styling form  -- Start -->
+        </div>
+    </div>
+    <!-- Graph Styling Pane - End -->
+
+    <!-- Add Table Entity Pane - Start -->
+    <div style="display:none;" data-bind="
+        visible: addTableEntityPane.visible">
+        <div class="contextual-pane-out" data-bind="
+            click: addTableEntityPane.cancel(),
+            clickBubble: false">
+        </div>
+        <div class="contextual-pane" style="width:700px;" id="addtableentitypane">
+            <!-- Add table entity form - Start -->
+            <div class="contextual-pane-in" data-bind="
+                    visible: !addTableEntityPane.isEditing()">
+                <form data-bind="
+                    submit: addTableEntity_submit">
+                    <!-- Add table entity header - Start -->
+                    <div class="firstdivbg headerline">
+                        Add Table Entity
+                        <div class="closeImg" data-bind="
+                            click: addTableEntity_cancel">
+                            <img src="images/close.svg" alt="Cancel">
+                        </div>
+                    </div>
+                    <!-- Add table entity header - End -->
+                    <div class="seconddivbg paddingspan2">
+                        <div class="entity-table">
+                            <div class="entity-table-row">
+                                <div class="entity-table-cell entity-table-property-header" data-bind="text: addTableEntityPane.attributeNameLabel"></div>
+                                <div class="entity-table-cell entity-table-type-header" data-bind="text: addTableEntityPane.dataTypeLabel"></div>
+                                <div class="entity-table-cell entity-table-value-header" data-bind="text: addTableEntityPane.attributeValueLabel"></div>
+                            </div>
+                        </div>
+                        <div class="entity-table-scroll-box" id="addEntityScroll">
+                            <div class="entity-table" data-bind="foreach: addTableEntityPane.displayedAttributes">
+                                <div class="entity-table-row">
+                                    <div class="entity-table-cell entity-table-property-column">
+                                        <input type="text" class="entity-table-field entity-table-property-column" data-bind="
+                                        textInput: name,
+                                        attr: { title: nameTooltip, placeholder: namePlaceholder },
+                                        css: { 'invalid-field': isInvalidName },
+                                        readOnly: !editable,
+                                        hasFocus: hasFocus" />
+                                    </div>
+                                    <div class="entity-table-cell entity-table-type-column">
+                                        <select class="entity-table-field" data-bind="
+                                        options: $parent.addTableEntityPane.edmTypes,
+                                        optionsAfterRender: $parent.addTableEntityPane.setOptionDisable,
+                                        value: type,
+                                        enable: editable,
+                                        readOnly: !editable">
+                                    </select>
+                                    </div>
+                                    <!-- ko ifnot: isDateType -->
+                                    <div class="entity-table-cell entity-table-value-column">
+                                        <input class="entity-table-field" step=1 data-bind="
+                                        textInput: value,
+                                        attr: { title: valueTooltip, placeholder: valuePlaceholder, type: inputType },
+                                        css: { 'invalid-field': isInvalidValue },
+                                        readOnly: !valueEditable" />
+                                    </div>
+                                    <!-- /ko -->
+                                    <!-- ko if: isDateType -->
+                                    <div class="entity-table-cell entity-table-value-column">
+                                        <input class="entity-table-field" step=1 data-bind="
+                                        value: value,
+                                        attr: { title: valueTooltip, placeholder: valuePlaceholder, type: inputType },
+                                        css: { 'invalid-field': isInvalidValue },
+                                        readOnly: !valueEditable,
+                                        hasFocus: valueHasFocus" autocomplete="off" />
+                                    </div>
+                                    <!-- /ko -->
+                                    <div class="entity-table-cell entity-table-action-column" data-bind="if: removable || editable">
+                                        <span class="entity-Edit-Cancel" title="Edit property" data-bind="click: $parent.addTableEntityPane.editAttribute.bind($data, $index())">
+                                            <img class="entity-Editor-Cancel-Img" src="images/Edit_entity.svg" alt="...">
+                                        </span>
+                                        <span class="entity-Edit-Cancel" title="Delete property" data-bind="click: $parent.addTableEntityPane.removeAttribute.bind($data, $index())">
+                                            <img class="entity-Editor-Cancel-Img" src="images/delete.svg" alt="Cancel">
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="entity-table addProperty">
+                                <div class="entity-table-row">
+                                    <div class="entity-table-cell">
+                                        <span class="spanmenu" data-bind="enable: addTableEntityPane.canAdd, click: addTableEntityPane.insertAttribute" autofocus>
+                                            <img class="addPropertyImg" src="images/Add-property.svg" alt="Insert attribute"/>
+                                            <span data-bind="text: addTableEntityPane.addButtonLabel"> </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="paddingspan3">
+                            <div class="leftpanel-okbut">
+                                <input type="submit" value="Add Entity" class="btncreatecoll1">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Add table entity form - End -->
+            <!-- Add table entity editor - Start -->
+            <div id="editor-panel" data-bind="visible: addTableEntityPane.isEditing()" style="display: none">
+                <div data-bind="with: addTableEntityPane.editingProperty()">
+                    <!-- Add table entity editor header - Start -->
+                    <div class="firstdivbg headerline">
+                        <div style="float: left; cursor: pointer;" data-bind="
+                            click: $parent.addTableEntityPane.finishEditingAttribute">
+                            <img class="edit-value-Icon" src="images/imgarrowlefticon-white.svg" alt="">
+                        </div>
+                        <div style="float: left;" data-bind="text: name"></div>
+                    </div>
+                    <!-- Add table entity editor header - End -->
+                    <div class="seconddivbg paddingspan2">
+                        <textarea class="entity-editor-expanded" id="editor-area" rows="21" data-bind="value: value" style="width:95%"></textarea>
+                    </div>
+                </div>
+            </div>
+            <!-- Add table entity editor - End -->
+        </div>
+    </div>
+    <!-- Add Table Entity Pane - End -->
+
+    <!-- Edit Table Entity Pane - Start -->
+    <div style="display:none;" data-bind="
+        visible: editTableEntityPane.visible">
+        <div class="contextual-pane-out" data-bind="
+            click: editTableEntityPane.cancel(),
+            clickBubble: false">
+        </div>
+        <div class="contextual-pane" style="width:700px;" id="edittableentitypane">
+            <!-- Edit table entity form - Start -->
+            <div class="contextual-pane-in" data-bind="
+                    visible: !editTableEntityPane.isEditing()">
+                <form data-bind="
+                    submit: editTableEntity_submit">
+                    <!-- Edit table entity header - Start -->
+                    <div class="firstdivbg headerline">
+                        Edit Table Entity
+                        <div class="closeImg" data-bind="
+                            click: editTableEntity_cancel">
+                            <img src="images/close.svg" alt="Cancel">
+                        </div>
+                    </div>
+                    <!-- Edit table entity header - End -->
+                    <div class="seconddivbg paddingspan2">
+                        <div class="entity-table">
+                            <div class="entity-table-row">
+                                <div class="entity-table-cell entity-table-property-header" data-bind="text: editTableEntityPane.attributeNameLabel"></div>
+                                <div class="entity-table-cell entity-table-type-header" data-bind="text: editTableEntityPane.dataTypeLabel"></div>
+                                <div class="entity-table-cell entity-table-value-header" data-bind="text: editTableEntityPane.attributeValueLabel"></div>
+                            </div>
+                        </div>
+                        <div class="entity-table-scroll-box" id="editEntityScroll">
+                            <div class="entity-table" data-bind="foreach: editTableEntityPane.displayedAttributes">
+                                <div class="entity-table-row">
+                                    <div class="entity-table-cell entity-table-property-column">
+                                        <input type="text" class="entity-table-field entity-table-property-column" data-bind="
+                                        textInput: name,
+                                        attr: { title: nameTooltip, placeholder: namePlaceholder },
+                                        css: { 'invalid-field': isInvalidName },
+                                        readOnly: !editable,
+                                        hasFocus: hasFocus" />
+                                    </div>
+                                    <div class="entity-table-cell entity-table-type-column">
+                                        <select class="entity-table-field" data-bind="
+                                        options: $parent.editTableEntityPane.edmTypes,
+                                        optionsAfterRender: $parent.editTableEntityPane.setOptionDisable,
+                                        value: type,
+                                        enable: editable,
+                                        readOnly: !editable">
+                                    </select>
+                                    </div>
+                                    <!-- ko ifnot: isDateType -->
+                                    <div class="entity-table-cell entity-table-value-column">
+                                        <input class="entity-table-field" step=1 data-bind="
+                                        textInput: value,
+                                        attr: { title: valueTooltip, placeholder: valuePlaceholder, type: inputType },
+                                        css: { 'invalid-field': isInvalidValue },
+                                        readOnly: !valueEditable" />
+                                    </div>
+                                    <!-- /ko -->
+                                    <!-- ko if: isDateType -->
+                                    <div class="entity-table-cell entity-table-value-column">
+                                        <input class="entity-table-field" step=1 data-bind="
+                                        value: value,
+                                        attr: { title: valueTooltip, placeholder: valuePlaceholder, type: inputType },
+                                        css: { 'invalid-field': isInvalidValue },
+                                        readOnly: !valueEditable,
+                                        hasFocus: valueHasFocus" autocomplete="off" />
+                                    </div>
+                                    <!-- /ko -->
+                                    <div class="entity-table-cell entity-table-action-column" data-bind="if: removable || editable">
+                                        <span class="entity-Edit-Cancel" data-bind="click: $parent.editTableEntityPane.editAttribute.bind($data, $index())" title="Edit property">
+                                            <img class="entity-Editor-Cancel-Img" src="images/Edit_entity.svg" alt="Edit attribute">
+                                        </span>
+                                        <span class="entity-Edit-Cancel" data-bind="click: $parent.editTableEntityPane.removeAttribute.bind($data, $index())" title="Delete property">
+                                            <img class="entity-Editor-Cancel-Img" src="images/delete.svg" alt="Remove attribute">
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="entity-table addProperty">
+                                <div class="entity-table-row">
+                                    <div class="entity-table-cell">
+                                        <span class="spanmenu" data-bind="enable: editTableEntityPane.canAdd, click: editTableEntityPane.insertAttribute" autofocus>
+                                            <img class="addPropertyImg" src="images/Add-property.svg" alt="Insert attribute"/>
+                                            <span data-bind="text: editTableEntityPane.addButtonLabel"> </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="paddingspan3">
+                            <div class="leftpanel-okbut">
+                                <input type="submit" value="Update Entity" class="btncreatecoll1">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Edit table entity form - End -->
+            <!-- Edit table entity editor - Start -->
+            <div id="editor-panel" data-bind="visible: editTableEntityPane.isEditing()" style="display: none">
+                <div data-bind="with: editTableEntityPane.editingProperty()">
+                    <!-- Edit table entity editor header - Start -->
+                    <div class="firstdivbg headerline">
+                        <div style="float: left; cursor: pointer;" data-bind="
+                            click: $parent.editTableEntityPane.finishEditingAttribute">
+                            <img class="edit-value-Icon" src="images/imgarrowlefticon-white.svg" alt="">
+                        </div>
+                        <div style="float: left;" data-bind="text: name"></div>
+                    </div>
+                    <!-- Edit table entity editor header - End -->
+                    <div class="seconddivbg paddingspan2">
+                        <textarea class="entity-editor-expanded" id="editor-area" rows="21" data-bind="value: value"></textarea>
+                    </div>
+                </div>
+            </div>
+            <!-- Edit table entity editor - End -->
+        </div>
+    </div>
+    <!-- Edit Table Entity Pane - End -->
+
+    <!-- Table Column Options Pane - Start -->
+    <div style="display:none;" data-bind="
+        visible: tableColumnOptionsPane.visible">
+        <div class="contextual-pane-out" data-bind="
+            click: tableColumnOptionsPane.cancel(),
+            clickBubble: false">
+        </div>
+        <div class="contextual-pane" id="tablecolumnoptionspane">
+            <!-- Table Column Options form - Start -->
+            <div class="contextual-pane-in" data-bind="
+                    visible: !tableColumnOptionsPane.errorDetailsVisible()">
+                <form data-bind="
+                    submit: tableColumnOptions_submit">
+                    <!-- Table Column Options header - Start -->
+                    <div class="firstdivbg headerline">
+                        Column Options
+                        <div class="closeImg" data-bind="
+                            click: tableColumnOptions_cancel">
+                            <img src="images/close.svg" alt="Cancel">
+                        </div>
+                    </div>
+                    <!-- Table Column Options header - End -->
+                    <div class="seconddivbg" data-bind="with: tableColumnOptionsPane">
+                        <!--<div class="row">
+                            <label id="instructionLabel" data-bind="text: instructionLabel, attr: { title: instructionLabel }"></label>
+                        </div>-->
+                        <div>
+                            <span>Choose the columns and the order in which you want to display them in the table.</span>
+                        </div>
+                        <div class="column-options">
+                            <div class="columns-border">
+                                <input class="all-select-check" type="checkbox" data-bind="checked: allSelected" />
+                                <label style="font-weight:700;" id="availableColumnsLabel" data-bind="text: availableColumnsLabel"></label>
+                                <span class="column-arrows-svg" data-bind="click: moveDown, enable: canMoveDown">
+                                    <img class="column-opt-arrow-Img" src="images/Down.svg" alt="Move down" />
+                                </span>
+                                <span class="column-arrows-svg" data-bind="click: moveUp, enable: canMoveUp">
+                                    <img class="column-opt-arrow-Img" src="images/Up.svg" alt="Move up" />
+                                </span>
+                            </div>
+                            <div class="content">
+                                <section>
+                                    <ul data-bind="foreach: columnOptions" aria-labelledby="availableColumnsLabel" tabindex="0">
+                                        <li class="list-item columns-border" data-bind="attr: { title: columnName }, click: $parent.handleClick ">
+                                            <input type="checkbox" for="columnName" data-bind="attr: { title: columnName, 'aria-selected': (selected()? 'true': 'false') }, checked: selected" />
+                                            <label id="columnName" data-bind="text: columnName"></label>
+                                        </li>
+                                    </ul>
+                                </section>
+                            </div>
+                        </div>
+
+                        <div class="row-label" data-bind="style: { visibility: anyColumnSelected() ? 'hidden': 'visible' }">
+                            <label class="warning" role="alert" aria-atomic="true" data-bind="text: noColumnSelectedWarning"></label>
+                        </div>
+                        <div class="paddingspan3">
+                            <div class="leftpanel-okbut">
+                                <input type="submit" value="OK" class="btncreatecoll1">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Table Column Options form - End -->
+        </div>
+    </div>
+    <!-- Table Column Options Pane - End -->
+
+    <!-- Query Select Pane - Start -->
+    <div style="display:none;" data-bind="
+        visible: querySelectPane.visible">
+        <div class="contextual-pane-out" data-bind="
+            click: querySelectPane.cancel(),
+            clickBubble: false">
+        </div>
+        <div class="contextual-pane" id="queryselectpane">
+            <!-- Query Select form - Start -->
+            <div class="contextual-pane-in" data-bind="
+                    visible: !querySelectPane.errorDetailsVisible()">
+                <form data-bind="
+                    submit: querySelect_submit">
+                    <!-- Query Select header - Start -->
+                    <div class="firstdivbg headerline">
+                        Select Column
+                        <div class="closeImg" data-bind="
+                            click: querySelect_cancel">
+                            <img src="images/close.svg" alt="Cancel">
+                        </div>
+                    </div>
+                    <!-- Query Select header - End -->
+                    <div class="seconddivbg" data-bind="with: querySelectPane">
+                        <!--<div class="row">
+                            <label id="instructionLabel" data-bind="text: instructionLabel"></label>
+                        </div>-->
+                        <div>
+                            <span>Select the columns that you want to query.</span>
+                        </div>
+                        <div class="column-options">
+                            <div class="columns-border">
+                                <input class="all-select-check" type="checkbox" data-bind="checked: allSelected" />
+                                <label style="font-weight:700;" id="availableColumnsLabel" data-bind="text: availableColumnsLabel"></label>
+                            </div>
+                            <div class="content">
+                                <section>
+                                    <ul data-bind="foreach: columnOptions" aria-labelledby="availableColumnsLabel" tabindex="0">
+                                        <!-- ko template: {if: editable} -->
+                                        <li class="list-item columns-border" data-bind="attr: { title: columnName }, click: $parent.handleClick ">
+                                            <input type="checkbox" data-bind="attr: { title: columnName }, checked: selected" />
+                                            <span data-bind="text: columnName"></span>
+                                        </li>
+                                        <!--/ko-->
+                                        <!-- ko template: {ifnot: editable} -->
+                                        <li class="list-item columns-border" data-bind="attr: { title: columnName } ">
+                                            <input type="checkbox" disabled data-bind="checked: selected" />
+                                            <span data-bind="text: columnName"></span>
+                                        </li>
+                                        <!--/ko-->
+                                    </ul>
+                                </section>
+                            </div>
+                        </div>
+
+                        <div class="row-label" data-bind="style: { visibility: anyColumnSelected() ? 'hidden': 'visible' }">
+                            <label class="warning" role="alert" aria-atomic="true" data-bind="text: noColumnSelectedWarning"></label>
+                        </div>
+                        <div class="paddingspan3">
+                            <div class="leftpanel-okbut">
+                                <input type="submit" value="OK" class="btncreatecoll1">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Query Select form - End -->
+        </div>
+    </div>
+    <!-- Query Select Pane - End -->
+
+    <!-- New Vertex (Graph) Pane - Start -->
+    <div style="display:none;" data-bind="
+        visible: newVertexPane.visible">
+        <div class="contextual-pane-out" data-bind="
+            click: newVertexPane.clickOutside(),
+            clickBubble: false">
+        </div>
+        <div class="contextual-pane" id="newvertexpane">
+            <!-- New Vertex form  -- Start -->
+            <div class="contextual-pane-in" data-bind="
+                visible: !newVertexPane.errorDetailsVisible()">
+
+                <form data-bind="
+                    submit: newvertex_submit">
+                    <!-- Graph Styling header - Start -->
+                    <div class="firstdivbg headerline">
+                        New Vertex
+                        <div class="closeImg" data-bind="
+                            click: newvertex_cancel">
+                            <img src="images/close.svg" alt="Cancel">
+                        </div>
+                    </div>
+                    <!-- Graph Styling header - End -->
+
+                    <!-- Add graph configuration - Start -->
+                    <div class="seconddivbg paddingspan2 newVertexPaneContent contentScroll">
+                        <error-display params="{ errorMsg:newVertexPane.formErrors }"></error-display>
+
+                        <new-vertex-form params="{ newVertexData: newVertexPane.tempVertexData }"></new-vertex-form>
+                    </div>
+                    <div class="paddingspan3b">
+                        <div class="leftpanel-okbut">
+                            <input type="submit" value="OK" class="btncreatecoll1">
+                        </div>
+                    </div>
+                    <!-- Add Graph configuration - End -->
+
+                </form>
+            </div>
+            <!-- New Vertex form  -- Start -->
+        </div>
+    </div>
+    <!--New Vertex (Graph) Pane - End -->
+
+
+    <script>
+        require(["./built/Main"]);
+    </script>
+
+    <!-- Script for each clause in the tables query builder -->
+    <script type="text/html" id="queryClause-template">
+        <tr class="clause-table-row">
+            <td class="clause-table-cell action-column">
+                <span class="entity-Add-Cancel" data-bind="click: $parent.addClauseIndex.bind($data, $index()), attr:{title: $parent.insertNewFilterLine}">
+                    <img class="querybuilder-addpropertyImg" src="images/Add-property.svg" alt="Add clause">
+                </span>
+                <span class="entity-Add-Cancel" data-bind="hasFocus: isDeleteButtonFocused, click: $parent.deleteClause.bind($data, $index()), attr:{title: $parent.removeThisFilterLine}">
+                    <img class="querybuilder-cancelImg" src="images/Entity_cancel.svg" alt="Delete clause">
+                </span>
+            </td>
+            <td class="clause-table-cell group-control-column">
+                <input type="checkbox" data-bind="checked: checkedForGrouping" />
+            </td>
+            <td>
+                <table class="group-indicator-table">
+                    <tbody>
+                        <tr data-bind="template: { name: 'groupIndicator-template', foreach: $parent.getClauseGroupViewModels($data), as: 'gi' }">
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td class="clause-table-cell and-or-column">
+                <select class="clause-table-field and-or-column" data-bind="hasFocus: isAndOrFocused, options: $parent.clauseRules, value: and_or, visible: canAnd">
+                </select>
+            </td>
+            <td class="clause-table-cell field-column" data-bind="click: $parent.updateColumnOptions">
+                <select class="clause-table-field field-column" data-bind="options: $parent.columnOptions, value: field">
+                </select>
+            </td>
+            <td class="clause-table-cell type-column">
+                <select class="clause-table-field type-column" data-bind="
+                    options: $parent.edmTypes,
+                    enable: isTypeEditable,
+                    value: type,
+                    css: {'query-builder-isDisabled': !isTypeEditable()}">
+                </select>
+            </td>
+            <td class="clause-table-cell operator-column">
+                <select class="clause-table-field operator-column" data-bind="
+                    options: $parent.operators,
+                    enable: isOperaterEditable,
+                    value: operator,
+                    css: {'query-builder-isDisabled': !isOperaterEditable()}">
+                </select>
+            </td>
+            <td class="clause-table-cell value-column">
+                <!-- ko template: {if: isValue} -->
+                <input type="text" class="clause-table-field value-column" type="search" data-bind="textInput: value" />
+                <!-- /ko -->
+
+                <!-- ko template: {if: isTimestamp} -->
+                <select class="clause-table-field time-column" data-bind="options: $parent.timeOptions, value: timeValue">
+                    </select>
+                <!-- /ko -->
+
+                <!-- ko template: {if: isCustomLastTimestamp} -->
+                <input class="clause-table-field time-column" data-bind="value: customTimeValue, click: customTimestampDialog" />
+                <!-- /ko -->
+                <!-- ko template: {if: isCustomRangeTimestamp} -->
+                <input class="clause-table-field time-column" type="datetime-local" step=1 data-bind="value: customTimeValue" />
+                <!-- /ko -->
+            </td>
+        </tr>
+    </script>
+
+    <!-- Script for each clause group in the tables query builder -->
+    <script type="text/html" id="groupIndicator-template">
+        <td class="group-indicator-column" data-bind="style: {backgroundColor: gi.backgroundColor, borderTop: gi.showTopBorder.peek() ? 'solid thin #CCCCCC' : 'none', borderLeft: gi.showLeftBorder.peek() ? 'solid thin #CCCCCC' : 'none', borderBottom: gi.showBottomBorder.peek() ? 'solid thin #CCCCCC' : gi.borderBackgroundColor}">
+            <!-- ko template: {if: gi.canUngroup} -->
+            <button type="button" data-bind="click: ungroupClauses, attr: {title: ungroupClausesLabel}">
+                    <img src="images/QueryBuilder/UngroupClause_16x.png" alt="Ungroup clauses"/>
+                </button>
+            <!-- /ko -->
+        </td>
+    </script>
+
+</body>
+
+</html>

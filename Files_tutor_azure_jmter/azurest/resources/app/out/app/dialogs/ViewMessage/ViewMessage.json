@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 680,
+        "width": 500
+    },
+    "view": "app/dialogs/ViewMessage/ViewMessageView.html",
+    "viewModel": "app/dialogs/ViewMessage/ViewMessageViewModel"
+}

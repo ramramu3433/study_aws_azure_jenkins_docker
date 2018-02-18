@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html class="page" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Query Builder</title>
+    <link rel="stylesheet" href="../../../css/Common/plugin-mods.css" />
+    <link rel="stylesheet" href="../../../css/Common/dialogs.css" data-plugin-theme="true" />
+    <link rel="stylesheet" href="../../../css/StorageExplorer/Dialogs/QueryBuilder.css" data-plugin-theme="true" />
+    <script type="text/javascript" src="../../../internal/plugin/plugin.js"></script>
+    <script type="text/javascript" src="../../../js/Azure/StorageExplorer/config.js"></script>
+</head>
+
+<body>
+    <div class="dialog">
+        <h1 data-bind="text: titleLabel"></h1>
+
+        <div class="clear"></div>
+
+        <div class="group-div">
+            <div data-bind="click: showSelections">
+                <a href="#">Select</a>
+            </div>
+            <div class="popup" data-bind="popup: selectClicked, css: { 'active': selectClicked }">
+                <div class="inline-group" data-bind="foreach: propertyNames">
+                    <input type="checkbox" data-bind="value: $data, checked: $root.selectedProperties">
+                    <label data-bind="text: $data"></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="clear"></div>
+
+        <div class="group-div top-div">
+            <label data-bind="text: topLabel"></label>
+            <input class="full-width top-input" type="number" data-bind="textInput: topValue" />
+        </div>
+
+        <div class="clear"></div>
+
+        <div class="group-div">
+            <table class="full-width">
+                <thead>
+                    <tr>
+                        <th class="query-clause-cell"></th>
+                        <th class="query-clause-cell" data-bind="text: clauseRuleLabel"></th>
+                        <th class="query-clause-cell" data-bind="text: propertyNameLabel"></th>
+                        <th class="query-clause-cell" data-bind="text: operatorLabel"></th>
+                        <th class="query-clause-cell" data-bind="text: conditionValueLabel"></th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: queryClauses">
+                    <tr>
+                        <td class="query-clause-cell">
+                            <img class="icon_16x16" src="../../../images/StorageExplorer/Delete_16x.png" data-bind="click: removeClause" />
+                        </td>
+                        <td class="query-clause-cell">
+                            <select class="query-clause-field" data-bind="options: $parent.clauseRules, value: clauseRule" />
+                        </td>
+                        <td class="query-clause-cell">
+                            <select class="query-clause-field" data-bind="options: $parent.propertyNames, value: propertyName" />
+                        </td>
+                        <td class="query-clause-cell">
+                            <select class="query-clause-field" data-bind="options: $parent.operators, value: operator" />
+                        </td>
+                        <td class="query-clause-cell">
+                            <input type="text" class="query-clause-field" data-bind="textInput: conditionValue" />
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>
+                            <button type="button" class="inline-button" data-bind="text: addClauseLabel, click: addClause"></button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="clear"></div>
+
+        <div class="inline-group">
+            <div class="buttons" data-bind="foreach: buttons">
+                <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+            </div>
+        </div>
+
+        <div class="clear"></div>
+    </div>
+</body>
+
+</html>

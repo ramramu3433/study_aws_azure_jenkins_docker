@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 545,
+        "width": 625
+    },
+    "view": "app/dialogs/Connect/ConnectView.html",
+    "viewModel": "app/dialogs/Connect/ConnectDialogViewModel"
+}

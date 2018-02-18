@@ -1,0 +1,36 @@
+<div class="newVertexComponent">
+    <table class="edgesTable">
+        <tbody>
+            <tr>
+                <td class="labelCol">label</td>
+                <td colspan="2"><input class="edgeInput" type="text" data-bind="textInput:$data.newVertexData().label" placeholder="Enter vertex label" autocomplete="off" /></td>
+                <td class="actionCol"></td>
+            </tr>
+            <!-- ko foreach:{ data:newVertexData().properties, as: '_keyval' } -->
+            <tr>
+                <td class="labelCol">
+                    <input type="text" data-bind="textInput:_keyval.key" placeholder="Key" autocomplete="off" />
+                </td>
+                <td class="valueCol">
+                    <input class="edgeInput" type="text" data-bind="textInput:_keyval.value" placeholder="Value" autocomplete="off" />
+                </td>
+                <td>
+                    <select class="typeSelect" required data-bind="options:$parent.propertyTypes, value:type"></select>
+                </td>
+                <td class="actionCol">
+                    <span class="rightPaneTrashIcon rightPaneBtns">
+                        <img class="refreshcol rightPaneTrashIconImg" src="images/delete.svg" alt="Remove property"
+                            data-bind="click:$parent.removeNewVertexProperty.bind($parent, $index)">
+                    </span>
+                </td>
+            </tr>
+            <!-- /ko -->
+            <tr>
+                <td colspan="3" class="rightPaneAddPropertyBtnPadding">
+                    <span class="rightPaneAddPropertyBtn rightPaneBtns" data-bind="click:addNewVertexProperty">
+                        <img class="refreshcol rightPaneAddPropertyImg" src="images/Add-property.svg" alt="Add property"> Add Property</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

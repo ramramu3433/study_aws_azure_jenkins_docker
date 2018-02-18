@@ -1,0 +1,116 @@
+input:not([type=button]):not([type=checkbox]):not([type=radio]),
+textarea {
+  background: var(--plugin-textbox-background-color);
+  border: 1px solid var(--plugin-textbox-border-color);
+  color: var(--plugin-textbox-color);
+  min-height: 28px;
+  outline: none;
+  padding: 5px;
+}
+input:not([type=button]):not([type=checkbox]):not([type=radio])[readonly],
+textarea[readonly] {
+  background-color: var(--plugin-textbox-disabled-background-color);
+  border: 1px solid var(--plugin-textbox-disabled-border-color);
+}
+input:not([type=button]):not([type=checkbox]):not([type=radio]):focus,
+textarea:focus,
+input:not([type=button]):not([type=checkbox]):not([type=radio]):hover,
+textarea:hover {
+  border: 1px solid var(--common-controls-button-border-hover);
+}
+input:not([type=button]):not([type=checkbox]):not([type=radio]):disabled,
+textarea:disabled {
+  background-color: var(--plugin-textbox-disabled-background-color);
+  border: 1px solid var(--plugin-textbox-disabled-border-color);
+  color: var(--plugin-textbox-disabled-color);
+}
+input:not([type=button]):not([type=checkbox]):not([type=radio]).invalid-field,
+textarea.invalid-field {
+  color: var(--common-controls-invalid-field-text);
+  background-color: var(--common-controls-invalid-field-background);
+  border: 1px solid var(--common-controls-invalid-field-border);
+}
+select {
+  background: var(--plugin-select-background-color);
+  border: 1px solid var(--plugin-select-border-color);
+  color: var(--plugin-select-color);
+  min-height: 28px;
+  outline: none;
+}
+select[readonly] {
+  background-color: var(--plugin-textbox-disabled-background-color);
+  border: 1px solid var(--plugin-textbox-disabled-border-color);
+}
+select:focus,
+select:hover {
+  border: 1px solid var(--common-controls-button-border-hover);
+}
+select:disabled {
+  background-color: var(--plugin-textbox-disabled-background-color);
+  border: 1px solid var(--plugin-textbox-disabled-border-color);
+  color: var(--plugin-textbox-disabled-color);
+}
+button,
+input[type=button] {
+  min-height: 28px;
+  outline: none;
+  padding: 5px;
+}
+button.expander,
+input[type=button].expander {
+  background-color: transparent;
+  border: 1px solid transparent;
+  text-align: left;
+  width: 100%;
+}
+button.expander img,
+input[type=button].expander img {
+  vertical-align: middle;
+}
+button:not(.expander),
+input[type=button]:not(.expander) {
+  background-color: var(--common-controls-button-background);
+  border: 1px solid var(--common-controls-button-border);
+  color: var(--common-controls-button-foreground);
+}
+button.inline-button,
+input[type=button].inline-button {
+  display: inline-block;
+  outline: none;
+}
+button:hover,
+input[type=button]:hover {
+  background-color: var(--common-controls-button-hover-background);
+  border: 1px solid var(--common-controls-button-border-hover);
+  color: var(--common-controls-button-hover-foreground);
+}
+button:focus,
+input[type=button]:focus,
+button:hover,
+input[type=button]:hover {
+  border: 1px solid var(--common-controls-button-border-hover);
+}
+button:disabled,
+input[type=button]:disabled {
+  background-color: var(--common-controls-button-disabled-background);
+  border: 1px solid var(--common-controls-button-border-disabled);
+  color: var(--common-controls-button-disabled-foreground);
+}
+input[type=radio],
+input[type=checkbox] {
+  background-color: inherit;
+  vertical-align: middle;
+}
+input[type=radio]:focus,
+input[type=checkbox]:focus {
+  outline: 1px solid var(--common-controls-button-border-hover);
+}
+input[type=radio] + label,
+input[type=checkbox] + label {
+  margin-left: 3px;
+  vertical-align: middle;
+}
+textarea {
+  resize: none;
+  width: 100%;
+}

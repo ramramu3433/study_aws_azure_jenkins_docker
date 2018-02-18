@@ -1,0 +1,176 @@
+/*!
+ * jQuery contextMenu - Plugin for simple contextMenu handling
+ *
+ * Version: git-master
+ *
+ * Authors: Björn Brala (SWIS.nl), Rodney Rehm, Addy Osmani (patches for FF)
+ * Web: http://swisnl.github.io/jQuery-contextMenu/
+ *
+ * Licensed under
+ *   MIT License http://www.opensource.org/licenses/mit-license
+ *   GPL v3 http://opensource.org/licenses/GPL-3.0
+ *
+ */
+.context-menu-list {
+  margin: 0;
+  padding: 1px 4px 1px 1px;
+  min-width: 210px;
+  max-width: 250px;
+  display: inline-block;
+  position: absolute;
+  list-style-type: none;
+  border: 1px solid #DDD;
+  /*[1px solid {plugin-contextmenu-border-color}]*/
+  background: #EEEEF2;
+  /*[{plugin-contextmenu-background-color}]*/
+  -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  -ms-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  -o-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 11px;
+}
+.context-menu-item {
+  padding: 5px 2px 5px 30px;
+  background-color: #EEEEF2;
+  /*[{plugin-contextmenu-background-color}]*/
+  position: relative;
+  color: #000000;
+  /*[{common-controls-inner-tab-inactive-text}]*/
+  -webkit-user-select: none;
+  -moz-user-select: -moz-none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.context-menu-separator {
+  margin: 1px;
+  padding: 0px;
+  border-bottom: 1px solid #DDD;
+  /*[1px solid {plugin-contextmenu-border-color}]*/
+}
+.context-menu-item > label > input,
+.context-menu-item > label > textarea {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+.context-menu-item.hover,
+.context-menu-input.hover {
+  cursor: pointer;
+  color: #FFFFFF;
+  /*[{plugin-contextmenu-hover-text-color}]*/
+  background-color: #3399FF;
+  /*[{plugin-contextmenu-hover-color}]*/
+}
+.context-menu-item.disabled {
+  color: transparent;
+  /*[{plugin-contextmenu-inactive-text-color}]*/
+}
+.context-menu-item.disabled.hover {
+  cursor: default;
+  background-color: #EEE;
+  /*[{plugin-contextmenu-background-color}]*/
+}
+.context-menu-submenu:after {
+  content: ">";
+  color: #666;
+  /*[{plugin-contextmenu-inactive-text-color}]*/
+  position: absolute;
+  top: 0;
+  right: 3px;
+  z-index: 1;
+}
+/* icons
+    #protip:
+    In case you want to use sprites for icons (which I would suggest you do) have a look at
+    http://css-tricks.com/13224-pseudo-spriting/ to get an idea of how to implement
+    .context-menu-item.icon:before {}
+ */
+/* TODO: replace icons */
+.context-menu-item.icon {
+  min-height: 18px;
+  background-repeat: no-repeat;
+  background-position: 4px 2px;
+  list-style-type: none;
+}
+.context-menu-item.icon-copy {
+  background-image: url(../../../images/StorageExplorer/Copy_greyTheme_16x.png);
+}
+.context-menu-item.icon-paste {
+  background-image: url(../../../images/StorageExplorer/Paste_greyTheme_16x.png);
+}
+.context-menu-item.icon-delete {
+  background-image: url(../../../images/StorageExplorer/Delete_16x.png);
+}
+.context-menu-item.icon-download {
+  background-image: url(../../../images/StorageExplorer/Download_16x.png);
+}
+.context-menu-item.icon-add-entity {
+  background-image: url(../../../images/StorageExplorer/AddEntity_16x.png);
+}
+.context-menu-item.icon-edit-entity {
+  background-image: url(../../../images/StorageExplorer/EditEntity_16x.png);
+}
+.context-menu-item.icon-view-message {
+  background-image: url(../../../images/StorageExplorer/EditEntity_16x.png);
+}
+.context-menu-item.icon-customize-columns {
+  background-image: url(../../../images/StorageExplorer/CustomizeColumns_16x.png);
+}
+.context-menu-item.icon-reset-column-order {
+  background-image: url(../../../images/StorageExplorer/ResetColumnOrder_16x.png);
+}
+.context-menu-item.icon-shift-non-empty-columns-left {
+  background-image: url(../../../images/StorageExplorer/ShiftToLeft_16x.png);
+}
+/* vertically align inside labels */
+.context-menu-input > label > * {
+  vertical-align: top;
+}
+/* position checkboxes and radios as icons */
+.context-menu-input > label > input[type="checkbox"],
+.context-menu-input > label > input[type="radio"] {
+  margin-left: -17px;
+}
+.context-menu-input > label > span {
+  margin-left: 5px;
+}
+.context-menu-input > label > input[type="text"],
+.context-menu-input > label > textarea,
+.context-menu-input > label > select {
+  display: block;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.context-menu-input > label > textarea {
+  height: 100px;
+}
+.context-menu-item > .context-menu-list {
+  display: none;
+  /* re-positioned by js */
+  right: -5px;
+  top: 5px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.context-menu-item.visible > .context-menu-list {
+  display: block;
+}
+.context-menu-accesskey {
+  text-decoration: underline;
+}
+.context-menu-input > label {
+  display: inline-block;
+  width: inherit;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  box-sizing: border-box;
+}

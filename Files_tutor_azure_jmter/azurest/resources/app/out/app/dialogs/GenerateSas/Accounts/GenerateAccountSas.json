@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 575,
+        "width": 500
+    },
+    "view": "app/dialogs/GenerateSas/GenerateSasView.html",
+    "viewModel": "app/dialogs/GenerateSas/Accounts/GenerateAccountSasDialogViewModel"
+}

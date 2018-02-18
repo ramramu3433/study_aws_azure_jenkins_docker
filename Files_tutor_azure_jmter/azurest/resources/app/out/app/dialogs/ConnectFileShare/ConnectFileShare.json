@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 250,
+        "width": 600
+    },
+    "view": "app/dialogs/ConnectFileShare/ConnectFileShareView.html",
+    "viewModel": "app/dialogs/ConnectFileShare/ConnectFileShareViewModel"
+}

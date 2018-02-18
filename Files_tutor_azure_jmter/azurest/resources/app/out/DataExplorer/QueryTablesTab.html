@@ -1,0 +1,180 @@
+                        <div class="tab-pane" data-bind="
+                            attr:{
+                                id: tabId
+                            }">
+                            <!-- Tables Query Tab Command Bar - Start -->
+                            <div class="contentdiv">
+                                <div class="spanmenupaddingleft">
+                                    <!-- Select Query Helper- Start -->
+                                    <span class="spanmenu" data-bind="
+                                            click: onQueryBuilderClick,
+                                            visible: queryBuilderButton.visible(),
+                                            css: {'activeButton': queryBuilderButton.enabled()}">
+                                            <img class="imgiconwidth" src="images/Query-Builder.svg" />Query Builder
+                                        </span>
+                                    <!-- Select Query Helper- End -->
+                                    <!-- Select Query Text- Start -->
+                                    <span class="spanmenu" data-bind="
+                                            click: onQueryTextClick,
+                                            visible: queryTextButton.visible(),
+                                            css: {'activeButton': queryTextButton.enabled()}">
+                                            <img class="imgiconwidth" src="images/Query-Text.svg" />Query Text
+                                        </span>
+                                    <!-- Select Query Text- Start -->
+                                    <!-- Execute Tables Query - Start -->
+                                    <span class="spanmenu" data-bind="
+                                            click: onExecuteQueryClick,
+                                            visible: executeQueryButton.visible() && executeQueryButton.enabled()">
+                                            <img class="imgiconwidth" src="images/ExecuteQuery.svg" />Run
+                                        </span>
+                                    <!-- Execute Tables Query - End -->
+                                    <!-- Add Entity - Start -->
+                                    <span class="spanmenu" data-bind="
+                                            click: onAddEntityClick,
+                                            visible: addEntityButton.visible() && addEntityButton.enabled()">
+                                            <img class="imgiconwidth" src="images/AddEntity.svg" />Add Entity
+                                        </span>
+                                    <!-- Add Entity - End -->
+                                    <!-- Edit Entity - Start -->
+                                    <span class="spanmenu" data-bind="
+                                            click: onEditEntityClick,
+                                            visible: editEntityButton.visible() && editEntityButton.enabled()">
+                                            <img class="imgiconwidth" src="images/Edit-entity.svg" />Edit Entity
+                                        </span>
+                                    <span class="spanmenu tabCommandDisabled" data-bind="
+                                            visible: editEntityButton.visible() && !editEntityButton.enabled()">
+                                            <img class="imgiconwidth" src="images/Edit-entity-disabled.svg" />Edit Entity
+                                        </span>
+                                    <!-- Edit Entity - End  -->
+                                    <!-- Delete Entity - Start -->
+                                    <span class="spanmenu" data-bind="
+                                            click: onDeleteEntityClick,
+                                            visible: deleteEntityButton.visible() && deleteEntityButton.enabled()">
+                                            <img class="imgiconwidth" src="images/delete.svg" />Delete Entities
+                                        </span>
+                                    <span class="spanmenu tabCommandDisabled" data-bind="
+                                            visible: deleteEntityButton.visible() && !deleteEntityButton.enabled()">
+                                            <img class="imgiconwidth" src="images/delete-disabled.svg" />Delete Entities
+                                        </span>
+                                    <!-- Delete Entity - End  -->
+                                </div>
+                            </div>
+                            <!-- Tables Query Tab Command Bar - End -->
+                            <!-- Tables Query Tab Query Builder - Start-->
+                            <div class="query-builder" data-bind="with: queryViewModel, attr: {
+                                                id: queryViewModel.id
+                                            }">
+                                <!-- Tables Query Tab Errors - Start-->
+                                <div class="error-bar" tabindex="0" style="padding:10px 0px 15px 27px;outline:none;">
+                                    <div class="error-message" data-bind="visible: hasQueryError">
+                                        <img class="entity-error-Img" src="images/error.svg" />
+                                        <span class="error-text" data-bind="text: queryErrorMessage" />
+                                    </div>
+                                </div>
+                                <!-- Tables Query Tab Errors - End-->
+                                <!-- Tables Query Tab Query Text - Start-->
+                                <div class="query-editor-panel" data-bind="visible: isEditorActive">
+                                    <div>
+                                        <textarea class="query-editor-text" data-bind="textInput: queryText, css: { 'query-editor-text-invalid': hasQueryError }" name="query-editor" rows="5" cols="100" readonly></textarea>
+                                    </div>
+                                </div>
+                                <!-- Tables Query Tab Query Text - End-->
+                                <!-- Tables Query Tab Query Helper - Start-->
+                                <div data-bind="visible: isHelperActive" style="padding-left:13px">
+                                    <div class="clause-table" data-bind="with: queryBuilderViewModel ">
+                                        <div class="scroll-box scrollable" id="scroll">
+                                            <table class="clause-table">
+                                                <thead>
+                                                    <tr class="clause-table-row">
+                                                        <td class="clause-table-cell header-background">
+                                                            <!-- Add-remove -->
+                                                        </td>
+                                                        <td class="clause-table-cell header-background group-control-header">
+                                                            <button type="button" data-bind="enable: canGroupClauses, attr:{title: groupSelectedClauses}, click: groupClauses">
+                                                                <img class="and-or-svg" src="images/And-Or.svg"/>
+                                                            </button>
+                                                        </td>
+                                                        <td class="clause-table-cell header-background">
+                                                            <!-- Grouping indicator -->
+                                                        </td>
+                                                        <td class="clause-table-cell header-background and-or-header">
+                                                            <span data-bind="text: andLabel" />
+                                                        </td>
+                                                        <td class="clause-table-cell header-background field-header">
+                                                            <span data-bind="text: fieldLabel" />
+                                                        </td>
+                                                        <td class="clause-table-cell header-background type-header">
+                                                            <span data-bind="text: dataTypeLabel" />
+                                                        </td>
+                                                        <td class="clause-table-cell header-background operator-header">
+                                                            <span data-bind="text: operatorLabel" />
+                                                        </td>
+                                                        <td class="clause-table-cell header-background value-header">
+                                                            <span data-bind="text: valueLabel" />
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody data-bind="template: { name: 'queryClause-template', foreach: clauseArray, as: 'clause' }">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="addClause" data-bind="click: addNewClause, attr:{title: addNewClauseLine}" tabindex="0">
+                                            <div class="addClause-heading">
+                                                <span class="clause-table addClause-title">
+                                                    <img class="addclauseProperty-Img" style="margin-bottom:5px;" src="images/Add-property.svg">
+                                                    <span style="margin-left:5px;" data-bind="text: addNewClauseLine"/>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Tables Query Tab Query Helper - End-->
+                                <!-- Tables Query Tab Advanced Options - Start-->
+                                <div class="advanced-options-panel">
+                                    <div class="advanced-heading">
+                                        <span class="advanced-title" data-bind="click:toggleAdvancedOptions">
+                                            <!-- ko template: { ifnot: isExpanded} -->
+                                            <div class="themed-images" type="text/html" id="ExpandChevronRight" data-bind="hasFocus: focusExpandIcon">
+                                                <img class="imgiconwidth expand-triangle-right " src="images/Triangle-right.svg" />
+                                            </div>
+                                            <!-- /ko -->
+                                            <!-- ko template: { if: isExpanded} -->
+                                            <div class="themed-images" type="text/html" id="ExpandChevronDown">
+                                                <img class="imgiconwidth expand-triangle" src="images/Triangle-down.svg"/>
+                                            </div>
+                                            <!-- /ko -->
+                                            <span>Advanced Options</span>
+                                        </span>
+                                    </div>
+                                    <div class="advanced-options" data-bind="visible: isExpanded">
+                                        <div class="top">
+                                            <span>Show top results:</span>
+                                            <input class="top-input" type="number" data-bind="hasFocus: focusTopResult, textInput: topValue, attr: { title: topValueLimitMessage }" />
+                                            <div class="inline-div" data-bind="visible: isExceedingLimit">
+                                                <img class="advanced-options-icon" src="images/QueryBuilder/StatusWarning_16x.png">
+                                                <span data-bind="text: topValueLimitMessage"></span>
+                                            </div>
+                                        </div>
+                                        <div class="select">
+                                            <span> Select fields for query: </span>
+                                            <div data-bind="visible: isSelected">
+                                                <img class="advanced-options-icon" src="images/QueryBuilder/QueryInformation_16x.png" />
+                                                <span class="select-options-text" data-bind="text: selectMessage" />
+                                            </div>
+                                            <a class="select-options-link" data-bind="click: selectQueryOptions" tabindex="0">
+                                                <span>Choose Columns... </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Tables Query Tab Advanced Options - End-->
+                            </div>
+                            <hr>
+                            <!-- Tables Query Tab Query Builder - End-->
+                            <div data-bind="with: tableEntityListViewModel, attr: {
+                                                id: tableEntityListViewModel.id
+                                            }" style="padding-left:13px; float:left; position:absolute; width:calc(100% - 240px);">
+                                <!-- Keyboard navigation - tabindex is required to make the table focusable. -->
+                                <table id="storageTable" class="storage azure-table show-gridlines" style="width:100%" tabindex="0" data-bind="tableSource: items, tableSelection: selected"></table>
+                            </div>
+                        </div>

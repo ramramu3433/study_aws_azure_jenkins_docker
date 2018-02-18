@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 200,
+        "width": 500
+    },
+    "view": "app/dialogs/NPS/NpsView.html",
+    "viewModel": "app/dialogs/NPS/NpsViewModel"
+}

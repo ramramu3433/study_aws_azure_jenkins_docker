@@ -1,0 +1,264 @@
+input:not([type=button]):not([type=checkbox]):not([type=radio]),
+textarea {
+  background: var(--plugin-textbox-background-color);
+  border: 1px solid var(--plugin-textbox-border-color);
+  color: var(--plugin-textbox-color);
+  min-height: 28px;
+  outline: none;
+  padding: 5px;
+}
+input:not([type=button]):not([type=checkbox]):not([type=radio])[readonly],
+textarea[readonly] {
+  background-color: var(--plugin-textbox-disabled-background-color);
+  border: 1px solid var(--plugin-textbox-disabled-border-color);
+}
+input:not([type=button]):not([type=checkbox]):not([type=radio]):focus,
+textarea:focus,
+input:not([type=button]):not([type=checkbox]):not([type=radio]):hover,
+textarea:hover {
+  border: 1px solid var(--common-controls-button-border-hover);
+}
+input:not([type=button]):not([type=checkbox]):not([type=radio]):disabled,
+textarea:disabled {
+  background-color: var(--plugin-textbox-disabled-background-color);
+  border: 1px solid var(--plugin-textbox-disabled-border-color);
+  color: var(--plugin-textbox-disabled-color);
+}
+input:not([type=button]):not([type=checkbox]):not([type=radio]).invalid-field,
+textarea.invalid-field {
+  color: var(--common-controls-invalid-field-text);
+  background-color: var(--common-controls-invalid-field-background);
+  border: 1px solid var(--common-controls-invalid-field-border);
+}
+select {
+  background: var(--plugin-select-background-color);
+  border: 1px solid var(--plugin-select-border-color);
+  color: var(--plugin-select-color);
+  min-height: 28px;
+  outline: none;
+}
+select[readonly] {
+  background-color: var(--plugin-textbox-disabled-background-color);
+  border: 1px solid var(--plugin-textbox-disabled-border-color);
+}
+select:focus,
+select:hover {
+  border: 1px solid var(--common-controls-button-border-hover);
+}
+select:disabled {
+  background-color: var(--plugin-textbox-disabled-background-color);
+  border: 1px solid var(--plugin-textbox-disabled-border-color);
+  color: var(--plugin-textbox-disabled-color);
+}
+button,
+input[type=button] {
+  min-height: 28px;
+  outline: none;
+  padding: 5px;
+}
+button.expander,
+input[type=button].expander {
+  background-color: transparent;
+  border: 1px solid transparent;
+  text-align: left;
+  width: 100%;
+}
+button.expander img,
+input[type=button].expander img {
+  vertical-align: middle;
+}
+button:not(.expander),
+input[type=button]:not(.expander) {
+  background-color: var(--common-controls-button-background);
+  border: 1px solid var(--common-controls-button-border);
+  color: var(--common-controls-button-foreground);
+}
+button.inline-button,
+input[type=button].inline-button {
+  display: inline-block;
+  outline: none;
+}
+button:hover,
+input[type=button]:hover {
+  background-color: var(--common-controls-button-hover-background);
+  border: 1px solid var(--common-controls-button-border-hover);
+  color: var(--common-controls-button-hover-foreground);
+}
+button:focus,
+input[type=button]:focus,
+button:hover,
+input[type=button]:hover {
+  border: 1px solid var(--common-controls-button-border-hover);
+}
+button:disabled,
+input[type=button]:disabled {
+  background-color: var(--common-controls-button-disabled-background);
+  border: 1px solid var(--common-controls-button-border-disabled);
+  color: var(--common-controls-button-disabled-foreground);
+}
+input[type=radio],
+input[type=checkbox] {
+  background-color: inherit;
+  vertical-align: middle;
+}
+input[type=radio]:focus,
+input[type=checkbox]:focus {
+  outline: 1px solid var(--common-controls-button-border-hover);
+}
+input[type=radio] + label,
+input[type=checkbox] + label {
+  margin-left: 3px;
+  vertical-align: middle;
+}
+textarea {
+  resize: none;
+  width: 100%;
+}
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-background);
+  border: 1px solid var(--scrollbar-border);
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-background);
+  border: 1px solid var(--scrollbar-thumb-border);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover-background);
+}
+::-webkit-scrollbar-thumb:active {
+  background-color: var(--scrollbar-thumb-active-background);
+}
+::-webkit-scrollbar-corner {
+  background-color: var(--plugin-background-color);
+}
+* {
+  box-sizing: border-box;
+  font-family: var(--plugin-font-family), Arial, sans-serif;
+  font-size: var(--plugin-font-size);
+  font-weight: var(--plugin-font-weight);
+  margin: 0px;
+  padding: 0px;
+}
+html {
+  height: 100%;
+  width: 100%;
+}
+body {
+  background: var(--plugin-background-color);
+  border: 1px solid var(--environment-page-sidebar-expander-separator);
+  color: var(--plugin-color);
+  height: 100%;
+  width: 100%;
+}
+a {
+  color: var(--environment-panel-hyperlink);
+}
+hr {
+  color: var(--environment-page-sidebar-expander-separator);
+  height: 1px;
+}
+.checkbox-label {
+  margin-left: 3px;
+}
+.dialog-panel {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+.dialog-panel h1 {
+  font-size: 200%;
+}
+.dialog-panel > .title {
+  background-color: var(--plugin-background-color);
+  border-left: 1px solid var(--environment-page-sidebar-expander-separator);
+  border-right: 1px solid var(--environment-page-sidebar-expander-separator);
+  border-top: 1px solid var(--environment-page-sidebar-expander-separator);
+  font-size: 200%;
+  font-weight: normal;
+  order: 1;
+  padding: 10px 20px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+.dialog-panel > .content {
+  border-left: 1px solid var(--environment-page-sidebar-expander-separator);
+  border-right: 1px solid var(--environment-page-sidebar-expander-separator);
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  height: 100%;
+  order: 2;
+  padding: 0 20px;
+  width: 100%;
+}
+.dialog-panel > .buttons {
+  background-color: var(--plugin-background-color);
+  border-bottom: 1px solid var(--environment-page-sidebar-expander-separator);
+  border-left: 1px solid var(--environment-page-sidebar-expander-separator);
+  border-right: 1px solid var(--environment-page-sidebar-expander-separator);
+  bottom: 0;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  order: 3;
+  padding: 10px 20px 20px;
+  position: fixed;
+  width: 100%;
+}
+.dialog-panel > .buttons button,
+.dialog-panel > .buttons input[type=button] {
+  min-width: 73px;
+}
+.dialog-panel > .buttons button:not(:last-child),
+.dialog-panel > .buttons input[type=button]:not(:last-child) {
+  margin-right: 12px;
+}
+.row {
+  display: block;
+  margin: 10px 0px;
+}
+.row > :not(:first-child) {
+  margin-top: 5px;
+}
+.row > input,
+.row > textarea,
+.row > select {
+  width: 100%;
+}
+.row .environment-management-button {
+  width: 25%;
+  margin-bottom: 6px;
+}
+.note {
+  display: flex;
+  align-items: flex-start;
+}
+.note img {
+  margin-right: 6px;
+}
+.note div,
+.note span {
+  flex: 1 1 auto;
+}
+.warning {
+  color: var(--common-controls-warning-text);
+  background-color: var(--common-controls-warning-text-background);
+  padding-right: 0px;
+}
+.option-select .option {
+  margin: 3px 0px 3px 9px;
+}
+#message {
+  word-wrap: break-word;
+}

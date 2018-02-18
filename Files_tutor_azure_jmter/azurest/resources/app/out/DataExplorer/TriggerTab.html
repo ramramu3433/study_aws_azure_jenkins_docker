@@ -1,0 +1,150 @@
+<div class="tab-pane" data-bind="
+                            attr:{
+                                id: tabId
+                            }">
+    <!-- Trigger Tab Command Bar - Start -->
+
+    <!-- ko if: !isRunningOnDaytona -->
+    <div class="contentdiv">
+        <div class="spanmenupaddingleft">
+            <!-- Save - Start -->
+            <span class="spanmenu" data-bind="
+                                        click: onSaveClick,
+                                        visible: saveButton.visible() && saveButton.enabled()">
+                                            <img class="imgiconwidth" src="images/save.svg"  alt="Save"/>Save
+                                        </span>
+            <span class="spanmenu tabCommandDisabled" data-bind="
+                                            visible: saveButton.visible() && !saveButton.enabled()">
+                                            <img class="imgiconwidth" src="images/save-disabled.svg"  alt="Save (disabled)"/>Save
+                                        </span>
+            <!-- Save - End -->
+
+            <!-- Update - Start -->
+            <span class="spanmenu" data-bind="
+                                            click: onUpdateClick,
+                                            visible: updateButton.visible() && updateButton.enabled()">
+                                            <img class="imgiconwidth" src="images/save.svg"  alt="Update"/>Update
+                                        </span>
+            <span class="spanmenu tabCommandDisabled" data-bind="
+                                            visible: updateButton.visible() && !updateButton.enabled()">
+                                            <img class="imgiconwidth" src="images/save-disabled.svg"  alt="Update (disabled)"/>Update
+                                        </span>
+            <!-- Update - Start -->
+
+            <!-- Discard - Start -->
+            <span class="spanmenu" data-bind="
+                                            click: onDiscard,
+                                            visible: discardButton.visible() && discardButton.enabled()">
+                                            <img class="imgiconwidth" src="images/discard.svg"  alt="Discard"/>Discard
+                                        </span>
+            <span class="spanmenu tabCommandDisabled" data-bind="
+                                            visible: discardButton.visible() && !discardButton.enabled()">
+                                            <img class="imgiconwidth" src="images/discard-disabled.svg"  alt="Discard (disabled)"/>Discard
+                                        </span>
+            <!-- Discard - End -->
+
+            <!-- Delete - Start -->
+            <!--<span class="spanmenu" data-bind="
+                                            click: onDelete,
+                                            visible: deleteButton.visible() && deleteButton.enabled()">
+                                            <img class="imgiconwidth" src="images/delete.svg"  alt="Delete"/>Delete
+                                        </span>
+                                    <span class="spanmenu tabCommandDisabled" data-bind="
+                                            visible: deleteButton.visible() && !deleteButton.enabled()">
+                                            <img class="imgiconwidth" src="images/delete-disabled.svg"  alt="Delete (disabled)"/>Delete
+                                        </span>-->
+            <!-- Delete - End -->
+        </div>
+    </div>
+    <!-- /ko -->
+
+    <!-- ko if: isRunningOnDaytona -->
+    <div class="toolbar" data-bind="with: toolbarViewModel">
+        <!-- ko template: { name: 'toolbarItemTemplate', foreach: toolbarItems } -->
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
+    <script type="text/html" id="toolbarItemTemplate">
+        <!-- ko if: type === "action" -->
+        <div class="toolbar-group" data-bind="visible: visible">
+            <button class="toolbar-group-button" data-bind="hasFocus: focused, attr: {id: id, title: title, 'aria-label': displayName}, event: { mousedown: mouseDown, keydown: keyDown, keyup: keyUp }, enable: enabled">
+                <div class="toolbar-group-button-icon">
+                    <div class="toolbar_icon" data-bind="icon: icon"></div>
+                </div>
+                <span data-bind="text: displayName"></span>
+            </button>
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: type === "toggle" -->
+        <div class="toolbar-group" data-bind="visible: visible">
+            <button class="toolbar-group-button toggle-button" data-bind="hasFocus: focused, attr: {id: id, title: title}, event: { mousedown: mouseDown, keydown: keyDown, keyup: keyUp }, enable: enabled">
+                <div class="toolbar-group-button-icon" data-bind="css: { 'toggle-checked': checked }">
+                    <div class="toolbar_icon"  data-bind="icon: icon"></div>
+                </div>
+                <span data-bind="text: displayName"></span>
+            </button>
+        </div>
+        <!-- /ko -->
+        <!-- ko if: type === "dropdown" -->
+        <div class="toolbar-group" data-bind="visible: visible">
+            <div class="dropdown" data-bind="attr: {id: (id + '-dropdown')}">
+                <button role="menu" class="toolbar-group-button" data-bind="hasFocus: focused, attr: {id: id, title: title, 'aria-label': displayName},  event: { mousedown: mouseDown, keydown: keyDown, keyup: keyUp }, enable: enabled">
+                    <div class="toolbar-group-button-icon">
+                        <div class="toolbar_icon" data-bind="icon: icon"></div>
+                    </div>
+                    <span data-bind="text: displayName"></span>
+                </button>
+            </div>
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: type === "separator" -->
+        <div class="toolbar-group vertical-separator" data-bind="visible: visible"></div>
+        <!-- /ko -->
+    </script>
+
+    <!-- Trigger Tab Command Bar - End -->
+
+    <!-- Trigger Tab Form - Start -->
+    <div class="tabForm">
+        <!-- ko if: !isRunningOnDaytona -->
+        <div class="formTitleFirst">
+            Trigger Id
+        </div>
+        <input class="formTree" type="text" required pattern="[^/?#\\]*[^/?# \\]" title="May not end with space nor contain characters '\' '/' '#' '?'"
+            placeholder="Enter the new trigger id" size="40" data-bind="
+                                    textInput: id">
+        <!-- /ko -->
+
+        <div class="formTitleFirst">
+            Trigger Type
+        </div>
+
+        <select class="formTree" required data-bind="
+                                    value: triggerType">
+                                        <option>Pre</option>
+                                        <option>Post</option>
+                                    </select>
+
+        <div class="formTitleFirst">
+            Trigger Operation
+        </div>
+        <select class="formTree" required data-bind="
+                                    value: triggerOperation">
+                                        <option>All</option>
+                                        <option>Create</option>
+                                        <option>Delete</option>
+                                        <option>Replace</option>
+                                    </select>
+
+        <div class="formTitle">Trigger Body</div>
+        <div style="width:100%; height:calc(100vh - 240px);" data-bind="
+                                    setTemplateReady: true,
+                                    attr: {
+                                        id: editorId
+                                    }">
+        </div>
+    </div>
+    <!-- Trigger Tab Form - End -->
+</div>

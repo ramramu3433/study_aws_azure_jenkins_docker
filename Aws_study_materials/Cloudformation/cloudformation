@@ -1,0 +1,176 @@
+Creating a cloudformation template 
+
+
+1.You can write your own template for cloudformation
+
+which follows the below syntax
+
+
+The key sections in any template :
+Resources.
+Parameters.
+Mappings.
+
+Resources:
+The resources has the objects needs to be created in your aws account.
+Every object such as an EC2 instance , s3 bucket , VPC - CIDR block, Security Group are considered as resources.
+
+
+{
+    "Resources" : {
+        "<name_of_resource" : {
+            "Type" : "AWS::S3::Bucket<Aws::resource:type> ",#Format : AWS::<service_name>::<object__resource> (ex...AWS::EC2::Instance)
+            "Properties" : { #You have to provide the Related properties for any resources (basically the options in object creation, ##If a property is given as required : yes then if the property is present in the template definition , Then stack won't be created 
+               "AccessControl" : "PublicRead",
+               "WebsiteConfiguration" : {
+                    "IndexDocument" : "index.html",
+                    "ErrorDocument" : "error.html"            
+               }               
+            }
+        }
+    }
+}
+
+
+
+
+
+
+Resources: []  - > array if u have multiple resources..
+
+ex...
+
+{
+    "Resources": {
+        "Ec2Instance": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "SecurityGroups": [
+                    {
+                        "Ref": "InstanceSecurityGroup"
+                    }
+                ],
+                "KeyName": "mykey",
+                "ImageId": ""
+            }
+        },
+        "InstanceSecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "Enable SSH access via port 22",
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "22",
+                        "ToPort": "22",
+                        "CidrIp": "0.0.0.0/0"
+                    }
+                ]
+            }
+        }
+    }
+}
+
+Parameters:
+
+ "Parameters": {
+    "KeyName": {  # To get the user input from management console 
+      "Description" : "Name of an existing EC2 KeyPair to enable SSH access into the WordPress web server",
+      "Type": "AWS::EC2::KeyPair::KeyName"
+    },
+    "WordPressUser": {
+      "Default": "admin",
+      "NoEcho": "true",
+      "Description" : "The WordPress database admin account user name",
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*"
+    },
+    "WebServerPort": {
+      "Default": "8888",
+      "Description" : "TCP/IP port for the WordPress web server",
+      "Type": "Number",
+      "MinValue": "1",
+      "MaxValue": "65535"
+    }
+  }
+
+
+Mappings:
+
+
+"Mappings": {
+    "RegionMap": { ----- #Section .M1 ---
+      "us-east-1": {
+        "AMI": "ami-76f0061f"
+      },
+      "us-west-1": {
+        "AMI": "ami-655a0a20"
+      },
+      "eu-west-1": {
+        "AMI": "ami-7fd4e10b"
+      },
+      "ap-southeast-1": {
+        "AMI": "ami-72621c20"
+      },
+      "ap-northeast-1": {
+        "AMI": "ami-8e08a38f"
+      }
+    }
+  },
+
+Mappings provides a collection of objects per k-v map as like dicts in python...
+
+Using Mapping to provide conditional values  ...
+
+"ImageId": {
+          "Fn::FindInMap": [ # Aws cloudformation has in-built functions which can be accessed by fn (fn::FindInMap --> searches the map see the map in M1 section , so Map name is RegionMap
+            "RegionMap", #It searches  in map , with region name has the key to find , so need to give region name
+            {
+              "Ref": "AWS::Region" # This provides region name ( Ref used to refer a variable from other variable or resource (basically this will be the current region name else u can hardcode your region name like "us-east-1" , reason for Ref is reusablity just like programming make anything dynamic and modular)---------
+            },
+            "AMI"
+          ]
+        },
+
+Template refrence :: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-reference.html
+
+The above link gives the required properties for each resources in aws template...
+
+
+
+Parameters and mappings are an excellent way to pass or determine specific values at stack creation time.
+
+Optional section
+
+Output:
+
+Usage ----> to get the IP of any instance created and Id of any resoure created , basically these section will provide you names and strings like print statement in cloudformation templates ...
+
+
+fn::GetAtt ---> used to retrieve any values produced by resources section...
+ex....
+
+"Outputs": {
+  "InstallURL": {
+    "Value": {
+      "Fn::Join": [
+        "",
+        [
+          "http://",
+          {
+            "Fn::GetAtt": [
+              "ElasticLoadBalancer",
+              "DNSName"
+            ]
+          },
+          "/wp-admin/install.php"
+        ]
+      ]
+    }
+
+
+Template should have name ,
+
+Version in template should be "2010-09-09"

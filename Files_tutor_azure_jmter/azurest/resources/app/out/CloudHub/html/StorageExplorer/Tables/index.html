@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html class="page" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+
+    <title>Storage Explorer Data View</title>
+
+    <link rel="stylesheet" href="../../../lib/datatables-colreorder/css/colReorder.dataTables.scss" />
+    <link rel="stylesheet" href="../../../css/Common/plugin-mods.css" />
+    <link rel="stylesheet" href="../../../css/StorageExplorer/contextMenu.css" data-plugin-theme="true" />
+    <link rel="stylesheet" href="../../../css/StorageExplorer/fulldatatables.css" data-plugin-theme="true" />
+    <link rel="stylesheet" href="../../../css/StorageExplorer/toolbar.css" data-plugin-theme="true" />
+    <link rel="stylesheet" href="../../../css/StorageExplorer/site.css" data-plugin-theme="true" />
+    <link rel="stylesheet" href="../../../css/StorageExplorer/tableQuery.css" data-plugin-theme="true" />
+
+    <script type="text/javascript" src="../../../internal/plugin/plugin.js"></script>
+    <script type="text/javascript" src="../../../js/StorageExplorer/config.js"></script>
+
+    <script type="text/javascript" src="../../../lib/requirejs/require.js" data-main="StorageExplorer/Tables/appStorageTables"></script>
+
+</head>
+
+<body class="container" data-bind="shortcut: { F5: runQuery, 'Shift+F5': stopQuery, 'Ctrl+S': saveQuery }">
+    <a href="#" onclick="window.location.reload(true);" style="color: white;display:none">Refresh!</a>
+    <div data-bind="with: toolbarViewModel">
+        <div class="toolbar">
+            <!-- ko template: { name: 'toolbarItemTemplate', foreach: toolbarItems } -->
+            <!-- /ko -->
+        </div>
+    </div>
+
+    <div class="query-panel" data-bind="css: { 'transition-in': isQueryOpen }" tabindex="0">
+        <!--ko template: { if: isQueryOpen, name:'queryBuilderTemplate'}-->
+        <!--/ko-->
+    </div>
+
+    <div data-bind="with: tableEntityListViewModel">
+        <!-- Keyboard navigation - tabindex is required to make the table focusable. -->
+        <table id="storageTable" class="storage azure-table can-select show-gridlines" style="width:100%" tabindex="0" data-bind="tableSource: items, tableSelection: selected"></table>
+    </div>
+
+    <script type="text/html" id="queryBuilderTemplate">
+        <div class="query-builder" data-bind="with: queryViewModel">
+            <div class="query-builder-toolbar">
+                <div class="query-toolbar-group">
+                    <!-- ko template: { if: isHelperEnabled} -->
+                    <button class="query-toolbar-button" id="query-helper" title="Query builder" data-bind="click:selectHelper, css:{'active': isHelperActive}">
+                        <div>
+                            <img class="query-toolbar-icon" src="../../../images/StorageExplorer/DropdownMenu_16x.png">
+                        </div>
+                    </button>
+                    <!--/ko-->
+                    <!-- ko template: {ifnot: isHelperEnabled} -->
+                    <button class="query-toolbar-button disabled" id="query-helper" title="Clear Editor to go back to query builder">
+                        <div>
+                            <img class="query-toolbar-icon" src="../../../images/StorageExplorer/DropdownMenu_16x.png">
+                        </div>
+                    </button>
+                    <!--/ko-->
+                </div>
+                <div class="query-toolbar-group">
+                    <button class="query-toolbar-button" id="text-editor" title="Text editor" data-bind="click: selectEditor, css:{'active': isEditorActive}">
+                        <div>
+                            <img class="query-toolbar-icon" src="../../../images/StorageExplorer/CustomActionEditor_16x.png">
+                        </div>
+                    </button>
+                </div>
+                <div class="query-toolbar-group vertical-separator"> </div>
+                <div class="query-toolbar-group">
+                    <button class="query-toolbar-button" id="open-saved-query" title="Open saved query" data-bind="click: openQuery">
+                        <div>
+                            <img class="query-toolbar-icon" src="../../../images/StorageExplorer/OpenFile_16x.png">
+                        </div>
+                    </button>
+                </div>
+                <div class="query-toolbar-group">
+                    <button class="query-toolbar-button" id="save-as-query" title="Save query as... (Ctrl+S)" data-bind="click: saveAsQuery">
+                        <div>
+                            <img class="query-toolbar-icon" src="../../../images/StorageExplorer/SaveAs_16x.png">
+                        </div>
+                    </button>
+                </div>
+                <div class="query-toolbar-group">
+                    <!-- ko template: {if: isSaveEnabled } -->
+                    <button class="query-toolbar-button" id="save-query" title="Save query" data-bind="click: saveQuery">
+                            <div>
+                                <img class="query-toolbar-icon" src="../../../images/StorageExplorer/Save_16x.png">
+                            </div>
+                        </button>
+                    <!--/ko-->
+                    <!-- ko template: {ifnot: isSaveEnabled } -->
+                    <button class="query-toolbar-button disabled" id="save-query" title="Save query">
+                            <div>
+                                <img class="query-toolbar-icon" src="../../../images/StorageExplorer/Save_16x.png">
+                            </div>
+                        </button>
+                    <!--/ko-->
+                </div>
+                <div class="query-toolbar-group vertical-separator"> </div>
+                <div class="query-toolbar-group">
+                    <button class="query-toolbar-button" id="clear-query" title="Clear query" data-bind="click: clearQuery">
+                        <div>
+                            <img class="query-toolbar-icon" src="../../../images/StorageExplorer/Eraser_16x.png">
+                        </div>
+                    </button>
+                </div>
+                <div class="query-toolbar-group vertical-separator"> </div>
+                <div class="query-toolbar-group">
+                    <button class="query-toolbar-button" id="stop-query" title="Stop query (Shift+F5)" data-bind="click:stopQuery">
+                        <div>
+                            <img class="query-toolbar-icon" src="../../../images/StorageExplorer/Stop_16x.png">
+                        </div>
+                    </button>
+                </div>
+                <div class="query-toolbar-group">
+                    <button class="query-toolbar-button" id="execute-query" title="Execute Query (F5)" data-bind="click: runQuery, enable: canRunQuery">
+                        <div>
+                            <img class="query-toolbar-icon" src="../../../images/CloudExplorer/AttachDebugger_16x.png">
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <div class="query-editor-panel" data-bind="visible: isEditorActive">
+                <div class="warning-bar">
+                    <div class="warning-message">
+                        <img src="../../../images/StorageExplorer/QueryInformation_16x.png">
+                        <span class="warning-text">Changes made in the text editor cannot be displayed in the query builder.</span>
+                    </div>
+                </div>
+                <div>
+                    <textarea class="query-editor-text" data-bind="textInput: queryText, css: { 'query-editor-text-invalid': hasQueryError }"
+                        name="query-editor" rows="5" cols="100" aria-label="Text editor"></textarea>
+                </div>
+                <div class="error-bar">
+                    <div class="error-message" data-bind="visible: hasQueryError" tabindex="0">
+                        <img src="../../../images/StorageExplorer/StatusInvalid_16x.png" />
+                        <span class="error-text" data-bind="text: queryErrorMessage" />
+                    </div>
+                </div>
+                <div class="help-link">
+                    <a href="#" data-bind="click: openStatement">Need help with OData filter query option?</a>
+                </div>
+            </div>
+
+            <div class="query-helper" data-bind="visible: isHelperActive">
+                <div class="clause-table" data-bind="with: queryBuilderViewModel ">
+                    <div class="scroll-box scrollable" id="scroll">
+                        <table class="clause-table">
+                            <thead>
+                                <tr class="clause-table-row">
+                                    <td class="clause-table-cell">
+                                        <!-- Add-remove -->
+                                    </td>
+                                    <td class="clause-table-cell group-control-header">
+                                        <button type="button" data-bind="enable: canGroupClauses, attr:{title: groupSelectedClauses}, click: groupClauses">
+                                            <img src="../../../images/StorageExplorer/GroupClause_16x.png"/>
+                                        </button>
+                                    </td>
+                                    <td class="clause-table-cell">
+                                        <!-- Grouping indicator -->
+                                    </td>
+                                    <td class="clause-table-cell and-or-header">
+                                        <span data-bind="text: andLabel" />
+                                    </td>
+                                    <td class="clause-table-cell field-header">
+                                        <span data-bind="text: fieldLabel" />
+                                    </td>
+                                    <td class="clause-table-cell type-header">
+                                        <span data-bind="text: dataTypeLabel" />
+                                    </td>
+                                    <td class="clause-table-cell operator-header">
+                                        <span data-bind="text: operatorLabel" />
+                                    </td>
+                                    <td class="clause-table-cell value-header">
+                                        <span data-bind="text: valueLabel" />
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody data-bind="template: { name: 'queryClause-template', foreach: clauseArray, as: 'clause' }">
+                            </tbody>
+                            <tfoot>
+                                <tr class="clause-table-row">
+                                    <td colspan="100">
+                                        <div class="addClause" data-bind="onEnterKey: addNewClause, click: addNewClause, attr:{title: addNewClauseLine}" tabindex="0">
+                                            <div class="addClause-heading">
+                                                <span class="clause-table addClause-title">
+                                                    <img src="../../../images/StorageExplorer/Add_green_16x.png">
+                                                    <a>
+                                                        <span data-bind="text: addNewClauseLine"/>
+                                                    </a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="advanced-options-panel">
+                <div class="advanced-heading">
+                    <span id="advancedOptionsSpan" class="advanced-title" data-bind="onEnterKey: toggleAdvancedOptions, click:toggleAdvancedOptions">
+                        Advanced Options
+                        <!-- ko template: { ifnot: isExpanded} -->
+                                <div class="themed-images" type="text/html" id="ExpandChevronDown" data-bind="hasFocus: focusExpandIcon" role="button" aria-expanded="false" aria-labeledby="advancedOptionsSpan" tabindex=0>
+                                    <img src="../../../images/StorageExplorer/CollapseChevronDown_16x.png"/>
+                                </div>
+                        <!-- /ko -->
+                        <!-- ko template: { if: isExpanded} -->
+                                <div class="themed-images" type="text/html" id="ExpandChevronUp" aria-labeledby="advancedOptionsSpan" role="button" aria-expanded="true" tabindex=0>
+                                    <img src="../../../images/StorageExplorer/CollapseChevronUp_16x.png"/>
+                                </div>
+                        <!-- /ko -->
+                    </span>
+                </div>
+                <div class="advanced-options" data-bind="visible: isExpanded">
+                    <div class="top">
+                        <span id="topResultsSpan">Show top results:</span>
+                        <input class="top-input" type="number" data-bind="hasFocus: focusTopResult, textInput: topValue, attr: { title: topValueLimitMessage }"
+                            aria-describedby="topValueLimitSpan" aria-labeledby="topResultsSpan" />
+                        <div class="inline-div" data-bind="visible: isExceedingLimit">
+                            <img class="advanced-options-icon" src="../../../images/StorageExplorer/StatusWarning_16x.png">
+                            <span id="topValueLimitSpan" data-bind="text: topValueLimitMessage"></span>
+                        </div>
+                    </div>
+                    <div class="select">
+                        <span> Select fields for query: </span>
+                        <img class="advanced-options-icon" src="../../../images/StorageExplorer/QueryInformation_16x.png" data-bind="visible: isSelected">
+                        <span class="select-options-text" data-bind="text: selectMessage" />
+                        <a class="select-options-link" data-bind="onEnterKey: selectQueryOptions, click: selectQueryOptions" tabindex="0">
+                            <span>Choose Columns... </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="divider horizontal"> </div>
+        </div>
+    </script>
+
+    <script type="text/html" id="queryClause-template">
+        <tr class="clause-table-row">
+            <td class="clause-table-cell action-column">
+                <button type="button" data-bind="click: $parent.addClauseIndex.bind($data, $index()), attr:{title: $parent.insertNewFilterLine}">
+                    <img src="../../../images/StorageExplorer/Add_green_16x.png">
+                </button>
+                <button type="button" data-bind="hasFocus: isDeleteButtonFocused, click: $parent.deleteClause.bind($data, $index()), attr:{title: $parent.removeThisFilterLine}">
+                    <img src="../../../images/StorageExplorer/Delete_16x.png">
+                </button>
+            </td>
+            <td class="clause-table-cell group-control-column">
+                <input type="checkbox" data-bind="checked: checkedForGrouping" />
+            </td>
+            <td>
+                <table class="group-indicator-table">
+                    <tbody>
+                        <tr data-bind="template: { name: 'groupIndicator-template', foreach: $parent.getClauseGroupViewModels($data), as: 'gi' }">
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td class="clause-table-cell and-or-column">
+                <select class="clause-table-field and-or-column" data-bind="hasFocus: isAndOrFocused, options: $parent.clauseRules, value: and_or, visible: canAnd">
+                </select>
+            </td>
+            <td class="clause-table-cell field-column" data-bind="click: $parent.updateColumnOptions">
+                <select class="clause-table-field field-column" data-bind="options: $parent.columnOptions, value: field">
+                </select>
+            </td>
+            <td class="clause-table-cell type-column">
+                <select class="clause-table-field type-column" data-bind="options: $parent.edmTypes, enable: isTypeEditable, value: type">
+                </select>
+            </td>
+            <td class="clause-table-cell operator-column">
+                <select class="clause-table-field operator-column" data-bind="options: $parent.operators, enable: isOperaterEditable, value: operator">
+                </select>
+            </td>
+            <td class="clause-table-cell value-column">
+                <!-- ko template: {if: isValue} -->
+                <input type="text" class="clause-table-field value-column" type="search" data-bind="textInput: value, onEnterKey: $parent.runQuery"
+                />
+                <!-- /ko -->
+
+                <!-- ko template: {if: isTimestamp} -->
+                <select class="clause-table-field time-column" data-bind="options: $parent.timeOptions, value: timeValue">
+                    </select>
+                <!-- /ko -->
+
+                <!-- ko template: {if: isCustomLastTimestamp} -->
+                <input class="clause-table-field time-column" data-bind="value: customTimeValue, click: customTimestampDialog" />
+                <!-- /ko -->
+                <!-- ko template: {if: isCustomRangeTimestamp} -->
+                <input class="clause-table-field time-column" type="datetime-local" step=1 data-bind="value: customTimeValue" />
+                <!-- /ko -->
+            </td>
+        </tr>
+    </script>
+
+    <script type="text/html" id="groupIndicator-template">
+        <td class="group-indicator-column" data-bind="style: {backgroundColor: gi.backgroundColor, borderTop: gi.showTopBorder.peek() ? 'solid thin #CCCCCC' : 'none', borderLeft: gi.showLeftBorder.peek() ? 'solid thin #CCCCCC' : 'none', borderBottom: gi.showBottomBorder.peek() ? 'solid thin #CCCCCC' : 'none'}">
+            <!-- ko template: {if: gi.canUngroup} -->
+            <button type="button" data-bind="click: ungroupClauses, attr: {title: ungroupClausesLabel}">
+                    <img src="../../../images/StorageExplorer/UngroupClause_16x.png"/>
+                </button>
+            <!-- /ko -->
+        </td>
+    </script>
+
+    <script type="text/html" id="toolbarItemTemplate">
+        <!-- ko if: type === "action" -->
+        <div class="toolbar-group" data-bind="visible: visible">
+            <button class="toolbar-group-button" data-bind="hasFocus: focused, attr: {id: id, title: title, 'aria-label': displayName}, event: { mousedown: mouseDown, keydown: keyDown, keyup: keyUp }, enable: enabled">
+                <div class="toolbar-group-button-icon">
+                    <div class="toolbar_icon" data-bind="icon: icon"></div>
+                </div>
+                <span data-bind="text: displayName"></span>
+            </button>
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: type === "toggle" -->
+        <div class="toolbar-group" data-bind="visible: visible">
+            <button class="toolbar-group-button toggle-button" data-bind="hasFocus: focused, attr: {id: id, title: title}, event: { mousedown: mouseDown, keydown: keyDown, keyup: keyUp }, enable: enabled">
+                <div class="toolbar-group-button-icon" data-bind="css: { 'toggle-checked': checked }">
+                    <div class="toolbar_icon"  data-bind="icon: icon"></div>
+                </div>
+                <span data-bind="text: displayName"></span>
+            </button>
+        </div>
+        <!-- /ko -->
+        <!-- ko if: type === "dropdown" -->
+        <div class="toolbar-group" data-bind="visible: visible">
+            <div class="dropdown" data-bind="attr: {id: (id + '-dropdown')}">
+                <button role="menu" class="toolbar-group-button" data-bind="hasFocus: focused, attr: {id: id, title: title, 'aria-label': displayName},  event: { mousedown: mouseDown, keydown: keyDown, keyup: keyUp }, enable: enabled">
+                    <div class="toolbar-group-button-icon">
+                        <div class="toolbar_icon" data-bind="icon: icon"></div>
+                    </div>
+                    <span data-bind="text: displayName"></span>
+                </button>
+            </div>
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: type === "separator" -->
+        <div class="toolbar-group vertical-separator" data-bind="visible: visible"></div>
+        <!-- /ko -->
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,422 @@
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  /*[{scrollbar-background}]*/
+  border: 1px solid transparent;
+  /*[1px solid {scrollbar-border}]*/
+}
+::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  /*[{scrollbar-thumb-background}]*/
+  border: 1px solid transparent;
+  /*[1px solid {scrollbar-thumb-border}]*/
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: transparent;
+  /*[{scrollbar-thumb-hover-background}]*/
+}
+::-webkit-scrollbar-thumb:active {
+  background-color: transparent;
+  /*[{scrollbar-thumb-active-background}]*/
+}
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+  /*[{plugin-background-color}]*/
+}
+html,
+body {
+  background: transparent;
+  /*[{plugin-background-color}]*/
+  height: 100%;
+}
+h1 {
+  font: 150%;
+  font-weight: normal;
+}
+h2 {
+  font: 120%;
+  font-weight: normal;
+}
+hr {
+  height: 1px;
+  border: none;
+  color: #CCCEDB;
+  /*[{environment-page-sidebar-expander-separator}]*/
+}
+input,
+textarea,
+select {
+  outline: none;
+  padding: 5px;
+}
+input[type=button],
+textarea[type=button],
+select[type=button] {
+  padding: 5px;
+  margin-right: 10px;
+  word-spacing: normal;
+  color: #1E1E1E;
+  /*[{common-controls-button-foreground}]*/
+  background-color: #ECECF0;
+  /*[{common-controls-button-background}]*/
+  border: 1px solid #CCCEDB;
+  /*[1px solid {common-controls-button-border}]*/
+}
+input[type=button]:hover,
+textarea[type=button]:hover,
+select[type=button]:hover {
+  color: #F1F1F1;
+  /*[{common-controls-button-hover-foreground}]*/
+  background-color: #C9DEF5;
+  /*[{common-controls-button-hover-background}]*/
+  border: 1px solid #3399FF;
+  /*[1px solid {common-controls-button-border-hover}]*/
+}
+input[type=button]:focus,
+textarea[type=button]:focus,
+select[type=button]:focus {
+  border: 1px solid #3399FF;
+  /*[1px solid {common-controls-button-border-hover}]*/
+}
+input[type=button]:disabled,
+textarea[type=button]:disabled,
+select[type=button]:disabled {
+  color: #A2A4A5;
+  /*[{common-controls-button-disabled-foreground}]*/
+  background-color: #F5F5F5 ;
+  /*[{common-controls-button-disabled-background}]*/
+  border: 1px solid #CCCEDB;
+  /*[1px solid {common-controls-button-border-disabled}]*/
+}
+select[disabled] {
+  color: #A2A4A5;
+  /*[{common-controls-button-disabled-foreground}]*/
+  background-color: #F5F5F5 ;
+  /*[{common-controls-button-disabled-background}]*/
+  border: 1px solid #CCCEDB;
+  /*[1px solid {common-controls-button-border-disabled}]*/
+}
+input[type=text]:focus,
+input[type=number]:focus,
+input[type=number]:hover,
+input[type=datetime-local]:focus,
+select:focus,
+textarea:hover,
+textarea:focus {
+  border: 1px solid #007ACC;
+  /*[1px solid {common-controls-button-border-hover}]*/
+}
+/* inline-button controls should not have padding nor margin*/
+.inline-button {
+  display: inline-block;
+  word-spacing: normal;
+  color: #1E1E1E;
+  /*[{common-controls-button-foreground}]*/
+  background-color: #ECECF0;
+  /*[{common-controls-button-background}]*/
+  border: 1px solid #CCCEDB;
+  /*[1px solid {common-controls-button-border}]*/
+  outline: none;
+}
+.inline-button:hover,
+.inline-button:focus {
+  border: 1px solid #3399FF;
+  /*[1px solid {common-controls-button-border-hover}]*/
+}
+.inline-button:disabled {
+  color: #A2A4A5;
+  /*[{common-controls-button-disabled-foreground}]*/
+  background-color: #F5F5F5;
+  /*[{common-controls-button-disabled-background}]*/
+  border: 1px solid #CCCEDB;
+  /*[1px solid {common-controls-button-border-disabled}]*/
+}
+input[type=radio]:focus,
+input[type=checkbox]:focus {
+  outline: 1px solid #3399FF;
+  /*[1px solid {common-controls-button-border-hover}]*/
+}
+input[readonly],
+textarea[readonly] {
+  color: transparent;
+  /*[{common-controls-button-foreground}]*/
+  background-color: #F5F5F5;
+  /*[{common-controls-button-disabled-background}]*/
+  border: 1px solid #CCCEDB;
+  /*[1px solid {common-controls-button-border-disabled}]*/
+}
+input::selection,
+textarea::selection {
+  color: #FFFFFF;
+  /*[{common-controls-textbox-selected-text}]*/
+  background-color: #3399FF;
+  /*[{common-controls-textbox-selected-background}]*/
+}
+.invalid-field {
+  border: 1px solid red;
+}
+.dialog {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+}
+.dialog .radio-group {
+  margin-top: 1em;
+  margin-bottom: .75em;
+}
+.dialog .radio-group .radio-group-label {
+  margin-bottom: .5em;
+}
+.dialog .radio-group .radio-group-subgroup {
+  margin-left: 20px;
+}
+.dialog .radio-group .radio-group-subgroup .radio-group-subgroup-select {
+  width: 100%;
+}
+.dialog .radio-group .choose-access-level {
+  margin-bottom: .75em;
+}
+.dialog .radio-group .choose-access-level > label {
+  vertical-align: middle;
+}
+.dialog .radio-group .choose-access-level > label > input {
+  vertical-align: bottom;
+}
+.secondary-label {
+  color: #A2A4A5;
+  /*[{common-controls-button-disabled-foreground}]*/
+}
+.row {
+  display: block;
+  margin: 10px 0px;
+}
+.row > *:not(:first-child) {
+  margin-top: 5px;
+}
+.row > input,
+.row > textarea,
+.row > select {
+  width: 100%;
+}
+.row .environment-management-button {
+  width: 25%;
+  margin-bottom: 6px;
+}
+.warning {
+  color: #DD0000;
+  /*[{common-controls-warning-text}]*/
+  background-color: transparent;
+  /*[{common-controls-warning-text-background}]*/
+  padding-right: 0px;
+}
+/* The browse-group class styles a text input and a "..." button into a single row.
+    Must be structured like this:
+
+        <div class="input browse-group">
+            <div>
+                <input type="text" />
+            </div>
+            <input type="button" value="..." />
+        </div>
+*/
+.browse-group {
+  /* This is the "..." button */
+}
+.browse-group > div {
+  margin-right: 27px;
+}
+.browse-group > div input[type=text] {
+  width: 100%;
+  float: left;
+  box-sizing: border-box;
+}
+.browse-group input[type=button] {
+  min-width: 0;
+  width: 25px;
+  padding-left: 0;
+  padding-right: 0;
+  vertical-align: middle;
+  margin: 0 0 0 2px;
+}
+.inline-group {
+  display: inline;
+}
+.inline-block-group {
+  display: inline-block;
+}
+.inline-block-group .inline-group > a {
+  vertical-align: middle;
+  padding-top: 28px;
+  float: left;
+}
+.inline-block-group .inline-group > .buttons {
+  vertical-align: middle;
+  float: right;
+}
+.inline-block-group .inline-group > .buttons > *:last-child {
+  margin-right: 0px;
+}
+.inline-group-left {
+  float: left;
+  margin-top: 6px;
+}
+.inline-group-left > input,
+.inline-group-left > label {
+  vertical-align: middle;
+}
+.custom-api-input {
+  margin-top: 6px;
+}
+.buttons {
+  bottom: 20px;
+  /* .dialog:padding-top */
+  position: absolute;
+  right: 30px;
+  /* .dialog:padding-right */
+  margin-top: 6px;
+}
+.buttons > *:last-child {
+  margin-right: 0px;
+}
+.right-bottom-buttons {
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
+  margin-top: 6px;
+}
+.vertical-buttons {
+  display: table;
+}
+.vertical-buttons button {
+  display: table-row;
+  width: 100%;
+  margin-bottom: 14px;
+}
+.no-bullets {
+  list-style: none;
+}
+.list {
+  list-style: none;
+  margin-left: 10px;
+}
+.clear {
+  clear: both;
+}
+.popup {
+  display: none;
+}
+.popup.active {
+  display: block;
+}
+.full-width {
+  width: 100%;
+}
+/* Storage Table Related Dialogs
+*************************************************/
+.table-storage-dialog h1 {
+  margin-bottom: 12px;
+}
+.table-storage-dialog input,
+.table-storage-dialog select {
+  height: 30px;
+}
+.table-storage-dialog textarea {
+  resize: none;
+}
+.table-storage-dialog input[readonly],
+.table-storage-dialog textarea[readonly] {
+  background-color: #EEEEF2;
+  /*[{plugin-textbox-background-color}]*/
+  border: 1px solid #CCCEDB;
+  /*[1px solid {plugin-textbox-border-color}]*/
+}
+.table-storage-dialog table th {
+  padding: 6px 12px 6px 12px;
+  background-color: transparent;
+  border: 1px solid #CCCEDB;
+  /*[1px solid {common-controls-button-border-disabled}]*/
+}
+.table-storage-dialog table button {
+  padding: 5px;
+}
+.table-storage-dialog .buttons {
+  margin: 0;
+  /* Cancel this margin */
+}
+.table-storage-dialog .dialog {
+  padding: 12px 36px 12px 24px;
+}
+.table-storage-dialog .property-table-body {
+  min-width: auto;
+}
+.table-storage-dialog .inline-group > .buttons > *:last-child {
+  margin-right: 2px;
+}
+.one-px {
+  width: 1px;
+}
+#td-armEndpoint {
+  padding-bottom: 00px;
+  white-space: nowrap;
+}
+#td-armEndpointHelpLink {
+  padding-bottom: 10px;
+  white-space: nowrap;
+}
+.table-info {
+  width: 100%;
+}
+.table-info td {
+  padding-bottom: 5px;
+  white-space: nowrap;
+}
+.table-info .cell-label {
+  white-space: nowrap;
+  font-weight: bold;
+  padding-right: 5px;
+}
+.table-info .cell-data {
+  padding-left: 25px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 425px;
+}
+.table-info .cell-input {
+  padding: 5px;
+  width: 100%;
+}
+.table-info .warning {
+  font-weight: bold;
+}
+/* Conflicts dialog
+*************************************************/
+.conflicts-dialog h2 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+.conflicts-dialog hr {
+  margin-top: 20px;
+  margin-bottom: 14px;
+  border: 1px solid #CCCEDB;
+  /*[1px solid {environment-page-sidebar-expander-separator}]*/
+}
+.conflicts-dialog .vertical-buttons button {
+  padding: 5px 30px;
+}
+.sign-in-spinner {
+  width: 48px;
+  height: 48px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 25px;
+  margin-bottom: auto;
+  display: block;
+}
+.sign-in-title {
+  margin-top: 150px;
+  text-align: center;
+}

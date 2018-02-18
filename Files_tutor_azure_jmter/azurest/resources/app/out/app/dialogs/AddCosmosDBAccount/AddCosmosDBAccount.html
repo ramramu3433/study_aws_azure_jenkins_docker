@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html class="page" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - Connect to Azure Cosmos DB</title>
+
+    <link rel="stylesheet" href="./AddCosmosDBAccount.css" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel">
+        <div class="content">
+            <div class="row">
+                <label for="defaultExperience" data-bind="text: defaultExperienceLabel"></label>
+                <select id="defaultExperience" data-bind="options: supportExperiences, optionsText: 'display', value: defaultExperience"></select>
+            </div>
+            <div class="row">
+                <label for="connectionString" data-bind="text: connectionStringLabel"></label>
+                <input id="connectionString" type="text" data-bind="value: connectionString, valueUpdate: 'afterkeydown',
+                css: { 'invalid-field': isInvalidConnectionString },
+                attr: { title: connectionStringTooltip, placeholder: connectionStringPlaceHolder },
+                hasFocus: true" />
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+</body>
+
+</html>

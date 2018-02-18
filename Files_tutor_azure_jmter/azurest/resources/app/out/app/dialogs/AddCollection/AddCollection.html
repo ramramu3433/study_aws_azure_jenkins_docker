@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html class="page" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - Create Collection</title>
+
+    <link rel="stylesheet" href="./AddCollection.css" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel">
+        <div class="title" id="dialogTitle" data-bind="text: titleLabel"></div>
+
+        <div class="content">
+            <div class="row">
+                <label for="databaseId" data-bind="text: databaseIdLabel"></label>
+                <input id="databaseId" type="text" data-bind="value: databaseId, enable: false" />
+            </div>
+
+            <div class="row">
+                <label for="collectionId" data-bind="text: collectionIdLabel"></label>
+                <input id="collectionId" type="text" data-bind="value: collectionId, valueUpdate: 'afterkeydown',
+                css: { 'invalid-field': isInvalidCollectionId },
+                attr: { title: collecionIdTooltip, placeholder: collectionIdPlaceHolder },
+                hasFocus: true" />
+            </div>
+
+            <div class="row">
+                <div class="add-collection-group-field">
+                    <label id="storageCapacityLabel" data-bind="text: storageCapacityLabel"></label>
+                </div>
+                <div class="add-collection-group-field">
+                    <input type="radio" id="fixed" value="fixed" data-bind="checked: storageCapacityOptions"></input>
+                    <label for="fixed" data-bind="text: fixedLabel"></label>
+                </div>
+                <div class="add-collection-group-field">
+                    <input type="radio" id="unlimited" value="unlimited" data-bind="checked: storageCapacityOptions"></input>
+                    <label for="unlimited" data-bind="text: unlimitedLabel"></label>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="throughput" data-bind="text: throughputLabel"></label>
+                <input id="throughput" type="number" data-bind="value: throughput, valueUpdate: 'afterkeydown',
+                css: { 'invalid-field': isInvalidThroughput },
+                attr: { title: throughputTooltip, step: throughputStep }" />
+            </div>
+
+            <div class="row">
+                <label for="partitionKey" data-bind="text: partitionKeyLabel"></label>
+                <input id="partitionKey" placeholder="e.g., /address/zipCode" type="text" data-bind="value: partitionKey,
+                valueUpdate: 'afterkeydown',
+                css: { 'invalid-field': isInvalidPartitionKey },
+                attr: { title: partitionKeyTooltip, placeholder: partitionKeyPlaceHolder }" />
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+</body>
+
+</html>

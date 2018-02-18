@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 275,
+        "width": 500
+    },
+    "view": "app/dialogs/Rename/RenameView.html",
+    "viewModel": "app/dialogs/Rename/RenameViewModel"
+}

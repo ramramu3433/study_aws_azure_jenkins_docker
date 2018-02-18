@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - Generate Shared Access Signature</title>
+
+    <link rel="stylesheet" href="./GenerateSas.css" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="default-title" data-bind="with: generateSasPanel">
+        <div class="title" id="default-title" data-bind="text: titleLabel"></div>
+
+        <div class="content">
+            <div class="generate-sas-field-table">
+                <div class="generate-sas-table-row" data-bind="visible: resourceType !== 'account'">
+                    <label class="generate-sas-table-label" for="policy" data-bind="text: policyLabel"></label>
+                    <select class="generate-sas-table-input" id="policy" data-bind="options: accessPolicies, value: accessPolicy" autofocus></select>
+                </div>
+
+                <div class="generate-sas-table-row">
+                    <label class="generate-sas-table-label" for="startdate" data-bind="text: startTimestampLabel"></label>
+                    <input class="generate-sas-table-input" type="datetime-local" id="startdate" data-bind="value: startTimestamp, enable: noAccessPolicy, css: { 'invalid-field': isInvalidStartTimestamp },
+                                      attr: { title: startTimestampTooltip }">
+                    </input>
+                </div>
+
+                <div class="generate-sas-table-row">
+                    <label class="generate-sas-table-label" for="enddate" data-bind="text: expiryTimestampLabel"></label>
+                    <input class="generate-sas-table-input" type="datetime-local" id="enddate" data-bind="value: expiryTimestamp, enable: noAccessPolicy, , css: { 'invalid-field': isInvalidExpiryTimestamp },
+                                      attr: { title: expiryTimestampTooltip }">
+                    </input>
+                </div>
+            </div>
+
+            <div class="generate-sas-row">
+                <div class="generate-sas-group-field">
+                    <label id="timeZoneLabel" data-bind="text: timeZoneLabel"></label>
+                </div>
+                <div class="generate-sas-group-field">
+                    <input class="generate-sas-inline-input" type="radio" name="timezone" id="local" value="local" aria-describedby="timeZoneLabel"
+                        data-bind="checked: timeZone"></input>
+                    <label for="local" data-bind="text: localTimeLabel"></label>
+                </div>
+                <div>
+                    <input class="generate-sas-inline-input" type="radio" name="timezone" id="utc" value="utc" data-bind="checked: timeZone"></input>
+                    <label for="utc" data-bind="text: utcLabel"></label>
+                </div>
+            </div>
+
+            <div class="generate-sas-fieldset">
+                <legend class="generate-sas-fieldset-legend" data-bind="text: permissionsLabel"></legend>
+                <div class="scroll-box-tall" data-bind="foreach: permissionViewModels">
+                    <label class="generate-sas-label" data-bind="attr: { 'for': label + '-permission' }">
+                        <input class="generate-sas-inline-input" type="checkbox"
+                               data-bind="attr: { 'id': label + '-permission' }, value: value, checked: isSelected, enable: $parent.noAccessPolicy">
+                        </input>
+                        <span data-bind="text: label"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- ko if: resourceType === "blob" && isSasForBlob -->
+            <div class="generate-sas-fieldset">
+                <div class="generate-sas-row">
+                    <input class="generate-sas-inline-input" type="checkbox" id="useContainer" data-bind="checked: generateContainerLevelSas"></input>
+                    <label for="useContainer" data-bind="text: generateContainerLevelSasLabel"></label>
+                </div>
+                <div class="generate-sas-row warning" role="alert" aria-atomic="true" data-bind="text: generateContainerLevelSasMessage"></div>
+            </div>
+            <!-- /ko -->
+
+            <!-- ko if: resourceType === "table" -->
+            <div class="generate-sas-fieldset">
+                <legend class="generate-sas-fieldset-legend" data-bind="text: entityRestrictionsLabel" tabindex="0"></legend>
+                <div class="group-box">
+                    <div class="generate-sas-table">
+                        <div class="generate-sas-table-row">
+                            <label class="generate-sas-table-label" data-bind="text: rangeStartLabel"></label>
+                            <div class="generate-sas-table-input">
+                                <input id="startpk" data-bind="
+                                    value: startPartitionKey,
+                                    enable: noAccessPolicy,
+                                    attr: { placeholder: rangeStartPKPlaceholder }
+                                    ">
+                                </input>
+                                <span>&nbsp;,&nbsp;</span>
+                                <input id="startrk" data-bind="
+                                    value: startRowKey,
+                                    enable: noAccessPolicy,
+                                    attr: { placeholder: rangeStartRKPlaceholder }
+                                    ">
+                                </input>
+                            </div>
+                        </div>
+                        <div class="generate-sas-table-row">
+                            <label class="generate-sas-table-label" data-bind="text: rangeEndLabel"></label>
+                            <div class="generate-sas-table-input">
+                                <input id="endpk" data-bind="
+                                    value: endPartitionKey,
+                                    enable: noAccessPolicy,
+                                    attr: { placeholder: rangeEndPKPlaceholder }
+                                    ">
+                                </input>
+                                <span>&nbsp;,&nbsp</span>
+                                <input id="endrk" data-bind="
+                                    value: endRowKey,
+                                    enable: noAccessPolicy,
+                                    attr: { placeholder: rangeEndRKPlaceholder }
+                                    ">
+                                </input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /ko -->
+
+            <!-- ko if: resourceType === "account" -->
+            <div class="generate-sas-fieldset">
+                <legend class="generate-sas-fieldset-legend" data-bind="text: supportedServicesLabel"></legend>
+                <div class="scroll-box" data-bind="foreach: supportedServices">
+                    <label class="generate-sas-label" data-bind="attr: { 'for': label + '-service-type' }">
+                        <input class="generate-sas-inline-input" type="checkbox"
+                               data-bind="attr: { 'id': label + '-service-type' }, value: value, checked: isSelected, disable: isDisabled">
+                        </input>
+                        <span data-bind="text: label"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="generate-sas-fieldset">
+                <legend class="generate-sas-fieldset-legend" data-bind="text: supportedTypesLabel"></legend>
+                <div class="scroll-box" data-bind="foreach: supportedTypes">
+                    <label class="generate-sas-label" data-bind="attr: { 'for': label + '-resource-type' }">
+                        <input class="generate-sas-inline-input" type="checkbox"
+                            data-bind="attr: { 'id': label + '-resource-type' }, value: value, checked: isSelected">
+                        </input>
+                        <span data-bind="text: label"></span>
+                    </label>
+                </div>
+            </div>
+            <!-- /ko -->
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+
+    <div id="show-panel" class="dialog-panel" data-bind="with: showSasPanel">
+        <div class="title" data-bind="text: titleLabel"></div>
+
+        <div class="content">
+            <fieldset id="show-sas-topmost-field" class="show-sas-fieldset">
+                <legend data-bind="text: itemType"></legend>
+                <input class="show-sas-field show-sas-readonly" type="text" readonly data-bind="value: itemName"></input>
+            </fieldset>
+
+            <fieldset class="show-sas-fieldset">
+                <legend data-bind="text: connectionLabel"></legend>
+                <div class="show-sas-field">
+                    <input class="show-sas-field-text show-sas-readonly" type="text" readonly id="sasUrl" data-bind="value: sasConnection, attr: { placeholder: waitLabel }"></input>
+                    <button type="button" for="sasUrl" class="inline-button show-sas-field-copy-button" data-bind="text: copyButtonLabel, click: copyConnectionToClipboard"></button>
+                </div>
+            </fieldset>
+
+            <fieldset class="show-sas-fieldset">
+                <legend data-bind="text: sasQueryStringLabel"></legend>
+                <div class="show-sas-field">
+                    <input class="show-sas-field-text show-sas-readonly" type="text" readonly id="sasToken" data-bind="value: sasToken, attr: { placeholder: waitLabel }"></input>
+                    <button type="button" for="sasToken" class="inline-button show-sas-field-copy-button" data-bind="text: copyButtonLabel, click: copyTokenToClipboard"></button>
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+</body>
+
+</html>

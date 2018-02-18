@@ -1,0 +1,26 @@
+Token-sas
+?sv=2017-04-17&ss=bfqt&srt=sco&sp=rwdlacup&se=2018-02-04T05:09:50Z&st=2018-02-03T21:09:50Z&sip=0.0.0.0&spr=https,http&sig=k9Ev25kw91smKIyFGGuXUBj%2BzL%2F75MI0lzwR3AdDDfI%3D
+
+
+File sas 
+https://defaultdiag452.file.core.windows.net/?sv=2017-04-17&ss=bfqt&srt=sco&sp=rwdlacup&se=2018-02-04T05:09:50Z&st=2018-02-03T21:09:50Z&sip=0.0.0.0&spr=https,http&sig=k9Ev25kw91smKIyFGGuXUBj%2BzL%2F75MI0lzwR3AdDDfI%3D
+
+Blob sas
+https://defaultdiag452.blob.core.windows.net/?sv=2017-04-17&ss=bfqt&srt=sco&sp=rwdlacup&se=2018-02-04T05:09:50Z&st=2018-02-03T21:09:50Z&sip=0.0.0.0&spr=https,http&sig=k9Ev25kw91smKIyFGGuXUBj%2BzL%2F75MI0lzwR3AdDDfI%3D
+
+queue sas
+https://defaultdiag452.queue.core.windows.net/?sv=2017-04-17&ss=bfqt&srt=sco&sp=rwdlacup&se=2018-02-04T05:09:50Z&st=2018-02-03T21:09:50Z&sip=0.0.0.0&spr=https,http&sig=k9Ev25kw91smKIyFGGuXUBj%2BzL%2F75MI0lzwR3AdDDfI%3D
+
+Table sas
+https://defaultdiag452.table.core.windows.net/?sv=2017-04-17&ss=bfqt&srt=sco&sp=rwdlacup&se=2018-02-04T05:09:50Z&st=2018-02-03T21:09:50Z&sip=0.0.0.0&spr=https,http&sig=k9Ev25kw91smKIyFGGuXUBj%2BzL%2F75MI0lzwR3AdDDfI%3D
+
+
+connection string:
+
+DefaultEndpointsProtocol=https;AccountName=defaultdiag452;AccountKey=/gdjdneLbmfaRbFi+fDQ/6wK1poLTaOp/d9maaMDjKg68ymq46VektkdSGazgGQFq4vKf4Mv0SboOAWwUROuNA==;EndpointSuffix=core.windows.net
+
+key1:
+
+/gdjdneLbmfaRbFi+fDQ/6wK1poLTaOp/d9maaMDjKg68ymq46VektkdSGazgGQFq4vKf4Mv0SboOAWwUROuNA==s
+ss
+

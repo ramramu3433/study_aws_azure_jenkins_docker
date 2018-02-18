@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 600,
+        "width": 520
+    },
+    "view": "app/dialogs/FlobProperties/FlobPropertiesView.html",
+    "viewModel": "app/dialogs/FlobProperties/FlobPropertiesViewModel"
+}

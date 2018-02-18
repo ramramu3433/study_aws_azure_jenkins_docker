@@ -1,0 +1,121 @@
+Launching Kubernetes in azure
+
+For this u need service principal to be created
+
+Role creation
+az login -u <user> -p <password>
+az group create --name cluster  --location CentralUS
+
+enabling k8s preview 
+az login -u <user> -p <password>
+az provider register -n Microsoft.ContainerService
+az group create --name cluster  --location CentralUS
+create a sp for kubernetes cluster role as 
+az ad sp create-for-rbac --role="Owner" --scopes="/subscriptions/d835bb88-390c-4c23-b425-e4d06fb01540/resourceGroups/cluster"
+az aks browse opens local tunnel 
+to browse the kube ui
+
+
+az aks get-credentials --resource-group <rgroup> --name <cluster_name>
+
+after the above step you will get the config file download and will be downloaded into $HOME/.kube/config and u can use kubectl cli to run applications.
+
+
+az ad sp create-for-rbac --role="Owner" --scopes="/subscriptions/d835bb88-390c-4c23-b425-e4d06fb01540/resourceGroups/clusterk8s"
+
+
+westus
+{
+  "appId": "48679ea0-2af8-4fd8-8509-e4629973ba0d",
+  "displayName": "azure-cli-2018-02-17-05-34-58",
+  "name": "http://azure-cli-2018-02-17-05-34-58",
+  "password": "31bd1247-2038-4158-9618-f1a344d97f21",
+  "tenant": "1adb62a9-d916-4fb4-8e33-74e6f348ddec"
+}
+eastus
+{
+  "appId": "ddeb384f-e0d5-4594-925f-5173a6302178",
+  "displayName": "azure-cli-2018-02-17-05-39-12",
+  "name": "http://azure-cli-2018-02-17-05-39-12",
+  "password": "6970df9a-9bde-4528-a7b9-51b6d3fee654",
+  "tenant": "1adb62a9-d916-4fb4-8e33-74e6f348ddec"
+}
+
+centralus
+{
+{
+  "appId": "4544feae-bc7a-4136-828c-1b8c658c484b",
+  "displayName": "azure-cli-2018-02-17-06-51-29",
+  "name": "http://azure-cli-2018-02-17-06-51-29",
+  "password": "4166b2ec-61cf-4886-9a61-fa373ff184ed",
+  "tenant": "1adb62a9-d916-4fb4-8e33-74e6f348ddec"
+}
+}
+
+
+
+aws
+____________________________
+
+account id:512571996151
+
+ARN for resource s3:
+
+arn:aws:s3:::cf-templates-1okweusmjt807-us-east-2
+
+Developement ----> production s3 bucket only
+
+should use arn if u give single bucket permission
+ role policy should be
+
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:ListAllMyBuckets",
+      "Resource": "arn:aws:s3:::*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket",
+        "s3:GetBucketLocation"
+       ],
+      "Resource": "arn:aws:s3:::productionapp"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": "arn:aws:s3:::productionapp/*"
+    }
+  ]
+}
+
+for the above policy , create a role and associate type as another account role
+
+in the development account side::::
+assume role in developement account:
+{
+  "Version": "2012-10-17",
+  "Statement": {
+    "Effect": "Allow",
+    "Action": "sts:AssumeRole",
+    "Resource": "arn:aws:iam::PRODUCTION-ACCOUNT-ID:role/UpdateApp"
+  }
+}
+
+
+
+To do every possible thing in aws , you need the permission for the user . so need to have a role create to assign permission..
+eventhough we allowed cross account communication, but the user in this account needs to be checked by admin before doing anything , so its important to create policies as per you reqs and assign it to role , which in turn you can assign it to user , 
+
+role can can have have multiple policies , so if u need to add more permissions to same user , don't really need to create a role each time and assign it , instead of that you can just create a policy and assign it to the role where user is already attached....
+
+
+To assume role in this case u need to resource ARN of the role add json
+

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html class="page" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - CORS Settings</title>
+
+    <link rel="stylesheet" href="./CorsSettings.css" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="dialogTitle" aria-describedby="corsSettingsInstructionLabel"
+        data-bind="with: defaultPanel">
+        <div class="title" id="dialogTitle" data-bind="text: titleLabel"></div>
+
+        <div class="content">
+            <div class="row">
+                <label id="corsSettingsInstructionLabel" data-bind="text: corsSettingsDescription"></label>
+            </div>
+
+            <div class="row">
+                <label id="ruleLabel">Rules List:</label>
+                <div class="cors-rule-list">
+                    <ul data-bind="foreach: corsRuleList" aria-labelledby="ruleLabel">
+                        <li class="list-item" data-bind="
+                                click: $parent.handleClick,
+                                attr: {
+                                    title: allowedOriginsText
+                                },
+                                css: { 'selected': isSelected() },
+                                event: { keypress: $parent.onKeyPress }" tabindex="0">
+                            <span data-bind="text: displayName"></span>
+                        </li>
+                    </ul>
+                    <div class="list-buttons">
+                        <input type="button" data-bind="value: addLabel, click: openAddRulePanel" />
+                        <input type="button" data-bind="value: editLabel, click: openEditRulePanel, enable: canEdit" />
+                        <input type="button" data-bind="value: deleteLabel, click: deleteRule, enable: canDelete" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+
+    <div id="editor-panel" class="dialog-panel" role="dialog" aria-labelledby="newRuleLabel" aria-describedby="instructionLabel"
+        data-bind="with: editPanel">
+        <div class="title" id="newRuleLabel" data-bind="text: titleLabel"></div>
+
+        <div class="content">
+            <div class="row">
+                <label id="instructionLabel">Separate multiple values with a comma. All fields are required.</label>
+            </div>
+
+            <div class="row">
+                <label for="allowedOriginsLabel" data-bind="text: allowedOriginsLabel"></label>
+                <input id="allowedOriginsLabel" type="text" data-bind="textInput: allowedOriginsValue">
+            </div>
+
+            <div class="row">
+                <label for="allowedMethodsLabel" data-bind="text: allowedMethodsLabel"></label>
+                <input id="allowedMethodsLabel" type="text" data-bind="textInput: allowedMethodsValue">
+            </div>
+
+            <div class="row">
+                <label for="allowedHeadersLabel" data-bind="text: allowedHeadersLabel"></label>
+                <input id="allowedHeadersLabel" type="text" data-bind="textInput: allowedHeadersValue">
+            </div>
+
+            <div class="row">
+                <label for="exposedHeadersLabel" data-bind="text: exposedHeadersLabel"></label>
+                <input id="exposedHeadersLabel" type="text" data-bind="textInput: exposedHeadersValue">
+            </div>
+
+            <div class="row">
+                <label for="maxAgeInSecondsLabel" data-bind="text: maxAgeInSecondsLabel"></label>
+                <input id="maxAgeInSecondsLabel" type="number" min="0" data-bind="textInput: maxAgeInSecondsValue" style="width: 150px;">
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+</body>
+
+</html>

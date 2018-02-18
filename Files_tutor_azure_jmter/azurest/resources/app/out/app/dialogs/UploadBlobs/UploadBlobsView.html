@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - Upload Files to Blob Container</title>
+
+    <link rel="stylesheet" href="./UploadBlobs.css" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="dialogTitle">
+        <div class="title" id="dialogTitle" data-bind="text: title"></div>
+
+        <div class="content">
+            <div class="row">
+                <label for="caption" data-bind="text: filesOrFolderCaption"></label>
+                <div class="input-with-button">
+                    <input type="text" id="caption" readonly="readonly" data-bind="value: filesText, click: browseFiles" autofocus/>
+                    <input type="button" value="..." data-bind="click: browseFiles, attr: { 'aria-label': browseFilesLabel }" />
+                </div>
+            </div>
+            <div class="row">
+                <label for="blobType">Blob type</label>
+                <select id="blobType" data-bind="options: availableBlobTypes, optionsText: 'display', value: blobType"></select>
+                <div class="indent">
+                    <input type="checkbox" data-bind="checked: uploadVhdsAsPageBlobs, enable: uploadVhdsAsPageBlobsEnabled" />
+                    <label data-bind="text: uploadAsPageLabel"></label>
+                </div>
+            </div>
+            <div class="row">
+                <label for="uploadToDirectory">Upload to folder (optional)</label>
+                <input type="text" id="uploadToDirectory" data-bind="value: destinationBlobFolder" />
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - Connect File Share to VM</title>
+
+    <link rel="stylesheet" href="./ConnectFileShare.css" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="dialogTitle" aria-describedby="connectLabel">
+        <div class="title" id="dialogTitle" data-bind="text: titleLabel"></div>
+
+        <div class="content">
+            <div class="row">
+                <label id="connectLabel">To connect to this file share, run the following command from any Azure Windows virtual machine:</label>
+                <textarea rows="3" data-bind="textInput: commandText" readonly tabindex="0" autofocus aria-label="Command text" aria-describedby="connectLabel"></textarea>
+            </div>
+
+            <div class="note" tabindex="0" aria-labelledby="warning">
+                <img src="../../media/StorageExplorer/StatusWarning_16x.png" />
+                <label id="warning">Primary key could be used to do more than just read/write from the mounted drive.</label>
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+</body>
+
+</html>

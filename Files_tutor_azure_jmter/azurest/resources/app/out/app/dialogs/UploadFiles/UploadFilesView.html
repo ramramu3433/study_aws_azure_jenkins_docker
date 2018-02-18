@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+
+    <title>Microsoft Azure Storage Explorer - Upload Files to File Share</title>
+
+    <link rel="stylesheet" href="./UploadFiles.css" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="dialogTitle">
+        <div class="title" id="dialogTitle" data-bind="text: title"></div>
+
+        <div class="content">
+            <div class="row">
+                <label for="caption" data-bind="text: filesOrFolderCaption"></label>
+                <div class="input browse-group">
+                    <input type="text" id="caption" readonly="readonly" data-bind="value: filesText, click: browseFiles" autofocus/>
+                    <input type="button" value="..." data-bind="click: browseFiles, attr: { 'aria-label': browseFilesLabel }" />
+                </div>
+            </div>
+            <div class="row">
+                <label for="uploadToDirectory">Upload to directory (optional)</label>
+                <input id="uploadToDirectory" type="text" data-bind="value: destinationDirectory" />
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+</body>
+
+</html>

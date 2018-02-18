@@ -1,0 +1,13 @@
+/*******************************************************************************
+
+    plugin-mods.css: CSS stylesheet to add custom CSS for our Daytona plugins
+
+*/
+/* Universal properties */
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}

@@ -1,0 +1,995 @@
+/*******************************************************************************
+
+    Site.css: CSS stylesheet for the Cloud Explorer page
+
+    This file is organized according to CSS specificity, from least specific to
+    most specific, as defined by http://www.w3.org/TR/selectors/#specificity.
+
+    The location of a rule in this file can be determined by looking at each
+    selector, starting with the first, and determining its specificity. The
+    first selector determines the top-level section in the file. The second
+    selector determines the sub-section within that section, and so on.
+
+    This file recognizes three levels of specificity for a selector:
+
+      - Universal (e.g. *): styles all elements;
+      - Type (e.g. button): styles all elements of a specific type;
+      - Class (e.g. .icon): styles all elements with a specific class.
+
+    Class names should use hyphen-style, not camelCase style for naming. It
+    is not recommended to use both a type and class in a selector unless it
+    is truly warranted - such selectors often end up being too specific.
+
+    The class specificity is further categorized into two common usages:
+
+      - Adornments (e.g. .thick): configures an existing element type;
+      - Components (e.g. .tree): effectively derives a new element type.
+
+    Within these four specificity levels, selectors are ordered alphabetically,
+    which places any pseudo-class and pseudo-element embellishments after any
+    initial statement of the selector:
+
+      a { ... }
+          a:hover { ... }
+
+    After alphabetical ordering, rules with more selectors are placed after
+    rules with fewer selectors:
+
+      .tree { ... }
+          .tree .node { ... }
+
+    Next, rules with the same number of selectors but a different combinator
+    should be ordered according to the effective specificity of the result:
+
+      - Descendant selectors (A B): all Bs recursively under A;
+      - Child selectors (A > B): all Bs directly under A;
+      - General sibling selectors (A ~ B): all Bs that are siblings after A;
+      - Adjacent sibling selectors (A + B): any B that is the sibling after A.
+
+    Finally, rules that are identical through a certain selector should be
+    ordered by recursively applying all the above ordering rules starting
+    from the first selector that differs.
+
+    A component may be composed of a set of CSS rules that start with a single
+    class rule that applies in a global context, e.g. .tree. The ordering of
+    this set should eliminate the alphabetical ordering rule in favor of a more
+    logical ordering based on the intended visual layout, to aid in better
+    understanding of how the component is defined:
+
+      .tree { ... }
+          .tree .node { ... }
+              .tree .node .self { ... }
+              .tree .node .children { ... }
+
+    (Notice that the self rule comes before the children rule).
+
+    This ordering does not account for all the variations of CSS rules, but
+    defines a policy that represents a best practice for how to compose rules.
+
+    In terms of formatting, this file follows the default formatting rules
+    applied by the Visual Studio CSS editor when using Ctrl+K, Ctrl+D.
+
+*/
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  /*[{scrollbar-background}]*/
+  border: 1px solid transparent;
+  /*[1px solid {scrollbar-border}]*/
+}
+::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  /*[{scrollbar-thumb-background}]*/
+  border: 1px solid transparent;
+  /*[1px solid {scrollbar-thumb-border}]*/
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: transparent;
+  /*[{scrollbar-thumb-hover-background}]*/
+}
+::-webkit-scrollbar-thumb:active {
+  background-color: transparent;
+  /*[{scrollbar-thumb-active-background}]*/
+}
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+  /*[{plugin-background-color}]*/
+}
+/*******************************************************************************
+    Universal selectors (e.g. *)
+*/
+* {
+  box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  /*[{plugin-font-family, Arial, sans-serif}]*/
+  font-size: 9pt;
+  /*[{plugin-font-size}]*/
+  font-weight: normal;
+  /*[{plugin-font-weight}]*/
+}
+/*******************************************************************************
+    Type selectors (e.g. button)
+*/
+html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+img {
+  border: none;
+}
+/*******************************************************************************
+    Adornments (e.g. .thick)
+*/
+.scrollable {
+  overflow: auto;
+}
+.thick {
+  font-weight: bold;
+}
+.vsIconColor {
+  fill: #010101;
+}
+.link {
+  color: #0E70C0;
+  /*[{environment-panel-hyperlink}]*/
+}
+.link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #007ACC;
+  /*[{environment-panel-hyperlink-hover}]*/
+}
+.link.disabled,
+.link.disabled:hover {
+  text-decoration: none;
+  cursor: default;
+  color: #A2A4A5;
+  /*[{environment-panel-hyperlink-disabled}]*/
+}
+.remove {
+  padding-left: 10px;
+}
+/*******************************************************************************
+    Components (e.g. .tree)
+*/
+/*
+    Azure filter
+*/
+.azure-filter .scrollableContent {
+  overflow: auto;
+  height: auto;
+  /** The pixel value is the #header height + floatingButtons height + floatingButtons padding **/
+  max-height: calc(100vh - 125px);
+}
+.azure-filter .filter-footer {
+  height: 125px;
+}
+.azure-filter .instructions {
+  padding-bottom: 15px;
+  padding-left: 3px;
+}
+.azure-filter .account {
+  position: relative;
+  margin-left: 0px;
+  padding: 6px 5px 8px 45px;
+}
+.azure-filter .account .icon {
+  position: absolute;
+  top: 7px;
+  left: 3px;
+  bottom: 7px;
+  line-height: 32px;
+}
+.azure-filter .account .icon > img {
+  width: 32px;
+  height: 32px;
+}
+.azure-filter .account .status-glyph {
+  position: absolute;
+  top: 28px;
+  left: 23px;
+  line-height: 16px;
+}
+.azure-filter .account .status-glyph > img {
+  width: 16px;
+  height: 16px;
+}
+.azure-filter .account .actions {
+  position: absolute;
+  top: 3px;
+  left: 240px;
+}
+.azure-filter .account .information {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.azure-filter .account .information.error {
+  white-space: inherit;
+  text-overflow: ellipsis;
+}
+.azure-filter .account .information.no {
+  height: 100%;
+  line-height: 32px;
+}
+.azure-filter .account .information .name {
+  font-size: 133%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: -3px;
+}
+.azure-filter .account .information .name.no {
+  height: 100%;
+}
+.azure-filter .account .information .userInformation {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.azure-filter .account .information.error {
+  padding-top: 8px;
+}
+.azure-filter .accountContent .subscriptions {
+  padding-left: 43px;
+}
+.azure-filter .accountContent .subscriptions-loading {
+  padding-bottom: 3px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.azure-filter .accountContent .subscription {
+  padding-bottom: 3px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-left: 19px;
+}
+.azure-filter .accountContent .subscription input[type='checkbox'] {
+  margin-right: 0px;
+}
+.azure-filter .add {
+  padding-left: 3px;
+  padding-top: 5px;
+  padding-bottom: 18px;
+}
+.azure-filter.footer {
+  padding-top: 5px;
+  padding-left: 5px;
+  height: auto !important;
+}
+.azure-filter .buttons {
+  float: right;
+}
+.azure-filter .buttons > input[type='button'] {
+  margin-right: 5px;
+  margin-bottom: 5px;
+  height: 23px;
+  min-width: 72px;
+  word-spacing: normal;
+  color: #1E1E1E;
+  /*[{common-controls-button-foreground}]*/
+  background-color: #ECECF0;
+  /*[{common-controls-button-background}]*/
+  border: 1px solid #CCECDB;
+  /*[1px solid {common-controls-button-border}]*/
+}
+.azure-filter .buttons > input[type='button']:hover {
+  color: #1E1E1E;
+  /*[{common-controls-button-hover-foreground}]*/
+  background-color: #C9DEF5;
+  /*[{common-controls-button-hover-background}]*/
+  border: 1px solid #ECECF0;
+  /*[1px solid {common-controls-button-border-hover}]*/
+}
+.azure-filter .buttons > input[type='button']:disabled {
+  color: #A2A4A5;
+  /*[{common-controls-button-disabled-foreground}]*/
+  background-color: #F5F5F5;
+  /*[{common-controls-button-disabled-background}]*/
+  border: 1px solid #CCCEDB;
+  /*[1px solid {common-controls-button-border-disabled}]*/
+}
+.azure-filter.footer.strip .buttons,
+.azure-filter.strip .buttons {
+  margin-right: 0px;
+}
+/*
+    Container
+*/
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.container > .strip {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+}
+.container > .content.strip {
+  top: 0px;
+  bottom: 0px;
+}
+.container > .content.strip.collapsed {
+  height: auto !important;
+}
+.container > .footer.strip {
+  bottom: 0px;
+  white-space: nowrap;
+  height: 219px;
+}
+.container > .footer.strip.collapsed {
+  height: 39px !important;
+  top: auto !important;
+  visibility: hidden;
+}
+.container .divider {
+  position: absolute;
+  z-index: 10;
+  -webkit-user-select: none;
+  /* Chrome all / Safari all */
+  -moz-user-select: none;
+  /* Firefox all */
+  -ms-user-select: none;
+  /* IE 10+ */
+  user-select: none;
+}
+.container .divider.horizontal {
+  cursor: ns-resize;
+  height: 10px;
+  width: 100%;
+  top: 0;
+}
+.container .divider.vertical {
+  cursor: ew-resize;
+  width: 10px;
+  height: 100%;
+}
+/*
+    Context menu
+*/
+.context-menu {
+  position: absolute;
+  border: 1px solid #9BA7B7;
+  /*[1px solid {plugin-contextmenu-border-color}]*/
+  background-color: #EAF0FF;
+  /*[{plugin-contextmenu-background-color}]*/
+  outline: none;
+}
+.context-menu .list {
+  margin-left: 27px;
+  list-style: none;
+  padding: 2px;
+}
+.context-menu .list .item {
+  margin-left: -27px;
+  padding: 2px 42px 2px 0px;
+  height: 24px;
+  white-space: nowrap;
+  cursor: default;
+}
+.context-menu .list .item.disabled,
+.context-menu .list .item.disabled:hover {
+  color: #808080;
+  /*[{plugin-contextmenu-inactive-text-color}]*/
+  background-color: #EAF0FF;
+  /*[{plugin-contextmenu-background-color}]*/
+}
+.context-menu .list .item.selected,
+.context-menu .list .item:hover,
+.context-menu .list .item:focus {
+  color: transparent;
+  /*[{plugin-contextmenu-hover-text-color}]*/
+  background-color: #FDF4BF;
+  /*[{plugin-contextmenu-hover-color}]*/
+}
+.context-menu .list .item > .icon {
+  margin-left: 4px;
+  margin-right: 9px;
+  padding: 1px;
+  width: 18px;
+}
+.context-menu .list .item > .label {
+  text-decoration: none;
+  color: inherit;
+  cursor: default;
+}
+.context-menu .list .item.disabled > .label {
+  text-decoration: none;
+  color: inherit;
+  cursor: default;
+}
+/*
+    Feedback
+*/
+.feedback {
+  margin-bottom: 5px;
+  border-top: 1px solid #DDDDDD;
+  /*[1px solid {environment-page-sidebar-expander-separator}]*/
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.feedback .item {
+  display: block;
+  margin-top: 5px;
+  margin-left: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.highlight {
+  background: #FDFBAC;
+  /*[{tree-view-highlighted-span-background}]*/
+  color: #000000;
+  /*[{tree-view-highlighted-span-foreground}]*/
+}
+/*
+    Icon
+*/
+.icon {
+  display: inline-block;
+  line-height: 16px;
+}
+.icon > img {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+}
+/*
+    Informative
+*/
+.informative {
+  padding-top: 5px;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+.informative p {
+  padding-top: 5px;
+  text-align: center;
+}
+/*
+    Plugins
+*/
+.plugins > iframe {
+  visibility: hidden;
+  width: 0px;
+  height: 0px;
+}
+/*
+    Popup
+*/
+.popup {
+  display: none;
+}
+.popup.active {
+  display: block;
+}
+/*
+    Provider Sleeve
+*/
+.provider-sleeve {
+  height: 31px;
+  vertical-align: top;
+  white-space: nowrap;
+}
+.provider-sleeve .icon {
+  padding-top: 4px;
+  padding-left: 6px;
+}
+.provider-sleeve .icon img {
+  display: inline;
+  height: 24px;
+  width: 24px;
+}
+.provider-sleeve .label {
+  position: relative;
+  vertical-align: top;
+  left: 9px;
+  top: 9px;
+  display: inline;
+  font-size: 11px;
+  color: #6f6f6f;
+  /*[{panel-header-text}]*/
+  background-color: transparent;
+  /*[{panel-header-background}]*/
+  text-transform: uppercase;
+}
+/*
+    Node Details
+*/
+.node-details .tab-container {
+  flex: 0 1 auto;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  border-bottom: 3px solid #F5F5F5;
+  /*[3px solid {editortabs-tab-selected-border}]*/
+}
+.node-details .tab-content {
+  position: relative;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+.node-details .tab-content > * {
+  position: absolute;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+}
+.node-details .tab-container::last-child {
+  border-right: 0px;
+}
+.node-details .tab-container .tab-spacer {
+  flex-grow: 1;
+  background-color: #FFFFFF;
+  /*[{editortabs-tab-background}]*/
+  border-bottom: 1px solid #CCCEDB;
+  /*[1px solid {editortabs-tab-border}]*/
+  border-top: 1px solid #CCCEDB;
+  /*[1px solid {editortabs-tab-border}]*/
+}
+.node-details .tab {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 6px;
+  cursor: default;
+  color: black;
+  /*[{editortabs-tab-text}]*/
+  background-color: #FFFFFF;
+  /*[{editortabs-tab-background}]*/
+  border-right: 1px solid #CCCEDB;
+  /*[1px solid {editortabs-tab-border}]*/
+  border-bottom: 1px solid #CCCEDB;
+  /*[1px solid {editortabs-tab-border}]*/
+  border-top: 1px solid #CCCEDB;
+  /*[1px solid {editortabs-tab-border}]*/
+}
+.node-details .tab:hover,
+.node-details .tab:focus {
+  color: #000000;
+  /*[{editortabs-tab-hover-text}]*/
+  background-color: #DFE5F3;
+  /*[{editortabs-tab-hover-background}]*/
+  border-bottom-color: #CCCEDB;
+  /*[{editortabs-tab-hover-border}]*/
+}
+.node-details .tab.active,
+.node-details .tab.active:hover,
+.node-details .tab.active:focus {
+  color: #000000;
+  /*[{editortabs-tab-selected-text}]*/
+  background-color: #F5F5F5;
+  /*[{editortabs-tab-selected-background}]*/
+  border-bottom-color: #F5F5F5;
+  /*[{editortabs-tab-selected-border}]*/
+}
+.node-details .tab .tab-name {
+  font-weight: 500;
+}
+.node-details .expander {
+  float: right;
+  cursor: default;
+  background: white;
+  /*[{editortabs-tab-background}]*/
+  padding-top: 9px;
+  border-bottom: 1px solid #CCCEDB;
+  /*[1px solid {editortabs-tab-border}]*/
+  border-top: 1px solid #CCCEDB;
+  /*[1px solid {editortabs-tab-border}]*/
+}
+.node-details .expander:hover {
+  background-color: #FCFCFC;
+  /*[{common-controls-inner-tab-inactive-hover-background}]*/
+}
+/*
+    Panel
+*/
+.panel {
+  display: none;
+}
+.panel.active {
+  display: block;
+}
+/*
+    Properties Details
+*/
+.property-details .spinner {
+  top: 70%;
+}
+.property-details .table {
+  width: 100%;
+  color: gray;
+  /*[{plugin-table-header-color}]*/
+}
+.property-details .table td {
+  padding: 2px;
+}
+.property-details .table td:nth-child(1) {
+  border: none;
+  padding-right: 8px;
+  border-right: 1px solid #DDDDDD;
+  /*[1px solid {environment-page-sidebar-expander-separator}]*/
+}
+.property-details .table td:nth-child(2) {
+  padding-left: 10px;
+  width: 100%;
+}
+.property-details .table td:nth-child(2) input {
+  border: none;
+  width: 100%;
+  height: 100%;
+  padding: 1px 0px;
+  background-color: #ffffff;
+  /*[{plugin-background-color}]*/
+}
+.property-details .table td:nth-child(2) input:focus {
+  padding: 0px 0px;
+  border: 1px solid #3399ff;
+  /*[1px solid {plugin-textbox-border-color}]*/
+}
+/*
+    Action Details
+*/
+.action-details .list {
+  margin-top: 2px;
+  margin-left: 10px;
+  list-style: none;
+  cursor: default;
+}
+.action-details .item {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+.action-details .item .icon {
+  width: 16px;
+}
+.action-details .item .label {
+  margin-left: 6px;
+}
+.action-details .item.disabled .label,
+.action-details .item.disabled:hover .label {
+  text-decoration: none;
+  cursor: default;
+  color: #808080;
+  /*[{plugin-contextmenu-inactive-text-color}]*/
+}
+/*
+    Resource View Picker
+*/
+.resource-view-picker {
+  position: relative;
+  height: 20px;
+  left: 10px;
+  cursor: default;
+  text-align: left;
+  display: inline-block;
+  padding-right: 15px;
+  white-space: nowrap;
+  /* prevents the dropdown arrow from wrapping to the next line */
+}
+.resource-view-picker .context-menu {
+  position: absolute;
+  top: 22px;
+  left: 0;
+  display: none;
+  z-index: 20;
+}
+.resource-view-picker .context-menu.active {
+  display: block;
+}
+.resource-view-picker .context-menu .item img {
+  margin-left: 6px;
+}
+.resource-view-picker > .item {
+  line-height: 16px;
+}
+.resource-view-picker .label {
+  font-size: 9pt;
+  /*[{plugin-font-size}]*/
+  vertical-align: middle;
+  display: inline-block;
+  min-width: 90px;
+  /* variable width allows localized strings to be displayed */
+}
+.resource-view-picker .expander {
+  position: relative;
+  top: 2px;
+  left: 2px;
+}
+.action-links {
+  position: relative;
+  padding: 3px 10px 6px 10px;
+}
+.action-links .link.right-align {
+  position: absolute;
+  right: 9px;
+}
+/*
+    Search
+*/
+.search {
+  position: relative;
+  padding: 3px 10px 6px 10px;
+}
+.search input {
+  width: 100%;
+  height: 21px;
+  background: #FFFFFF;
+  /*[{search-control-unfocused-background}]*/
+  border-color: #BDC4D1;
+  /*[{search-control-unfocused-border}]*/
+  color: #b8b8bF;
+  /*[{environment-designer-watermark}]*/
+}
+.search input.storage-explorer {
+  padding-right: 24px;
+}
+.search input.searching.storage-explorer {
+  padding-right: 40px;
+}
+.search input:hover {
+  background: #FFFFFF;
+  /*[{search-control-mouse-over-background}]*/
+  border-color: #E5C365;
+  /*[{search-control-mouse-over-border}]*/
+  color: #1E1E1E;
+  /*[{search-control-mouse-over-foreground}]*/
+}
+.search input:hover + .icon,
+.search input:hover + .icon + .icon {
+  background: #FFFFFF;
+  /*[{search-control-mouse-over-background}]*/
+}
+.search input:focus {
+  background: #FFFFFF;
+  /*[{search-control-focused-background}]*/
+  border-color: #E5C365;
+  /*[{search-control-focused-border}]*/
+  color: #1E1E1E;
+  /*[{search-control-focused-foreground}]*/
+}
+.search input:focus + .icon,
+.search input:focus + .icon + .icon {
+  background-color: #1E1E1E;
+  /*[{search-control-focused-background}]*/
+}
+.search input:disabled {
+  border-color: #C6C6C6;
+  /*[{search-control-disabled-border}]*/
+  background: #EFEFF2;
+  /*[{search-control-disabled-background}]*/
+  color: #A2A4A5;
+  /*[{search-control-disabled-foreground}]*/
+}
+.search input:disabled + .icon,
+.search input:disabled + .icon + .icon {
+  background-color: #EFEFF2;
+  /*[{search-control-disabled-background}]*/
+}
+.search .icon {
+  top: 6px;
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  background-color: #FFFFFF;
+  /*[{search-control-unfocused-background}]*/
+}
+.search .icon.clear-icon {
+  right: 16px;
+}
+.search .icon.search-icon {
+  right: 16px;
+}
+.search .icon.loading-icon {
+  right: 32px;
+}
+/*
+    Spinner
+*/
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 0px;
+  right: 0px;
+  margin-top: -18px;
+  text-align: center;
+}
+/*
+    themed-images
+*/
+.themed-images {
+  display: none;
+  width: 0px;
+  height: 0px;
+}
+/*
+    Toolbar
+*/
+.toolbar {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  border-top: 1px solid #DDDDDD;
+  /*[1px solid {environment-page-sidebar-expander-separator}]*/
+  padding: 2px 4px;
+  font-size: 0pt;
+  /* avoids space between items */
+  height: auto;
+}
+.toolbar > .item,
+.toolbar > .item-group > .item {
+  display: inline-block;
+  padding: 3px;
+  cursor: default;
+}
+.toolbar > .item:hover,
+.toolbar > .item-group > .item:hover {
+  border: 1px solid #E5C365;
+  /*[1px solid {environment-commandbar-border}]*/
+  background-color: #FDF4BF;
+  /*[{environment-commandbar-mouse-over-background-begin}]*/
+  padding: 2px;
+}
+.toolbar > .item-group {
+  padding-left: 3px;
+  display: inline-block;
+}
+.toolbar > .leftseparator {
+  border-left: 1px solid #DDDDDD;
+  /*[1px solid {environment-page-sidebar-expander-separator}]*/
+}
+/*
+    Tree
+
+    The "treeView" class refers to the top level of the resource tree
+    The "tree" class is used for each tree structure including child trees
+    The "node" class marks a node plus its children
+    The "self" class marks a node's UI only, does not include the children
+
+*/
+.tree {
+  list-style: none;
+}
+.tree .node > .self {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  white-space: nowrap;
+  cursor: default;
+}
+.tree .node .load-more,
+.tree .node .load-more div {
+  display: inline;
+}
+.panel .tree .node.selected > .self {
+  /* The ".self" selector makes sure this applies to children but not grandchildren of the selected node */
+  background-color: #CCCEDB;
+  /*[{plugin-treeview-content-inactive-selected-background-color}]*/
+  color: black;
+  /*[{plugin-treeview-content-inactive-selected-color}]*/
+  /* IE will make the transparent outline visible in high contrast mode but invisible in normal mode. */
+  outline-style: dotted;
+  outline-width: 1px;
+  outline-color: transparent;
+}
+.panel .tree .node.selected > .self .load-more a {
+  color: white;
+  /*[{plugin-treeview-content-selected-color}]*/
+}
+.panel .treeView .treeViewContainer {
+  min-width: 100%;
+  display: inline-block;
+}
+.panel .treeView:focus {
+  outline: 0;
+}
+.panel .treeView .tree .node:focus {
+  outline: none;
+}
+.panel .treeView .tree .node.selected:focus > .self {
+  background-color: #3399ff;
+  /*[{plugin-treeview-content-selected-background-color}]*/
+  color: white;
+  /*[{plugin-treeview-content-selected-color}]*/
+  /* IE will make the transparent outline visible in high contrast mode but invisible in normal mode. */
+  outline-style: solid;
+  outline-width: 2px;
+  outline-color: transparent;
+}
+.tree .node > .self > .expander {
+  margin-left: 7px;
+  width: 16px;
+}
+.tree .node > .self > .icon,
+.tree .node .load-more .icon {
+  margin-left: 4px;
+  width: 16px;
+}
+.tree .node > .self > .label,
+.tree .node .load-more .label {
+  margin-left: 2px;
+}
+.tree .node > .self > .label > .placeholder {
+  display: inline;
+}
+.tree .node > .self > .label > .placeholder > input {
+  background: #333337;
+  /*[{search-control-unfocused-background}]*/
+  border-color: #3F3F46;
+  /*[{search-control-unfocused-border}]*/
+  color: #D0D2D3;
+  /*[{search-control-unfocused-foreground}]*/
+  padding-right: 2px;
+}
+.tree .node > .self > .label > .placeholder > input :focus {
+  background: #FFFFFF;
+  /*[{search-control-focused-background}]*/
+  border-color: #E5C365;
+  /*[{search-control-focused-border}]*/
+  color: #1E1E1E;
+  /*[{search-control-focused-foreground}]*/
+}
+.tree .node > .self > .label > .placeholder > img {
+  vertical-align: middle;
+}
+.tree .node > .self > .label > .icon {
+  position: relative;
+  padding: 0px;
+  top: 2px;
+  height: 15px;
+  width: 15px;
+}
+/*******************************************************************************
+    Specializing selectors: styles all elements with two or more classes
+*/
+/* If contained content is a tree, add top and bottom padding */
+.container > .tree.content {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+/* If contained content is not a tree, set appropriate padding */
+.container > .azure-filter.content {
+  padding: 5px;
+}
+.in-ie .node-details .tab-container {
+  display: block;
+  background-color: #FFFFFF;
+  /*[{editortabs-tab-background}]*/
+  padding-top: 1px;
+  border-top: 1px solid #CCCEDB;
+  /*[1px solid {editortabs-tab-selected-background}]*/
+}
+.in-ie .node-details .tab-container .tab-spacer {
+  display: none;
+}
+.in-ie .node-details .tab {
+  display: inline-block;
+  border-right: none;
+  border-bottom: none;
+  border-top: none;
+}
+.in-ie .node-details .expander {
+  border-bottom: none;
+  border-top: none;
+}
+.in-ie .provider-sleeve {
+  display: none;
+}
+/*
+    TextBox
+*/
+input::selection,
+textarea::selection {
+  color: #FFFFFF;
+  /*[{common-controls-textbox-selected-text}]*/
+  background-color: #3399FF;
+  /*[{common-controls-textbox-selected-background}]*/
+}

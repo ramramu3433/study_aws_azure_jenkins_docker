@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html class="page" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+
+    <title>Storage Explorer Data View</title>
+
+    <link rel="stylesheet" href="../../../lib/datatables-colreorder/css/colReorder.dataTables.scss" />
+    <link rel="stylesheet" href="../../../css/Common/plugin-mods.css" />
+    <link rel="stylesheet" href="../../../css/StorageExplorer/contextMenu.css" data-plugin-theme="true" />
+    <link rel="stylesheet" href="../../../css/StorageExplorer/fulldatatables.css" data-plugin-theme="true" />
+    <link rel="stylesheet" href="../../../css/StorageExplorer/toolbar.css" data-plugin-theme="true" />
+    <link rel="stylesheet" href="../../../css/StorageExplorer/site.css" data-plugin-theme="true" />
+
+    <script type="text/javascript" src="../../../internal/plugin/plugin.js"></script>
+    <script type="text/javascript" src="../../../js/StorageExplorer/config.js"></script>
+    <script type="text/javascript" src="../../../lib/requirejs/require.js" data-main="StorageExplorer/Blobs/appStorageBlobs"></script>
+</head>
+
+<body class="container" data-bind="shortcut: { 'Alt+LeftArrow': folderNavigateBack, 'Alt+RightArrow': folderNavigateForward, 'Alt+UpArrow': navigateToParentFolder }">
+    <a href="#" onclick="window.location.reload(true);" style="color: white;display:none">Refresh!</a>
+
+    <div>
+        <div class="toolbar" data-bind="with: toolbarViewModel">
+            <!-- ko template: { name: 'toolbarItemTemplate', foreach: toolbarItems } -->
+            <!-- /ko -->
+        </div>
+        <div class="toolbar-second-row">
+            <div class="row">
+                <div class="navigation-buttons" data-bind="with: navigationViewModel">
+                    <button id="navigate-back" title="Back (Alt + Left Arrow)" class="button-no-padding navigation-button" data-bind="
+                            enable: isBackwardable,
+                            event: { mousedown: onMouseDown, keydown: onKeyDown, keyup: onKeyUp },
+                            attr: { 'tabindex': (isBackwardable()? '0': '-1') }">
+                        <div class="icon_16x16" data-bind="icon: 'images/StorageExplorer/ASX_ArrowLeft.svg'"></div>
+                    </button>
+                    <button id="navigate-forward" title="Forward (Alt + Right Arrow)" class="button-no-padding navigation-button" data-bind="
+                            enable: isForwardable,
+                            event: { mousedown: onMouseDown, keydown: onKeyDown, keyup: onKeyUp },
+                            attr: { 'tabindex': (isForwardable()? '0': '-1') }">
+                        <div class="icon_16x16" data-bind="icon: 'images/StorageExplorer/ASX_ArrowRight.svg'"></div>
+                    </button>
+                    <div class="dropdown" id="navigation-dropdown">
+                        <button class="button-no-padding navigation-button dropdown-toggle" title="Recent locations" data-bind="
+                                enable: hasNavigationHistory,
+                                click: toggleNavigationHistory,
+                                attr: { 'tabindex': (hasNavigationHistory()? '0': '-1') }">
+                            <div class="icon_16x16" data-bind="icon: 'images/StorageExplorer/ASX_ChevronDown.svg'"></div>
+                        </button>
+                        <div class="dropdown-menu popup" role="alert" aria-atomic="true" data-bind="
+                            popup: navigationDropdownExpanded,
+                            css: { 'click-activated': navigationDropdownExpanded }">
+                            <ul data-bind="foreach: navigationHistory">
+                                <li tabindex="0" class="dropdown-menu-item" data-bind="
+                                    css: dropdownMenuItem,
+                                    click: $parent.handleHistoryEvent.bind($data, $index()),
+                                    event: { keydown: $parent.onKeyDown, keyup: $parent.onKeyUp },
+                                    attr: { 'aria-label': displayName }">
+                                    <span data-bind="text: displayName"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <button id="navigate-parent" tabindex="0" title="Up (Alt + Up Arrow)" class="button-no-padding navigation-button" data-bind="
+                            enable: !isTopLevelFolder(),
+                            event: { mousedown: onMouseDown, keydown: onKeyDown, keyup: onKeyUp }">
+                        <div class="icon_16x16" data-bind="icon: 'images/StorageExplorer/ASX_ArrowUp.svg'"></div>
+                    </button>
+                </div>
+
+                <div class="address-bar">
+                    <div class="table full-width">
+                        <div class="row">
+                            <div class="cell" data-bind="with: addressBarViewModel">
+                                <div class="address-group">
+                                    <input id="address-bar" tabindex="0" class="full-width address-bar-field" aria-label="Address bar" />
+                                    <ul id="breadcrumb-list" class="breadcrumb" data-bind="foreach: breadCrumbs">
+                                        <li>
+                                            <div style="display: none" data-bind="visible: !isCollapsed">
+                                                <a data-bind="text: displayName, click: $parent.handleClickBreadCrumb, attr: {title: displayName}"></a>
+                                                <img class="icon_16x16" data-bind="visible: !isLast && !isCollapsed" src="../../../images/StorageExplorer/ExpandChevronRight_16x.png"
+                                                />
+                                            </div>
+                                            <div style="display: none" data-bind="visible: isCollapsed">
+                                                <img class="icon_16x16" data-bind="
+                                                                visible: !$parent.hiddenBreadCrumbsExpanded(),
+                                                                click: $parent.handleClickBreadCrumb" src="../../../images/StorageExplorer/CollapseChevronLeftGroup_16x.png"
+                                                />
+                                                <img class="icon_16x16" data-bind="
+                                                                visible: $parent.hiddenBreadCrumbsExpanded,
+                                                                click: $parent.handleClickBreadCrumb" src="../../../images/StorageExplorer/CollapseChevronDown_16x.png"
+                                                />
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div id="breadcrumb-dropdown" class="navigation-dropdown-menu breadcrumb-dropdown-margin popup" role="alert" aria-atomic="true"
+                                        data-bind="
+                                                                                                                         popup: hiddenBreadCrumbsExpanded,
+                                                                                                                         css: { 'click-activated': hiddenBreadCrumbsExpanded }">
+                                        <ul data-bind="foreach: hiddenBreadCrumbs">
+                                            <li class="navigation-dropdown-menu-item" data-bind="click: $parent.handleClickBreadCrumb">
+                                                <span data-bind="text: displayName"></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-bar">
+                    <div class="search-bar-container">
+                        <input class="search-input" type="search" placeholder="Search by prefix (case-sensitive)" data-bind="textInput: searchText"
+                        />
+                        <img class="icon_16x16 search-icon" src="../../../images/StorageExplorer/Search_16x.png" data-bind="visible: !searchText()"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/html" id="toolbarItemTemplate">
+        <!-- ko if: type === "action" -->
+        <div class="toolbar-group" data-bind="visible: visible">
+            <button class="toolbar-group-button" data-bind="hasFocus: focused, attr: {id: id, title: title, 'aria-label': displayName}, event: { mousedown: mouseDown, keydown: keyDown, keyup: keyUp }, enable: enabled">
+                <div class="toolbar-group-button-icon">
+                    <div class="toolbar_icon" data-bind="icon: icon"></div>
+                </div>
+                <span data-bind="text: displayName"></span>
+            </button>
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: type === "toggle" -->
+        <div class="toolbar-group" data-bind="visible: visible">
+            <button class="toolbar-group-button toggle-button" data-bind="hasFocus: focused, attr: {id: id, title: title}, event: { mousedown: mouseDown, keydown: keyDown, keyup: keyUp }, enable: enabled">
+                <div class="toolbar-group-button-icon" data-bind="css: { 'toggle-checked': checked }">
+                    <div class="toolbar_icon"  data-bind="icon: icon"></div>
+                </div>
+                <span data-bind="text: displayName"></span>
+            </button>
+        </div>
+        <!-- /ko -->
+        <!-- ko if: type === "dropdown" -->
+        <div class="toolbar-group" data-bind="visible: visible">
+            <div class="dropdown" data-bind="attr: {id: (id + '-dropdown')}">
+                <button role="menu" class="toolbar-group-button" data-bind="hasFocus: focused, attr: {id: id, title: title, 'aria-label': displayName},  event: { mousedown: mouseDown, keydown: keyDown, keyup: keyUp }, enable: enabled">
+                    <div class="toolbar-group-button-icon">
+                        <div class="toolbar_icon" data-bind="icon: icon"></div>
+                    </div>
+                    <span data-bind="text: displayName"></span>
+                </button>
+            </div>
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: type === "separator" -->
+        <div class="toolbar-group vertical-separator" data-bind="visible: visible"></div>
+        <!-- /ko -->
+    </script>
+
+    <div data-bind="with: blobListViewModel">
+        <!-- Keyboard navigation - tabindex is required to make the table focusable. -->
+        <table id="storageTable" class="storage" style="width:100%" tabindex="0" data-bind="tableSource: items, tableSelection: selected"></table>
+    </div>
+</body>
+
+</html>

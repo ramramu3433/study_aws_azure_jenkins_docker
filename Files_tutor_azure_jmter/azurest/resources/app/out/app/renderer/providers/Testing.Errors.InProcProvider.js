@@ -1,0 +1,32 @@
+"use strict";
+/*!---------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *----------------------------------------------------------*/
+var fs = require("fs");
+var q = require("q");
+module.exports = {
+    "Testing.Errors.InProc.throwPrimitive": function (args) {
+        return q.reject(false);
+    },
+    "Testing.Errors.InProc.throwString": function (args) {
+        return q.reject("This exception is a string.");
+    },
+    "Testing.Errors.InProc.throwObject": function (args) {
+        return q.reject({ n: "Object", m: "This exception is an object." });
+    },
+    "Testing.Errors.InProc.throwError": function (args) {
+        return q.reject(new Error("This exception is an Error."));
+    },
+    "Testing.Errors.InProc.throwSystemError": function (args) {
+        return q.Promise(function (resolve, reject) {
+            fs.readFile("false-file.txt", function (error, data) {
+                if (error) {
+                    reject(error);
+                }
+                else {
+                    resolve(data);
+                }
+            });
+        });
+    }
+};

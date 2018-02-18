@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 340,
+        "width": 500
+    },
+    "view": "app/dialogs/UploadFiles/UploadFilesView.html",
+    "viewModel": "app/dialogs/UploadFiles/UploadFilesViewModel"
+}

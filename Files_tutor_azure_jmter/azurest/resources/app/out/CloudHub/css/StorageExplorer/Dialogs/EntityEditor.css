@@ -1,0 +1,89 @@
+body {
+  overflow: hidden;
+}
+.entity-table {
+  border-spacing: 2px;
+  display: table;
+  width: 100%;
+}
+.entity-table-row {
+  display: row;
+}
+.entity-table-cell {
+  display: table-cell;
+  text-align: left;
+  vertical-align: middle;
+  max-width: 230px;
+}
+.entity-table-field {
+  width: 100%;
+}
+.entity-table-cell button {
+  height: 30px;
+}
+.entity-table-field[readonly] {
+  background-color: #EEEEF2;
+  /*[{plugin-select-background-color}]*/
+  border: 1px solid #CCCEDB;
+  /*[1px solid {plugin-select-border-color}]*/
+}
+.scroll-box {
+  border-bottom: 1px solid #DDD;
+  /*[1px solid {plugin-table-border-color}]*/
+  border-top: 1px solid #DDD;
+  /*[1px solid {plugin-table-border-color}]*/
+  height: 296px;
+  min-width: 598px;
+  overflow-y: scroll;
+  width: 100%;
+}
+.property-column,
+.property-header,
+.value-column,
+.value-header {
+  width: 230px;
+}
+.type-header,
+.type-column {
+  width: 100px;
+}
+.property-header,
+.type-header,
+.value-header {
+  font-weight: bold;
+}
+.action-column > button {
+  min-width: 20px;
+  width: 20px;
+  padding: 0;
+  background: transparent;
+}
+.right-bottom-buttons {
+  right: 10px;
+}
+#editor-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+#shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #CCCEDB;
+  /*[{plugin-table-border-color}]*/
+  opacity: 0.5;
+}
+#content {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  height: 100%;
+  width: 100%;
+  background-color: #F5F5F5;
+  /*[{plugin-background-color}]*/
+}

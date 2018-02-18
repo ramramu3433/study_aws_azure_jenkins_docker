@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html class="page" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+
+    <title>Storage Explorer Data View</title>
+
+    <link rel="stylesheet" href="../../../lib/datatables-colreorder/css/colReorder.dataTables.scss" />
+    <link rel="stylesheet" href="../../../css/Common/plugin-mods.css" />
+    <link rel="stylesheet" href="../../../css/StorageExplorer/contextMenu.css" data-plugin-theme="true" />
+    <link rel="stylesheet" href="../../../css/StorageExplorer/fulldatatables.css" data-plugin-theme="true" />
+    <link rel="stylesheet" href="../../../css/StorageExplorer/toolbar.css" data-plugin-theme="true" />
+    <link rel="stylesheet" href="../../../css/StorageExplorer/site.css" data-plugin-theme="true" />
+
+    <script type="text/javascript" src="../../../internal/plugin/plugin.js"></script>
+    <script type="text/javascript" src="../../../js/StorageExplorer/config.js"></script>
+    <script type="text/javascript" src="../../../lib/requirejs/require.js" data-main="StorageExplorer/Queues/appStorageQueues"></script>
+</head>
+
+<body class="container">
+    <a href="#" onclick="window.location.reload(true);" style="color: white;display:none">Refresh!</a>
+    <div data-bind="with: toolbarViewModel">
+        <div class="toolbar">
+            <!-- ko template: { name: 'toolbarItemTemplate', foreach: toolbarItems } -->
+            <!-- /ko -->
+        </div>
+    </div>
+    <!-- End of toolbar -->
+
+    <div data-bind="with: queueListViewModel">
+        <!-- Keyboard navigation - tabindex is required to make the table focusable. -->
+        <table id="storageTable" class="storage" style="width:100%" tabindex="0" data-bind="tableSource: messages, tableSelection: selected"></table>
+    </div>
+
+    <script type="text/html" id="toolbarItemTemplate">
+        <!-- ko if: type === "action" -->
+        <div class="toolbar-group" data-bind="visible: visible">
+            <button class="toolbar-group-button" data-bind="hasFocus: focused, attr: {id: id, title: title, 'aria-label': displayName}, event: { mousedown: mouseDown, keydown: keyDown, keyup: keyUp }, enable: enabled">
+                <div class="toolbar-group-button-icon">
+                    <div class="toolbar_icon" data-bind="icon: icon"></div>
+                </div>
+                <span data-bind="text: displayName"></span>
+            </button>
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: type === "toggle" -->
+        <div class="toolbar-group" data-bind="visible: visible">
+            <button class="toolbar-group-button toggle-button" data-bind="hasFocus: focused, attr: {id: id, title: title}, event: { mousedown: mouseDown, keydown: keyDown, keyup: keyUp }, enable: enabled">
+                <div class="toolbar-group-button-icon" data-bind="css: { 'toggle-checked': checked }">
+                    <div class="toolbar_icon"  data-bind="icon: icon"></div>
+                </div>
+                <span data-bind="text: displayName"></span>
+            </button>
+        </div>
+        <!-- /ko -->
+        <!-- ko if: type === "dropdown" -->
+        <div class="toolbar-group" data-bind="visible: visible">
+            <div class="dropdown" data-bind="attr: {id: (id + '-dropdown')}">
+                <button role="menu" class="toolbar-group-button" data-bind="hasFocus: focused, attr: {id: id, title: title, 'aria-label': displayName},  event: { mousedown: mouseDown, keydown: keyDown, keyup: keyUp }, enable: enabled">
+                    <div class="toolbar-group-button-icon">
+                        <div class="toolbar_icon" data-bind="icon: icon"></div>
+                    </div>
+                    <span data-bind="text: displayName"></span>
+                </button>
+            </div>
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: type === "separator" -->
+        <div class="toolbar-group vertical-separator" data-bind="visible: visible"></div>
+        <!-- /ko -->
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,170 @@
+/*******************************************************************************
+
+    plugin-reset.css: CSS stylesheet to undo Daytona theming (for now)
+
+    This file is a duplicate of the CSS injected automatically by Daytona
+    for the default VS theme with one key difference: all rules are made
+    more specific by including the "page" class, which is specified on the
+    root html element of the page. This ensures that regardless of what
+    theming Daytona includes in the page, it will always be reset to the
+    default VS theme information.
+
+*/
+/* HTML and body styles */
+html.page,
+.page body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 9pt;
+  font-weight: normal;
+  color: #000000;
+  background-color: #FFFFFF;
+  scrollbar-3dlight-color: #E8E8EC;
+  scrollbar-darkshadow-color: #E8E8EC;
+  scrollbar-highlight-color: #E8E8EC;
+  scrollbar-shadow-color: #E8E8EC;
+  scrollbar-track-color: #E8E8EC;
+  scrollbar-arrow-color: #868999;
+  scrollbar-face-color: #D0D1D7;
+}
+.page select {
+  color: #1B293E;
+  background-color: #FCFCFC;
+  font: normal 9pt "Segoe UI", Arial, sans-serif;
+  border: 1px solid #BDC5D8;
+}
+.page select:hover {
+  color: #000000;
+  background-color: #FCFCFC;
+  border: 1px solid #E5C365;
+}
+.page select[multiple],
+.page select option {
+  color: #000000;
+  background-color: #F0F0F0;
+}
+.page select option:hover {
+  color: #000000;
+  background-color: #FDF4BF;
+  border: 1px solid #FDF4BF;
+}
+.page select option:checked {
+  color: #FFFFFF;
+  background-color: #3399FF;
+  border: 1px solid #3399FF;
+}
+/* Input styles */
+.page input {
+  font: normal 9pt "Segoe UI", Arial, sans-serif;
+  color: #1E1E1E;
+  background-color: #FFFFFF;
+  border: 1px solid #DBDDE6;
+  padding: 0 3px;
+}
+.page input:disabled {
+  color: #A2A4A5;
+  background-color: #D5DCE8;
+  border: 1px solid #A4ADBA;
+}
+.page input[type="checkbox"],
+.page input[type="radio"] {
+  border: none;
+  background-color: inherit;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+.page input[type="file"],
+.page input[type="image"] {
+  border: none;
+  background-color: inherit;
+  padding: 0;
+}
+/* TextArea styles */
+.page textarea {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 9pt;
+  font-weight: normal;
+  color: #000000;
+  background-color: #FFFFFF;
+  border: 1px solid #DBDDE6;
+  padding: 0 3px;
+}
+/* Button styles */
+.page button,
+.page input[type="button"],
+.page input[type="reset"],
+.page input[type="submit"] {
+  color: #000000;
+  /*background-image: -ms-linear-gradient(top, #F0F0F0 0%, #E5E5E5 100%);*/
+  border: 1px solid #ACACAC;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 9pt;
+  font-weight: normal;
+  min-width: 73px;
+  padding: 1px 19px 2px 19px;
+}
+.page button:hover,
+.page input[type="button"]:hover,
+.page input[type="reset"]:hover,
+.page input[type="submit"]:hover {
+  /*background-image: -ms-linear-gradient(top, #ECF4FC 0%, #DCECFC 100%);*/
+  border: 1px solid #7EB4EA;
+}
+.page button:focus,
+.page input[type="button"]:focus,
+.page input[type="reset"]:focus,
+.page input[type="submit"]:focus {
+  border: 1px solid #569DE5;
+}
+.page button:active,
+.page input[type="button"]:active,
+.page input[type="reset"]:active,
+.page input[type="submit"]:active {
+  /*background-image: -ms-linear-gradient(top, #DAECFC 0%, #C4E0FC 100%);*/
+  border: 1px solid #569DE5;
+}
+.page button[disabled],
+.page input[type="button"][disabled],
+.page input[type="reset"][disabled],
+.page input[type="submit"][disabled] {
+  color: #838383;
+  background: #F4F4F4 none;
+  border: 1px solid #B1B1B2;
+}
+/* Other form styles */
+.page fieldset {
+  border: 1px solid #DBDDE6;
+}
+/* Link styles */
+.page a,
+.page a:link,
+.page a:visited,
+.page a:focus {
+  color: #0E2FC0;
+  text-decoration: none;
+}
+.page a:hover {
+  color: #0026CC;
+  text-decoration: underline;
+}
+.page a:active {
+  color: #0026CC;
+}
+/* Table styles */
+.page th {
+  color: #000000;
+  background-color: #F0F0F0;
+}
+.page td,
+.page th {
+  border-color: #F0F0F0;
+}
+/* Disabled styles */
+.page :disabled {
+  color: #808080;
+}
+/* Highlight styles
+   Use this class when you have a highlighted item, for example a highlighted row in a grid */
+.page .plugin-highlight {
+  color: #FFFFFF;
+  background-color: #3399FF;
+}

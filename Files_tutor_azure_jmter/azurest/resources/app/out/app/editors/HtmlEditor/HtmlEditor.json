@@ -1,0 +1,4 @@
+{
+    "view": "./app/editors/HtmlEditor/HtmlEditorView.html",
+    "viewModel": "./app/editors/HtmlEditor/HtmlEditorViewModel"
+}

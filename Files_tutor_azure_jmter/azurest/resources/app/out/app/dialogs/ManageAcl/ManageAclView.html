@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html class="page" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - Manage Access Policies</title>
+
+    <link rel="stylesheet" href="./ManageAcl.css" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="dialogTitle">
+        <div class="title" id="dialogTitle" data-bind="text: titleLabel"></div>
+
+        <div class="content">
+            <div class="row">
+                <label for="resourceLabel" data-bind="text: resourceLabel"></label>
+                <input class="manage-acl-readonly-field" id="resourceLabel" type="text" readonly data-bind="value: resourceName" autofocus>
+            </div>
+
+            <div class="row">
+                <label for="accessPoliciesTable" data-bind="text: accessPoliciesLabel"></label>
+                <table id="accessPoliciesTable" role="table" class="manage-acl-table">
+                    <thead data-bind="visible: hasPolicies">
+                        <tr>
+                            <th class="manage-acl-table-cell" scope="col" style="text-align:left" data-bind="text: idLabel"></th>
+                            <th class="manage-acl-table-cell" scope="col" style="text-align:left" data-bind="text: startTimeLabel"></th>
+                            <th class="manage-acl-table-cell" scope="col" style="text-align:left" data-bind="text: expiryTimeLabel"></th>
+                            <!-- ko foreach: accessPolicyPermissionLabels -->
+                            <th class="manage-acl-table-cell" scope="col" data-bind="text: $data"></th>
+                            <!-- /ko -->
+                            <th class="manage-acl-table-cell" scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: accessPolicies">
+                        <tr>
+                            <td class="manage-acl-table-cell">
+                                <input type="text" class="manage-acl-table-field" data-bind="value: id, css: { 'invalid-field': isInvalidId }, attr: { title: idTooltip, placeholder: idPlaceholder, 'aria-label': $parent.idLabel }"
+                                />
+                            </td>
+                            <td class="manage-acl-table-cell">
+                                <input type="datetime-local" class="manage-acl-table-field" data-bind="value: startTimestamp, css: { 'invalid-field': isInvalidStartTimestamp }, attr: { title: startTimestampTooltip, 'aria-label': $parent.startTimeLabel }"
+                                />
+                            </td>
+                            <td class="manage-acl-table-cell">
+                                <input type="datetime-local" class="manage-acl-table-field" data-bind="value: expiryTimestamp, css: { 'invalid-field': isInvalidExpiryTimestamp }, attr: { title: expiryTimestampTooltip, 'aria-label': $parent.expiryTimeLabel }"
+                                />
+                            </td>
+                            <!-- ko foreach: permissionViewModels -->
+                            <td class="manage-acl-table-cell">
+                                <div class="manage-acl-table-permission-column">
+                                    <input type="checkbox" data-bind="checked: isSelected, value: value, attr: { 'id': 'permission_' + $index, 'aria-label': label }">
+                                </div>
+                            </td>
+                            <!-- /ko -->
+                            <td class="manage-acl-table-cell">
+                                <button type="button" class="inline-button manage-acl-table-button" data-bind="hasFocus: isRemoveButtonFocused, text: $root.removeButtonLabel, click: remove"></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="manage-acl-buttons">
+                    <button type="button" aria-label="Add access policy" class="inline-button manage-acl-table-button" data-bind="text: addButtonLabel, enable: canAdd, click: addPolicy"></button>
+                </div>
+            </div>
+
+            <div class="row" data-bind="visible: hasPolicies">
+                <label id="timeZoneLabel" data-bind="text: timeZoneLabel"></label>
+                <div>
+                    <div>
+                        <input type="radio" name="timezone" id="manage-acl-local-time-field" value="local" aria-describedby="timeZoneLabel" data-bind="checked: timeZone">
+                        <label for="manage-acl-local-time-field" data-bind="text: localTimeLabel"></label>
+                    </div>
+                    <div>
+                        <input type="radio" name="timezone" id="utc" value="utc" data-bind="checked: timeZone">
+                        <label for="utc" data-bind="text: utcLabel"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,32 @@
+Microsoft Azure Storage Explorer
+
+  What is it?
+  -----------
+
+  Storage Explorer allows you to view and interact with your Azure Storage resources.
+
+  The Latest Version
+  ------------------
+
+  Details of the latest version can be found on the Storage Explorer project page under https://go.microsoft.com/fwlink/?linkid=835245.
+
+  Documentation
+  -------------
+
+  Please refer to https://azure.microsoft.com/en-us/documentation/articles/storage-getting-started-guide/
+
+  Installation
+  ------------
+
+  Linux install needs gcc version updated or upgraded – steps to upgrade are below:
+	sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+	sudo apt-get update
+	sudo apt-get upgrade
+	sudo apt-get dist-upgrade
+
+  Contacts
+  --------
+
+     o If you want to send feedback or report a bug, please go to https://feedback.azure.com. Make sure 'Storage Explorer' is included in the idea title.
+
+

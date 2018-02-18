@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - Send Feedback</title>
+
+    <link rel="stylesheet" href="./Feedback.css" data-plugin-theme="true" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="default-panel-title" aria-describedby="instructionLabel">
+        <div class="title" id="default-panel-title" data-bind="text:title"></div>
+
+        <div class="content">
+            <label id="instructionLabel" data-bind="text: instructionLabel"></label>
+
+            <div class="row">
+                <label for="email-address-input" data-bind="text: emailAddressLabel"></label>
+                <input id="email-address-input" type="text" data-bind="value: email, attr: { placeholder: emailAddressPlaceholder }"></input>
+            </div>
+            <div class="row">
+                <textarea rows="3" data-bind="textInput: feedbackText"></textarea>
+            </div>
+            <div class="row" data-bind="if: hasData">
+                <button class="expander" data-bind="click: toggleData">
+                    <img data-bind="visible: isDataVisible" src="../../media/StorageExplorer/CollapseChevronUp_16x.png"></img>
+                    <img data-bind="visible: !isDataVisible()" src="../../media/StorageExplorer/CollapseChevronDown_16x.png"></img>
+                    <label for="details-input">Details</label>
+                </button>
+                <div data-bind="if: isDataVisible">
+                    <textarea id="details-input" rows="3" readonly="readonly" data-bind="text: data"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+</body>
+
+</html>

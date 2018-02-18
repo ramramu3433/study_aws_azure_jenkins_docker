@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+
+<html class="page" lang="en" xmlns="http://www.w3.org/1999/xhtml" aria-label="Cloud Explorer">
+
+<head>
+    <!-- NOTE: Although we're using IE10 mode, it is still possible (on Win7) to end up rendering against IE9, so
+        any IE10 features that are used must have reasonable degraded behavior on IE9 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=10" />
+    <meta charset="utf-8" />
+    <title aria-label="Cloud Explorer">Cloud Explorer</title>
+
+    <link href="../../css/CloudExplorer/site.css" rel="stylesheet" data-plugin-theme="true" />
+    <link href="../../css/Common/plugin-mods.css" rel="stylesheet" />
+
+    <script type="text/javascript" src="../../internal/plugin/plugin.js"></script>
+    <script type="text/javascript">
+        // Dev12 back-compat fix
+        if (typeof Microsoft === "undefined") {
+            Microsoft = { Plugin: Plugin };
+        } else if (!Microsoft.Plugin) {
+            Microsoft.Plugin = Plugin;
+        }
+
+        if (Microsoft.Plugin) {
+            // Attach to Error event at global level.
+            // If an exception is thrown Daytona crashes,
+            // we need to handle error as soon as possible.
+            window.TelemetryMarshaler = Microsoft.Plugin.Utilities.JSONMarshaler.attachToPublishedObject("Telemetry", {}, true);
+            window.onerror = function (errorMsg, url, lineNumber) {
+                try {
+                    // Load the marshaler for telemetry
+                    var marshaler = window.TelemetryMarshaler;
+
+                    // Check if we loaded the marshaler
+                    if (!!marshaler) {
+                        // Get rid of possible PII from
+                        // the url as it is a local path.
+                        // We only need the file name.
+                        var file;
+                        if (!!url) {
+                            var parts = url.split("/");
+                            file = parts[parts.length - 1];
+                        }
+
+                        // Send telemetry event with
+                        // error information.
+                        marshaler._call(
+                            "sendEvent",
+                            "CloudHub.Error",
+                            {
+                                name: "Global",
+                                message: errorMsg,
+                                file: file,
+                                lineNumber: lineNumber
+                            });
+                    }
+                } catch (e) {
+                    // Some error happened sending the error,
+                    // don't do anything.
+                }
+
+                // Prevent the browser to show an error message.
+                return true;
+            };
+
+            // Attach to Daytona's pluginready event at a global level
+            window.pluginReady = (function () {
+                var pluginReady = false;
+                var pluginReadyEventName = "pluginready";
+
+                function onPluginReady() {
+                    Microsoft.Plugin.removeEventListener(pluginReadyEventName, onPluginReady);
+                    pluginReady = true;
+                };
+                Microsoft.Plugin.addEventListener(pluginReadyEventName, onPluginReady);
+                return function (callback) {
+                    if (!pluginReady) {
+                        var callbackWrapper = function () {
+                            Microsoft.Plugin.removeEventListener(pluginReadyEventName, callbackWrapper);
+                            callback();
+                        }
+                        Microsoft.Plugin.addEventListener(pluginReadyEventName, callbackWrapper);
+                    } else {
+                        callback();
+                    }
+                }
+            }());
+        }
+    </script>
+    <script type="text/javascript" src="../../lib/requirejs/require.js" data-main="../../js/CloudExplorer/app.js"></script>
+
+    <style>
+        /* Test for high contrast settings (IE only) */
+
+        @media screen and (-ms-high-contrast: active) {
+            #hidden-high-contrast-test {
+                background: #010203;
+            }
+        }
+        /* Work around Daytona bug 451107 - remove hard-coded button gradients that show up in IE10+ */
+
+        .page button,
+        .page input[type="button"],
+        .page input[type="reset"],
+        .page input[type="submit"] {
+            background-image: none;
+        }
+
+        .page button:hover,
+        .page input[type="button"]:hover,
+        .page input[type="reset"]:hover,
+        .page input[type="submit"]:hover {
+            background-image: none;
+        }
+
+        .page button:active,
+        .page input[type="button"]:active,
+        .page input[type="reset"]:active,
+        .page input[type="submit"]:active {
+            background-image: none;
+        }
+    </style>
+</head>
+
+<!-- in-ie check is for workaround in VS. -->
+
+<body class="container" data-bind="css:{'in-ie': !!document.documentMode }">
+    <div id="hidden-high-contrast-test" hidden="hidden"></div>
+
+    <div class="header strip">
+        <div role="banner" class="provider-sleeve">
+            <h1 class="label">
+                <!-- ko text: titleText -->
+                <!-- /ko -->
+            </h1>
+        </div>
+
+        <!-- ko template: { if: toolbarViewModel(), name: 'toolbarTemplate', data: toolbarViewModel } -->
+        <!-- /ko -->
+    </div>
+
+    <div class="spinner" data-bind="visible: isLoading, template: { name: 'iconTemplate', data: largeSpinnerIconData }"></div>
+
+    <div class="content strip" data-bind="style: {top: panelsContainerTopPixels, bottom: panelsContainerBottomPixels}">
+        <!-- ko template: { if: toolbarViewModel(), name: 'toolbarPanelsTemplate', data: toolbarViewModel } -->
+        <!-- /ko -->
+    </div>
+
+    <div class="footer strip">
+        <div class="divider horizontal"></div>
+        <!-- ko template: { if: shouldShowDetailsPanel(), name: 'nodeDetailsTemplate', data: detailsPanelViewModel } -->
+        <!-- /ko -->
+    </div>
+    <!-- ko template: { name: 'contextMenuTemplate', data: contextMenu } -->
+    <!-- /ko -->
+
+    <script type="text/html" id="nodeTemplate">
+        <li role="treeitem" class="node" data-bind="attr: { 'aria-selected': (selected()? 'true': 'false'),
+            'tabindex': (selected()? '0': '-1'),
+            'aria-label': displayName,
+            'aria-expanded': canExpand() && isExpanded() },
+            css: { selected: selected() }">
+            <div class="self" data-bind="attr: { 'aria-label': displayName },
+                style: { paddingLeft: paddingLeftPx },
+                click: handleClick, event: { contextmenu: openContextMenu }">
+                <!-- Expander -->
+                <span class="expander icon" data-bind="click: toggle">
+                    <span class="expander icon" data-bind="visible: canExpand() && !isExpanded(), template: { name: 'iconTemplate', data: $root.collapsedIconData }"></span>
+                <span class="expander icon" data-bind="visible: canExpand() && isExpanded(), template: { name: 'iconTemplate', data: $root.expandedIconData }"></span>
+                </span>
+                <!-- Node icon -->
+                <span class="icon" data-bind="visible: icon()">
+                    <img data-bind="visible: !themeSrc(), attr: { src: icon }" />
+                    <!-- ko template: { if:themeSrc, name: themeSrc} --> <!-- /ko -->
+                </span>
+                <!-- Node label (template-based) -->
+                <span class="label">
+                    <!-- Display the NodeViewModel node based on a template (default is defaultTreeItemTemplate) -->
+                    <!-- ko template: { name: templateName, data: $data } --> <!-- /ko -->
+                </span>
+            </div>
+
+            <!-- Children -->
+            <!-- ko template: { name: 'nodeGroupTemplate', data: childGroupViewModel } -->
+            <!-- /ko -->
+        </li>
+    </script>
+
+    <!-- NodeViewModel template: Standard treeview item -->
+    <script type="text/html" id="defaultTreeItemTemplate">
+        <span data-bind="attr: {'aria-label': displayName}, template: { name: 'displayNamePartTemplate', foreach: displayNameHighlightParts }"
+        />
+        <span data-bind="attr: {'aria-label': displayStatus}, text: displayStatus" />
+    </script>
+
+    <script type="text/html" id="displayNamePartTemplate"><span data-bind="text: val, css: { highlight: highlight }"></span></script>
+
+    <!-- NodeViewModel template: Fake node for editing the name of a new resource -->
+    <script type="text/html" id="placeholderTemplate">
+        <div class="placeholder" data-bind="with: placeholderViewModel">
+            <input id="placeholderForInput" data-bind="
+                textInput: newChildName,
+                click: handleFocus,
+                attr: {
+                    'aria-label': ariaLabel,
+                    'aria-invalid' : !isNameValid()
+                },
+                event: {
+                    keydown: onKeydown,
+                    blur: executeAddResourceAction
+                }" />
+            <img class="icon" src="../../images/CloudExplorer/StatusInvalid_16x.png" data-plugin-theme-src="StatusInvalidIcon" data-bind="visible: !isNameValid(), attr: { title: errorMessage }"
+            />
+        </div>
+    </script>
+
+    <!-- NodeViewModel template: "Load More" item -->
+    <script type="text/html" id="loadMoreItemTemplate">
+        <div class="load-more">
+            <!-- Note: Load More/Is Loading state we're interested in is that of the children of
+                 this node's parent (i.e. its siblings) -->
+            <!-- Load More link -->
+            <span class="label" data-bind="visible: !isLoadingSiblings()">
+                <a href="#" role="button" data-bind="attr : {'aria-label': displayName}" tabindex="-1">
+                    <!-- ko text: displayName --><!-- /ko -->
+                </a>
+            </span>
+
+            <!-- Loading children spinner -->
+            <div data-bind="visible: isLoadingSiblings, attr: { 'aria-label': displayName }">
+                <span class="icon" data-bind="template: { name: 'iconTemplate', data: $root.smallSpinnerIconData }"></span>
+                <span class="label">
+                    <span>
+                        <!-- ko text: displayName --><!-- /ko -->
+                    </span>
+                </span>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/html" id="nodeGroupTemplate">
+        <div class="children" data-bind="visible: isExpanded">
+            <ul role="tree" class="tree" data-bind="template: { name: 'nodeTemplate', foreach: children }"></ul>
+        </div>
+    </script>
+
+    <script type="text/html" id="contextMenuTemplate">
+        <div class="context-menu" tabindex="0" data-bind="popup: visible,
+            attr: { 'aria-label': screenReaderText },
+            style: { top: top, left: left },
+            event: { keydown: onKeyDown }">
+            <ul class="list">
+                <!-- ko foreach: actions -->
+                <li class="item" data-bind="visible: visible,
+                    click: $parent.executeAction,
+                    clickBubble: false,
+                    css: { disabled: !enabled(), selected: selected },
+                    attr: { 'aria-label': displayName }">
+                    <span class="icon">
+                        <img data-bind="visible: showIcon, attr: { src: icon }" />
+                        <!-- ko template: { if:themeSrc, name: themeSrc} --> <!-- /ko -->
+                    </span>
+
+                    <span class="label" data-bind="text: displayName"></span>
+                </li>
+                <!-- /ko -->
+            </ul>
+        </div>
+    </script>
+
+    <script type="text/html" id="nodeDetailsTemplate">
+        <div class="node-details" data-bind="css: {expanded: isExpanded}">
+            <div class="tab-container">
+                <!-- ko foreach: detailsViews -->
+                <span class="tab" role="tab" tabindex="0" data-bind="css: { active: active }, attr: { 'aria-label': displayName }, shortcut: { 'Enter': $parent.selectView }, click: $parent.selectDetailsView">
+                    <span class="tab-name" data-bind="attr: { title: displayName }, text: displayName"></span>
+                </span>
+                <!-- /ko -->
+                <span class="tab-spacer"></span>
+
+                <span class="expander" tabindex="0" role="button" data-bind="click: toggle, attr: { 'aria-label': toggleActionsPropertiesText }, shortcut: { 'Enter': toggle }">
+                    <!-- ko template: { if: isExpanded, name: 'ExpandChevronDown'} --> <!-- /ko -->
+                    <!-- ko template: { ifnot: isExpanded, name: 'ExpandChevronUp'} --> <!-- /ko -->
+                </span>
+            </div>
+            <div>
+                <!-- ko foreach: detailsViews -->
+                <div class="node-details-content tab-content" data-bind="visible: active, style: {height: $parent.heightPixels}">
+                    <div data-bind="template: { name: templateName, data: $data }"></div>
+                </div>
+                <!-- /ko -->
+            </div>
+        </div>
+    </script>
+
+    <script type="text/html" id="propertyDetailsTemplate">
+        <div class="property-details">
+            <table class="table">
+                <tbody>
+                    <!-- ko template: { name: 'propertyTemplate', foreach: properties } -->
+                    <!-- /ko -->
+                </tbody>
+            </table>
+            <div class="spinner" data-bind="visible: loadingMoreProperties, template: { name: 'iconTemplate', data: $root.largeSpinnerIconData }"></div>
+        </div>
+    </script>
+
+    <script type="text/html" id="actionDetailsTemplate">
+        <div class="action-details">
+            <ul class="list">
+                <!-- ko foreach: actions -->
+                <li class="item" data-bind="click: $parent.executeAction, visible:visible, css: { disabled: !enabled() }">
+                    <span class="icon">
+                        <img data-bind="visible: showIcon, attr: { src: icon }" />
+                        <!-- ko template: { if:themeSrc, name: themeSrc} --> <!-- /ko -->
+                    </span>
+                    <span>
+                        <a class="label link action-link" href="#" data-bind="text: displayName" tabindex="0"></a>
+                    </span>
+                </li>
+                <!-- /ko -->
+            </ul>
+        </div>
+    </script>
+
+    <script type="text/html" id="propertyTemplate">
+        <!-- ko if: type() === "read-only" -->
+        <tr>
+            <td>
+                <label data-bind="text: displayName, attr: { 'id': 'property-label-' + $index() }" />
+            </td>
+            <td>
+                <input class="property-input" type="text" onClick="this.select();" data-bind="value: displayValue, attr: { 'aria-labelledby': 'property-label-' + $index() }"
+                    readonly="readonly" />
+            </td>
+        </tr>
+        <!-- /ko -->
+    </script>
+
+    <script type="text/html" id="actionLinksTemplate">
+        <div class="action-links">
+            <span>
+                <a class="label link" href="#" data-bind="text: collapseAllText, click: function() { collapseAll(); }"></a>
+                <a class="label link right-align" href="#" data-bind="text: $root.refreshText, click: function() { $root.refresh(); }, attr:{ title: $root.refreshText, 'aria-label': $root.refreshText}"></a>
+            </span>
+        </div>
+    </script>
+
+    <script type="text/html" id="treeViewPanel">
+        <!-- ko template: { if: isActive, name: 'searchTemplate', data: searchViewModel } -->
+        <!-- /ko -->
+
+        <div class="informative content" data-bind="visible: runningSearch() && isEmpty()">
+            <p>
+                <!-- ko text: searchingText -->
+                <!-- /ko -->
+            </p>
+        </div>
+
+        <div class="spinner" data-bind="visible: isLoading, template: { name: 'iconTemplate', data: $root.largeSpinnerIconData }"></div>
+
+        <!-- ko if: !isLoading() && !isLoadingSearchResults() -->
+        <!-- ko if: isEmpty() && !runningSearch() -->
+        <div class="informative content">
+            <p>
+                <!-- ko text: noNodesText -->
+                <!-- /ko -->
+            </p>
+        </div>
+        <!-- /ko -->
+        <!-- ko if: invalidPath() -->
+        <div class="informative content">
+            <p>
+                <!-- ko text: invalidPathText -->
+                <!-- /ko -->
+            </p>
+        </div>
+        <!-- /ko -->
+        <!-- ko if: !isEmpty() && !invalidPath() -->
+        <!-- ko template: { if: isActive, name: 'actionLinksTemplate' } -->
+        <!-- /ko -->
+        <div class="container">
+            <div class="treeView content strip scrollable" tabindex="-1" data-bind="click: setFocus, attr: {'aria-label': treeViewAriaLabel},
+                        style: { bottom: bottomPixels }, event: { keydown: onKeyDown}">
+                <div role="main" class="treeViewContainer" data-bind="template: { name: 'nodeGroupTemplate', data: childGroupViewModel }"></div>
+            </div>
+        </div>
+        <!-- /ko -->
+        <!-- /ko -->
+    </script>
+
+    <script type="text/html" id="azureFilterPanel">
+        <div class="azure-filter content">
+            <div class="azure-filter strip scrollableContent">
+                <div class="instructions" data-bind="text: showSubscriptionsMessage"></div>
+
+                <div class="accounts" data-bind="foreach: accounts">
+                    <!-- ko template: { name: 'accountTemplate' } -->
+                    <!-- /ko -->
+                </div>
+            </div>
+            <div class="filter-footer footer strip">
+                <div style="clear: both;"></div>
+                <div class="add link">
+                    <span>
+                            <!-- ko if: $root.environment === "electron" -->
+                            <a id="addAccountLink" class="link" href="#" data-bind="click: addAccount" tabindex="0">
+                                <!-- ko text: addAccountText --><!-- /ko -->
+                            </a>
+                            <!-- /ko -->
+                            <!-- ko if: $root.environment === "vs" -->
+                            <a id="manageAccountsLink" class="link" href="#" data-bind="click: launchAccountSettings" tabindex="0">
+                                <!-- ko text: manageAccountsText --><!-- /ko -->
+                            </a>
+                            <!-- /ko -->
+                        </span>
+                </div>
+                <div style="clear: both;"></div>
+                <div class="buttons">
+                    <input type="button" data-bind="click: apply, disable: disableApply, attr: { value: applyText }" />
+                    <input type="button" data-bind="click: cancel, attr: { value: cancelText }" />
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/html" id="accountTemplate">
+        <div class="accountContent" data-bind="if: $data">
+            <div class="account">
+                <div class="icon" data-bind="if: !$data || !logo">
+                    <img src="../../images/CloudExplorer/UserInformationDefaultImage.png" data-plugin-theme-src="UserInformationDefaultImage"
+                    />
+                </div>
+                <div class="icon" data-bind="if: $data && logo">
+                    <img data-bind="attr: { src: logo }" />
+                </div>
+                <div class="status-glyph" data-bind="if: $data && isScoped">
+                    <img src="../../images/CloudExplorer/AccountFilterIcon.png" data-plugin-theme-src="AccountFilterIcon" />
+                </div>
+                <div class="status-glyph" data-bind="visible: needsReauthentication">
+                    <img src="../../images/CloudExplorer/StatusWarning_16x.png" />
+                </div>
+
+                <div class="information" data-bind="if: $data">
+                    <div class="name" data-bind="text: name"></div>
+                    <div class="userInformation" data-bind="text: userInformation"></div>
+                </div>
+
+                <!-- ko if: loadedSubscriptions -->
+                <!-- ko if: subscriptionLoadFailed -->
+                <div class="information error">
+                    <p data-bind="text: errorMessage"></p>
+                </div>
+                <!-- /ko -->
+                <div class="information error action" data-bind="visible: needsReauthentication">
+                    <span class="link" data-bind="click: reenterCredentials">
+                        <!-- ko text: reenterCredentialsText --><!-- /ko -->
+                    </span>
+                </div>
+                <!-- /ko -->
+                <!-- ko if: $root.environment === "electron" -->
+                <div class="actions">
+                    <div class="add link remove">
+                        <span>
+                            <a class="link" href="#" data-bind="text: removeAccountText,
+                                    attr : { 'aria-label': removeAccountText() + ' ' + userInformation() },
+                                    click: removeAccount" tabindex="0">
+                            </a>
+                        </span>
+                    </div>
+                </div>
+                <!-- /ko -->
+            </div>
+
+            <div class="subscriptions">
+                <div class="subscriptions-loading" data-bind="visible: !loadedSubscriptions()">
+                    <span class="icon">
+                        <div data-bind="template: { name: 'iconTemplate', data: $root.smallSpinnerIconData }" />
+                    </span>
+                    <span class="label">
+                        <span><!-- ko text: loadingText --><!-- /ko --></span>
+                    </span>
+                </div>
+                <!-- ko if: loadedSubscriptions() && !subscriptionLoadFailed()  -->
+                <!-- ko template: { name: 'noSubscriptionsPanel', data: $data, if: !subscriptions().length } -->
+                <!-- /ko -->
+                <!-- ko if: subscriptions().length -->
+
+                <div class="all-subscription">
+                    <input type="checkbox" data-bind="checked: allSelected,
+                        attr: { 'aria-label': allSubscriptionScreenReaderText }" />
+                    <!-- ko text: allSubscriptionsText -->
+                    <!-- /ko -->
+                </div>
+                <!-- ko foreach: subscriptions -->
+                <div class="subscription">
+                    <input type="checkbox" data-bind="checked: selected, attr: { 'aria-label': name }" />
+                    <span data-bind="text: name"></span>
+                </div>
+                <!-- /ko -->
+                <!-- /ko -->
+                <!-- /ko -->
+            </div>
+
+        </div>
+    </script>
+
+    <script type="text/html" id="noSubscriptionsPanel">
+        <div class="informative content">
+            <p>
+                <!-- ko text: noUserSubscriptionsText -->
+                <!-- /ko -->
+            </p>
+            <p>
+                <a href="#" data-bind="click: openRegisterAzureUrl">
+                    <!-- ko text: signUpForSubscriptionText -->
+                    <!-- /ko -->
+                </a>
+            </p>
+        </div>
+    </script>
+
+    <script type="text/html" id="settingsButtonsTemplate">
+        <div class="buttons">
+            <input type="button" data-bind="click: apply, disable: disableApply, attr: { value: applyText }" />
+            <input type="button" data-bind="click: cancel, attr: { value: cancelText }" />
+        </div>
+    </script>
+
+    <script type="text/html" id="searchTemplate">
+        <div class="search">
+            <input role="search" type="text" data-bind="value: searchValue, attr: {'aria-label': searchViewAriaLabel, 'placeholder': searchPlaceholder},
+                   valueUpdate: ['input','keyup'],
+                   css: { 'searching': $parent.runningSearch(),
+                          'storage-explorer': $parent.isStorageExplorer() }" class="input" />
+            <img role="button" class="icon clear-icon" src="../../images/CloudExplorer/BlueClearSearchIcon.png" data-plugin-theme-src="BlueClearSearchIcon"
+                data-bind="visible: hasSearchValue, click: clearSearch" />
+            <img class="icon loading-icon" data-bind="visible: $parent.runningSearch(), attr: { src: '../../images/Common/Halo_ProgressSpinner.svg' }"
+            />
+            <img class="icon search-icon" src="../../images/CloudExplorer/SearchIcon.png" data-plugin-theme-src="SearchIcon" data-bind="visible: !hasSearchValue()"
+            />
+        </div>
+    </script>
+
+    <script type="text/html" id="resourceViewPickerTemplate">
+        <div class="resource-view-picker">
+            <span class="item" data-bind="click: toggleDropdown">
+                <span class="label link" data-bind="text: displayText"></span>
+
+            <span class="expander icon">
+                    <img src="../../images/CloudExplorer/GlyphDown_linkBlueNoHalo_16x.png" data-plugin-theme-src="DropdownExpandIconBlue" />
+                </span>
+            </span>
+            <div class="context-menu" data-bind="popup:dropDownVisible, css: { 'click-activated': dropDownVisible }">
+                <ul class="list">
+                    <!-- ko foreach: panelInfos -->
+                    <li class="item" data-bind="click: $parent.selectedPanelInfo">
+                        <span class="icon"><!-- ko if:  $parent.isSelected($data)--><img src="../../images/CloudExplorer/Checkmark_16x.png" data-plugin-theme-src="CheckMarkIcon" /><!-- /ko --></span>
+                        <span class="label" data-bind="text: displayName"></span>
+                    </li>
+                    <!-- /ko -->
+                </ul>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/html" id="toolbarTemplate">
+        <div role="toolbar" class="toolbar">
+            <!-- ko template: { if: showPanelPicker, name: 'resourceViewPickerTemplate', data: panelPicker } -->
+            <!-- /ko -->
+
+            <div class="item-group" data-bind="css: { leftseparator:  showPanelPicker }">
+                <!-- ko foreach: toolbarItems -->
+                <a role="button" class="item icon" href="#" data-bind="click: onClick, attr:{title: displayName, 'aria-label': displayName}">
+                    <!-- ko template: { if:themeSrc, name: themeSrc} -->
+                    <!-- /ko -->
+                </a>
+                <!-- /ko -->
+            </div>
+        </div>
+    </script>
+
+    <script type="text/html" id="toolbarPanelsTemplate">
+        <!-- ko if: !!panelPicker() -->
+        <!-- ko foreach: panelPicker().panelInfos -->
+
+        <div class="container panel" data-bind="template: { name: 'treeViewPanel', data: panelViewModel }, css: {active: panelViewModel.isActive}"></div>
+        <!-- /ko -->
+        <!-- /ko -->
+        <!-- ko foreach: $root.cachedPanelInfos -->
+        <div class="container panel" data-bind="template: { name: panelNamespace, data: panelViewModel }, css: {active: panelViewModel.isActive}"></div>
+        <!-- /ko -->
+    </script>
+
+    <script type="text/html" id="iconTemplate">
+        <!-- ko if: environment === "electron" -->
+        <img data-bind="attr: { src: svg },
+            style: {
+                height: height || '16px',
+                width: width || '16px',
+            }" />
+        <!-- /ko -->
+        <!-- ko if: environment === "vs" -->
+        <img data-bind="attr: { src: ($root.isDarkTheme() || $root.isHighContrastBlackTheme()) ? dark : light }" />
+        <!-- /ko -->
+    </script>
+
+    <!--The following divs contains all of the images so they can be themed by Daytona when loaded and then added dynmically as needed-->
+    <div class="themed-images">
+        <div class="themed-images" type="text/html" id="DefaultResourceIcon">
+            <img src="../../images/CloudExplorer/AzureDefaultResource_16x.png" data-plugin-theme-src="DefaultResourceIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="ConnectIcon">
+            <img src="../../images/CloudExplorer/Connect_16x.png" data-plugin-theme-src="ConnectIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="ApiAppsIcon">
+            <img src="../../images/CloudExplorer/AzureAPIApp_16x.png" data-plugin-theme-src="ApiAppsIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="ApplicationInsightsIcon">
+            <img src="../../images/CloudExplorer/ApplicationInsights_16x.png" data-plugin-theme-src="ApplicationInsightsIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="ApplicationInsightsSearchIcon">
+            <img src="../../images/CloudExplorer/ApplicationInsightsSearch_16x.png" data-plugin-theme-src="ApplicationInsightsSearchIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="AvailabilitySetsIcon">
+            <img src="../../images/CloudExplorer/AzureAvailabilitySet_16x.png" data-plugin-theme-src="AvailabilitySetsIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="AzureActiveDirectoryIcon">
+            <img src="../../images/CloudExplorer/AzureActiveDirectory_16x.png" data-plugin-theme-src="AzureActiveDirectoryIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="AzureLogicAppDesignerIcon">
+            <img src="../../images/CloudExplorer/AzureLogicAppDesigner_16x.png" data-plugin-theme-src="AzureLogicAppDesignerIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="AzureLogicAppEnableIcon">
+            <img src="../../images/CloudExplorer/AzureLogicAppEnable_16x.png" data-plugin-theme-src="AzureLogicAppEnableIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="AzureLogicAppDisableIcon">
+            <img src="../../images/CloudExplorer/AzureLogicAppDisable_16x.png" data-plugin-theme-src="AzureLogicAppDisableIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="AzureLogicAppHistoryIcon">
+            <img src="../../images/CloudExplorer/AzureLogicAppHistory_16x.png" data-plugin-theme-src="AzureLogicAppHistoryIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DataFactoriesIcon">
+            <img src="../../images/CloudExplorer/AzureDataFactory_16x.png" data-plugin-theme-src="DataFactoriesIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DataFactoryLinkedServiceGroupIcon">
+            <img src="../../images/CloudExplorer/AzureDataFactoryLinkedServiceGroup_16x.png" data-plugin-theme-src="DataFactoryLinkedServiceGroupIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataFactoryTableGroupIcon">
+            <img src="../../images/CloudExplorer/AzureDataFactoryTableGroup_16x.png" data-plugin-theme-src="DataFactoryTableGroupIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataFactoryPipelineGroupIcon">
+            <img src="../../images/CloudExplorer/AzureDataFactoryPipelineGroup_16x.png" data-plugin-theme-src="DataFactoryPipelineGroupIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataFactoryLinkedServiceIcon">
+            <img src="../../images/CloudExplorer/AzureDataFactoryLinkedService_16x.png" data-plugin-theme-src="DataFactoryLinkedServiceIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataFactoryTableIcon">
+            <img src="../../images/CloudExplorer/AzureDataFactoryTable_16x.png" data-plugin-theme-src="DataFactoryTableIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DataFactoryPipelineIcon">
+            <img src="../../images/CloudExplorer/AzureDataFactoryPipeline_16x.png" data-plugin-theme-src="DataFactoryPipelineIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DeleteApplicationIcon">
+            <img src="../../images/CloudExplorer/Remove_16x.png" data-plugin-theme-src="DeleteApplicationIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DeploymentSlotsIcon">
+            <img src="../../images/CloudExplorer/AzureDeploymentSlots_16x.png" data-plugin-theme-src="DeploymentSlotsIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DisableDebuggingIcon">
+            <img src="../../images/CloudExplorer/DisableDebugging_16x.png" data-plugin-theme-src="DisableDebuggingIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DisableDiagnosticsIcon">
+            <img src="../../images/CloudExplorer/DisableDiagnostics_16x.png" data-plugin-theme-src="DisableDiagnosticsIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DisableLogIcon">
+            <img src="../../images/CloudExplorer/DisableLog_16x.png" data-plugin-theme-src="DisableLogIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DocumentDBAccountsIcon">
+            <img src="../../images/CloudExplorer/AzureCosmosDB.svg" data-plugin-theme-src="DocumentDBAccountsIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DocumentDBDatabasesIcon">
+            <img src="../../images/CloudExplorer/AzureDocumentDBDatabase_16x.png" data-plugin-theme-src="DocumentDBDatabasesIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DocumentDBCollectionsIcon">
+            <img src="../../images/CloudExplorer/AzureDocumentDBCollection_16x.png" data-plugin-theme-src="DocumentDBCollectionsIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DocumentDBDocumentsIcon">
+            <img src="../../images/CloudExplorer/AzureDocumentDBDocument_16x.png" data-plugin-theme-src="DocumentDBDocumentsIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DocumentDBGraphIcon">
+            <img src="../../images/CloudExplorer/AzureDocumentDBGraph.svg" data-plugin-theme-src="DocumentDBGraphIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DocumentDBStoredProcedureIcon">
+            <img src="../../images/CloudExplorer/AzureDocumentDBStoredProcedure.svg" data-plugin-theme-src="DocumentDBStoredProcedureIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DocumentDBTriggerIcon">
+            <img src="../../images/CloudExplorer/AzureDocumentDBTrigger.svg" data-plugin-theme-src="DocumentDBTriggerIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DocumentDBUDFIcon">
+            <img src="../../images/CloudExplorer/AzureDocumentDBUDF.svg" data-plugin-theme-src="DocumentDBUDFIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DocumentDBNewStoredProcedureIcon">
+            <img src="../../images/CloudExplorer/AzureDocumentDBNewStoredProcedure.svg" data-plugin-theme-src="DocumentDBNewStoredProcedureIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DocumentDBNewTriggerIcon">
+            <img src="../../images/CloudExplorer/AzureDocumentDBNewTrigger.svg" data-plugin-theme-src="DocumentDBNewTriggerIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DocumentDBNewUDFIcon">
+            <img src="../../images/CloudExplorer/AzureDocumentDBNewUDF.svg" data-plugin-theme-src="DocumentDBNewUDFIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DocumentDBCreateIcon">
+            <img src="../../images/CloudExplorer/AzureDocumentDBCreate.svg" data-plugin-theme-src="DocumentDBCreateIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="ExpandChevronDown">
+            <img src="../../images/CloudExplorer/ExpandChevronDown_lightGrey_16x.png" data-plugin-theme-src="ExpandChevronDown" />
+        </div>
+        <div class="themed-images" type="text/html" id="ExpandChevronUp">
+            <img src="../../images/CloudExplorer/ExpandChevronUp_lightGrey_16x.png" data-plugin-theme-src="ExpandChevronUp" />
+        </div>
+        <div class="themed-images" type="text/html" id="DownloadIcon">
+            <img src="../../images/CloudExplorer/DownloadIcon.png" data-plugin-theme-src="DownloadIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="EnableDebuggingIcon">
+            <img src="../../images/CloudExplorer/EnableDebugging_16x.png" data-plugin-theme-src="EnableDebuggingIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="EnableDiagnosticsIcon">
+            <img src="../../images/CloudExplorer/EnableDiagnostics_16x.png" data-plugin-theme-src="EnableDiagnosticsIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="FunctionsAppIcon">
+            <img src="../../images/CloudExplorer/AzureFunctionsApp_16x.png" data-plugin-theme-src="FunctionsAppIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="EnableLogIcon">
+            <img src="../../images/CloudExplorer/EnableLog_16x.png" data-plugin-theme-src="EnableLogIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="GatewaysIcon">
+            <img src="../../images/CloudExplorer/AzureGateway_16x.png" data-plugin-theme-src="GatewaysIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="GenericFileIcon">
+            <img src="../../images/CloudExplorer/GenericFile_16x.png" data-plugin-theme-src="GenericFileIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="GenericFolderIcon">
+            <img src="../../images/CloudExplorer/GenericFolder_16x.png" data-plugin-theme-src="GenericFolderIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="HDInsightIcon">
+            <img src="../../images/CloudExplorer/AzureHDInsight_16x.png" data-plugin-theme-src="HDInsightIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="HDInsightClusterIcon">
+            <img src="../../images/CloudExplorer/AzureHDInsightCluster_16x.png" data-plugin-theme-src="HDInsightClusterIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="HDInsightContainerIcon">
+            <img src="../../images/CloudExplorer/AzureHDInsightContainer_16x.png" data-plugin-theme-src="HDInsightContainerIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="HDInsightHBaseIcon">
+            <img src="../../images/CloudExplorer/AzureHDInsightHBase_16x.png" data-plugin-theme-src="HDInsightHBaseIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="HDInsightHiveDatabaseIcon">
+            <img src="../../images/CloudExplorer/AzureHDInsightHiveDatabase_16x.png" data-plugin-theme-src="HDInsightHiveDatabaseIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="HDInsightHiveDatabasesIcon">
+            <img src="../../images/CloudExplorer/AzureHDInsightHiveDatabases_16x.png" data-plugin-theme-src="HDInsightHiveDatabasesIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="HDInsightServiceLogIcon">
+            <img src="../../images/CloudExplorer/AzureHDInsightServiceLog_16x.png" data-plugin-theme-src="HDInsightServiceLogIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="HDInsightSparkIcon">
+            <img src="../../images/CloudExplorer/AzureHDInsightSpark_16x.png" data-plugin-theme-src="HDInsightSparkIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="HDInsightStorageAccountIcon">
+            <img src="../../images/CloudExplorer/AzureHDInsightStorageAccount_16x.png" data-plugin-theme-src="HDInsightStorageAccountIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="HDInsightStormIcon">
+            <img src="../../images/CloudExplorer/AzureHDInsightStorm_16x.png" data-plugin-theme-src="HDInsightStormIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="HDInsightTableIcon">
+            <img src="../../images/CloudExplorer/AzureHDInsightTable_16x.png" data-plugin-theme-src="HDInsightTableIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="HDInsightTableColumnIcon">
+            <img src="../../images/CloudExplorer/AzureHDInsightTableColumn_16x.png" data-plugin-theme-src="HDInsightTableColumnIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="LoadBalancersIcon">
+            <img src="../../images/CloudExplorer/AzureLoadBalancer_16x.png" data-plugin-theme-src="LoadBalancersIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="LogicAppsIcon">
+            <img src="../../images/CloudExplorer/AzureLogicApp_16x.png" data-plugin-theme-src="LogicAppsIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="MobileAppsIcon">
+            <img src="../../images/CloudExplorer/AzureMobileApp_16x.png" data-plugin-theme-src="MobileAppsIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="MySQLDatabaseIcon">
+            <img src="../../images/CloudExplorer/AzureMySQLDatabase_16x.png" data-plugin-theme-src="MySQLDatabaseIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="NetworkInterfaceIcon">
+            <img src="../../images/CloudExplorer/AzureNetworkInterface_16x.png" data-plugin-theme-src="NetworkInterfaceIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="NetworkSecurityGroupIcon">
+            <img src="../../images/CloudExplorer/AzureNetworkSecurityGroup_16x.png" data-plugin-theme-src="NetworkSecurityGroupIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="NotificationHubsIcon">
+            <img src="../../images/CloudExplorer/AzureNotificationHub_16x.png" data-plugin-theme-src="NotificationHubsIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="OpenInPortalIcon">
+            <img src="../../images/CloudExplorer/OpenInPortal_16x.png" data-plugin-theme-src="OpenInPortalIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="OpenInSQLServerObjectExplorerIcon">
+            <img src="../../images/CloudExplorer/OpenInSQLServerObjectExplorer_16x.png" data-plugin-theme-src="OpenInSQLServerObjectExplorerIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="OpenIcon">
+            <img src="../../images/CloudExplorer/Open_16x.png" data-plugin-theme-src="OpenIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DeleteIcon">
+            <img src="../../images/CloudExplorer/Remove_16x.png" data-plugin-theme-src="DeleteIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="OpenWebsiteIcon">
+            <img src="../../images/CloudExplorer/OpenInBrowser_16x.png" data-plugin-theme-src="OpenWebsiteIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="KuduIcon">
+            <img src="../../images/CloudExplorer/Kudu_16x.png" data-plugin-theme-src="KuduIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="WebsiteSlotSwapIcon">
+            <img src="../../images/CloudExplorer/WebsiteSlotSwap_16x.png" data-plugin-theme-src="WebsiteSlotSwapIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="RedisCacheIcon">
+            <img src="../../images/CloudExplorer/AzureRedisCache_16x.png" data-plugin-theme-src="RedisCacheIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="ReservedIPAddressIcon">
+            <img src="../../images/CloudExplorer/AzureReservedIPAddress_16x.png" data-plugin-theme-src="ReservedIPAddressIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="ResourceGroupIcon">
+            <img src="../../images/CloudExplorer/AzureResourceGroup_16x.png" data-plugin-theme-src="ResourceGroupIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="RestartIcon">
+            <img src="../../images/CloudExplorer/Restart_16x.png" data-plugin-theme-src="RestartIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="RefreshIcon">
+            <img src="../../images/CloudExplorer/Refresh_16x.png" data-plugin-theme-src="RefreshIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="SchedulerJobCollectionsIcon">
+            <img src="../../images/CloudExplorer/AzureSchedulerJob_16x.png" data-plugin-theme-src="SchedulerJobCollectionsIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="SearchServicesIcon">
+            <img src="../../images/CloudExplorer/AzureCloudSearch_16x.png" data-plugin-theme-src="SearchServicesIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="SettingsIcon">
+            <img src="../../images/CloudExplorer/Settings_16x.png" data-plugin-theme-src="SettingsIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="SQLDatabaseIcon">
+            <img src="../../images/CloudExplorer/AzureSQLDatabase_16x.png" data-plugin-theme-src="SQLDatabaseIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="SQLDatabaseServersIcon">
+            <img src="../../images/CloudExplorer/AzureSQLServer_16x.png" data-plugin-theme-src="SQLDatabaseServersIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="StartDebuggingIcon">
+            <img src="../../images/CloudExplorer/AttachDebugger_16x.png" data-plugin-theme-src="StartDebuggingIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="StartIcon">
+            <img src="../../images/CloudExplorer/StartIcon.png" data-plugin-theme-src="StartIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="StartProfilerIcon">
+            <img src="../../images/CloudExplorer/StartProfiler_16x.png" data-plugin-theme-src="StartProfilerIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="StartStreamingLogsIcon">
+            <img src="../../images/CloudExplorer/StartStreamingLogsIcon_16x.png" data-plugin-theme-src="StartStreamingLogsIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="StatusInvalidIcon">
+            <img src="../../images/CloudExplorer/StatusInvalid_16x.png" data-plugin-theme-src="StatusInvalidIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="StopIcon">
+            <img src="../../images/CloudExplorer/StopIcon.png" data-plugin-theme-src="StopIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="StopProfilerIcon">
+            <img src="../../images/CloudExplorer/StopProfiler_16x.png" data-plugin-theme-src="StopProfilerIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="StopStreamingLogsIcon">
+            <img src="../../images/CloudExplorer/StopStreamingLogs_16x.png" data-plugin-theme-src="StopStreamingLogsIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="StorageAccountIcon">
+            <img src="../../images/CloudExplorer/AzureStorageAccount_16x.png" data-plugin-theme-src="StorageAccountIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="StorageAccountBlobContainerIcon">
+            <img src="../../images/CloudExplorer/AzureBlob_16x.png" data-plugin-theme-src="StorageAccountBlobContainerIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="StorageAccountFileShareIcon">
+            <img src="../../images/CloudExplorer/AzureFileShare_16x.png" data-plugin-theme-src="StorageAccountFileShareIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="StorageAccountQueueIcon">
+            <img src="../../images/CloudExplorer/AzureQueue_16x.png" data-plugin-theme-src="StorageAccountQueueIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="StorageAccountTableIcon">
+            <img src="../../images/CloudExplorer/AzureTable_16x.png" data-plugin-theme-src="StorageAccountTableIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="StorageAccountCreateIcon">
+            <img src="../../images/CloudExplorer/AzureFileShare_16x.png" data-plugin-theme-src="StorageAccountCreateIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="StorageAccountDeleteIcon">
+            <img src="../../images/CloudExplorer/Remove_16x.png" data-plugin-theme-src="StorageAccountDeleteIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="StorageAccountOpenIcon">
+            <img src="../../images/CloudExplorer/Open_16x.png" data-plugin-theme-src="StorageAccountOpenIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="AzureSubscriptionIcon">
+            <img src="../../images/CloudExplorer/AzureSubscription_16x.png" data-plugin-theme-src="AzureSubscriptionIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="TeamProjectIcon">
+            <img src="../../images/CloudExplorer/AzureTeam_16x.png" data-plugin-theme-src="TeamProjectIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="TreeViewExpandedIcon">
+            <img src="../../images/CloudExplorer/ScrollbarArrowsDownRight_noHalo1E_16x.png" data-plugin-theme-src="TreeViewExpandedIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="TreeViewCollapsedIcon">
+            <img src="../../images/CloudExplorer/ScrollbarArrowsCollapsed_noHalo1E_16x.png" data-plugin-theme-src="TreeViewCollapsedIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="UploadIcon">
+            <img src="../../images/CloudExplorer/UploadIcon_16x.png" data-plugin-theme-src="UploadIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="ViewDiagnosticsIcon">
+            <img src="../../images/CloudExplorer/ViewDiagnostics_16x.png" data-plugin-theme-src="ViewDiagnosticsIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="ViewLogIcon">
+            <img src="../../images/CloudExplorer/Log_16x.png" data-plugin-theme-src="ViewLogIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="OpenApplicationInsightsIcon">
+            <img src="../../images/CloudExplorer/OpenApplicationInsights_16x.png" data-plugin-theme-src="OpenApplicationInsightsIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="VirtualMachineIcon">
+            <img src="../../images/CloudExplorer/AzureVirtualMachine_16x.png" data-plugin-theme-src="VirtualMachineIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="VirtualMachineExtensionIcon">
+            <img src="../../images/CloudExplorer/AzureVirtualMachineExtension_16x.png" data-plugin-theme-src="VirtualMachineExtensionIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="VirtualMachineScaleSetIcon">
+            <img src="../../images/CloudExplorer/AzureVirtualMachineScaleSet_16x.png" data-plugin-theme-src="VirtualMachineScaleSetIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="VirtualNetworkIcon">
+            <img src="../../images/CloudExplorer/AzureVirtualNetworkIPAddress_16x.png" data-plugin-theme-src="VirtualNetworkIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="WebHostingIcon">
+            <img src="../../images/CloudExplorer/AzureWebHostingPlan_16x.png" data-plugin-theme-src="WebHostingIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="WebjobIcon">
+            <img src="../../images/CloudExplorer/AzureWebjob_16x.png" data-plugin-theme-src="WebjobIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="WebsiteIcon">
+            <img src="../../images/CloudExplorer/AzureWebsite_16x.png" data-plugin-theme-src="WebsiteIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="ServiceFabricIcon">
+            <img src="../../images/CloudExplorer/ServiceFabric_16x.png" data-plugin-theme-src="ServiceFabricIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="ServiceFabricColorIcon">
+            <img src="../../images/CloudExplorer/ServiceFabric_color_16x.png" data-plugin-theme-src="ServiceFabricColorIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalytics_16x.png" data-plugin-theme-src="DataLakeAnalyticsIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsAccountIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsAccount_16x.png" data-plugin-theme-src="DataLakeAnalyticsAccountIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsCatalogAssemblyIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsCatalogAssembly_16x.png" data-plugin-theme-src="DataLakeAnalyticsCatalogAssemblyIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsCatalogDatabaseIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsCatalogDatabase_16x.png" data-plugin-theme-src="DataLakeAnalyticsCatalogDatabaseIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsCatalogDatabasesIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsCatalogDatabases_16x.png" data-plugin-theme-src="DataLakeAnalyticsCatalogDatabasesIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsCatalogSchemaIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsCatalogSchema_16x.png" data-plugin-theme-src="DataLakeAnalyticsCatalogSchemaIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsCatalogTableIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsCatalogTable_16x.png" data-plugin-theme-src="DataLakeAnalyticsCatalogTableIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsCatalogTVFIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsCatalogTVF_16x.png" data-plugin-theme-src="DataLakeAnalyticsCatalogTVFIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsJobsIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsJobs_16x.png" data-plugin-theme-src="DataLakeAnalyticsJobsIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsLinkedStorageIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsLinkedStorage_16x.png" data-plugin-theme-src="DataLakeAnalyticsLinkedStorageIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsLinkedStoragesIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsLinkedStorages_16x.png" data-plugin-theme-src="DataLakeAnalyticsLinkedStoragesIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsMetadataIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsMetadata_16x.png" data-plugin-theme-src="DataLakeAnalyticsMetadataIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeFolderOpenIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeFolderOpen_16x.png" data-plugin-theme-src="DataLakeFolderOpenIcon" />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsCatalogCredentialIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsCatalogCredential_16x.png" data-plugin-theme-src="DataLakeAnalyticsCatalogCredentialIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsCatalogExternalDataSourceIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsCatalogExternalDataSource_16x.png" data-plugin-theme-src="DataLakeAnalyticsCatalogExternalDataSourceIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsCatalogProcedureIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsCatalogProcedure_16x.png" data-plugin-theme-src="DataLakeAnalyticsCatalogProcedureIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsCatalogTableColumnIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsCatalogTableColumn_16x.png" data-plugin-theme-src="DataLakeAnalyticsCatalogTableColumnIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsCatalogTableIndexIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsCatalogTableIndex_16x.png" data-plugin-theme-src="DataLakeAnalyticsCatalogTableIndexIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsCatalogTableStatisticsIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsCatalogTableStatistics_16x.png" data-plugin-theme-src="DataLakeAnalyticsCatalogTableStatisticsIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsCatalogTableTypeIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsCatalogTableType_16x.png" data-plugin-theme-src="DataLakeAnalyticsCatalogTableTypeIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeAnalyticsCatalogViewIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeAnalyticsCatalogView_16x.png" data-plugin-theme-src="DataLakeAnalyticsCatalogViewIcon"
+            />
+        </div>
+        <div class="themed-images" type="text/html" id="DataLakeStoreIcon">
+            <img src="../../images/CloudExplorer/AzureDataLakeStore_16x.png" data-plugin-theme-src="DataLakeStoreIcon" />
+        </div>
+        <!-- Not themed by Daytona -->
+        <div class="themed-images" type="text/html" id="QuickAccessIcon">
+            <img src="../../images/CloudExplorer/QuickAccess_16x.svg" />
+        </div>
+    </div>
+
+    <!--
+        This div is not part of the view. It will be used as the container of
+        the iFrames where the plugins will be loaded. Those iFrames will be
+        added dynamically and they will not be visible.
+    -->
+    <div class="plugins"></div>
+</body>
+
+</html>

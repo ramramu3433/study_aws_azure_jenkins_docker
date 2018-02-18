@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - Import Entities</title>
+
+    <link rel="stylesheet" href="./ImportEntities.css" data-plugin-theme="true" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="dialogTitle">
+        <div class="title" id="dialogTitle" data-bind="text: titleLabel"></div>
+
+        <div class="content">
+            <div class="entity-table">
+                <div class="entity-table-row">
+                    <div class="entity-table-cell name-header" data-bind="text: attributeNameLabel"></div>
+                    <div class="entity-table-cell type-header" data-bind="text: dataTypeLabel"></div>
+                    <div class="entity-table-cell value-header" data-bind="text: attributeValueLabel"></div>
+                </div>
+            </div>
+            <div class="scroll-box">
+                <div class="entity-table" data-bind="foreach: propertyViewModels">
+                    <div class="entity-table-row">
+                        <div class="entity-table-cell name-col">
+                            <input type="text" class="entity-table-field" data-bind="value: name, enable: !isReadOnly, css: { 'invalid-field': isNameInvalid }, attr: { title: nameTooltip }"
+                            />
+                        </div>
+                        <div class="entity-table-cell type-col">
+                            <select class="entity-table-field" data-bind="options: $parent.displayEdmTypes, value: displayType, enable: !isReadOnly"></select>
+                        </div>
+                        <div class="entity-table-cell value-col">
+                            <input type="text" class="entity-table-field" data-bind="value: value" readonly/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="import-option">
+                <input type="checkbox" id="replace-option" data-bind="checked: preserveExistingValues"></select>
+                <label for="replace-option" data-bind="text: preserveExistingValuesLabel"></label>
+            </div>
+            <div class="import-option">
+                <input type="checkbox" id="null-option" data-bind="checked: shouldUseNull"></select>
+                <label for="null-option" data-bind="text: shouldUseNullLabel"></label>
+            </div>
+
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+</body>
+
+</html>

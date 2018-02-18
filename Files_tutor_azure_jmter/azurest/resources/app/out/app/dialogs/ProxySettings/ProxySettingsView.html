@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - Proxy Settings</title>
+
+    <link rel="stylesheet" href="./ProxySettings.css" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="dialogTitle">
+        <div class="title" id="dialogTitle" data-bind="text: titleLabel"></div>
+
+        <div class="content">
+            <div class="proxy-settings-toggle">
+                <input id="noProxy" type="radio" value="noProxy" data-bind="checked: proxySettingsOption" autofocus/>
+                <label for="noProxy" data-bind="text: noProxyRadioLabel"></label>
+            </div>
+            <div class="proxy-settings-toggle">
+                <input id="customProxy" type="radio" value="customProxy" data-bind="checked: proxySettingsOption" />
+                <label for="customProxy" data-bind="text: customProxyRadioLabel"></label>
+            </div>
+
+            <!-- HTML layout using table tags is a no-no, but CSS tables don't have any support for row or column spans -->
+            <div class="proxy-settings-table indent">
+                <div class="proxy-settings-field">
+                    <label data-bind="text: urlLabel" for="url"></label>
+                    <input class="long" type="text" id="url" data-bind="textInput: url, enable: isCustomProxyEnabled, css: { 'invalid-field': !isUrlValid() }"
+                    />
+                </div>
+                <div class="proxy-settings-field">
+                    <label data-bind="text: portLabel" for="port"></label>
+                    <input type="text" id="port" data-bind="textInput: port, enable: isCustomProxyEnabled, css: { 'invalid-field': !isPortValid() }"
+                    />
+                </div>
+            </div>
+
+            <div class="proxy-settings-toggle indent">
+                <input id="useCredentials" type="checkbox" data-bind="checked: isCredentialsChecked, enable: isCustomProxyEnabled" />
+                <label for="useCredentials" data-bind="text: useCredentialsLabel"></label>
+            </div>
+            <div class="indent">
+                <div class="proxy-settings-table indent">
+                    <div class="proxy-settings-field">
+                        <label data-bind="text: usernameLabel" for="userName"></label>
+                        <input type="text" id="userName" data-bind="value: username, enable: isCredentialsEnabled" />
+                    </div>
+                    <div class="proxy-settings-field">
+                        <label data-bind="text: passwordLabel" for="password"></label>
+                        <input type="password" id="password" data-bind="value: password, enable: isCredentialsEnabled" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+</body>
+
+</html>

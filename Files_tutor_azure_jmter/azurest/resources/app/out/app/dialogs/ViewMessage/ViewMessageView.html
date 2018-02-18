@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html class="page" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - View Message</title>
+
+    <link rel="stylesheet" href="./ViewMessage.css" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="dialogTitle">
+        <div class="title" id="dialogTitle" data-bind="text: titleLabel"></div>
+
+        <div class="content">
+            <div class="row">
+                <label for="messageText" data-bind="text: messageTextLabel"></label>
+                <textarea id="messageText" rows="15" data-bind="value: messageText" aria-describedby="note" readonly autofocus></textarea>
+            </div>
+            <div id="note">
+                <span class="text">
+                <label data-bind="text: messageType"></label>
+            </span>
+            </div>
+            <ul class="no-bullets" data-bind="foreach: messageProperties">
+                <li class="row">
+                    <label for="property" data-bind="text: key"></label>
+                    <input id="property" type="text" data-bind="value: value, attr: { 'aria-label': key + value }" readonly />
+                </li>
+            </ul>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+</body>
+
+</html>

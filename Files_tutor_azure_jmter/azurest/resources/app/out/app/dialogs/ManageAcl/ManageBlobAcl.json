@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 520,
+        "width": 950
+    },
+    "view": "./app/dialogs/ManageAcl/ManageAclView.html",
+    "viewModel": "./app/dialogs/ManageAcl/ManageBlobAclViewModel"
+}

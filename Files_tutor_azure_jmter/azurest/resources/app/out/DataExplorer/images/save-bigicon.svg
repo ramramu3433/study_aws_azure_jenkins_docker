@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" enable-background="new 0 0 16 16">
+    <style type="text/css">.icon-asx-blue{fill:#0081E4;}</style> 
+	<path class="icon-asx-blue" d="M13.9,0.8c0.1,0,0.3,0,0.4,0.1C14.4,1,14.6,1,14.6,1.1c0.1,0.1,0.2,0.2,0.2,0.3s0.1,0.3,0.1,0.4v13
+		H2.7L0.9,13V1.8c0-0.1,0-0.3,0.1-0.4c0.1-0.1,0.1-0.2,0.2-0.3C1.3,1,1.4,1,1.5,0.9c0.1-0.1,0.3-0.1,0.4-0.1H13.9z M13.9,1.8h-1v6
+		h-10v-6h-1v10.8l1.2,1.2h0.8v-4h7v4h3V1.8z M3.9,6.8h8v-5h-8V6.8z M9.9,10.8h-5v3h1v-2h1v2h3V10.8z"/>
+</svg>

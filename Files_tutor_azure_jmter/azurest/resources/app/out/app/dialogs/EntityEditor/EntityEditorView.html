@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer</title>
+
+    <link rel="stylesheet" href="./EntityEditor.css" data-plugin-theme="true" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="dialogTitle">
+        <div class="title" id="dialogTitle" data-bind="text: titleLabel"></div>
+
+        <div class="content">
+            <div class="entity-table">
+                <div class="entity-table-row">
+                    <div class="entity-table-cell property-header" data-bind="text: attributeNameLabel"></div>
+                    <div class="entity-table-cell type-header" data-bind="text: dataTypeLabel"></div>
+                    <div class="entity-table-cell value-header" data-bind="text: attributeValueLabel"></div>
+                </div>
+            </div>
+            <div class="scroll-box">
+                <div class="entity-table" data-bind="foreach: displayedAttributes">
+                    <div class="entity-table-row">
+                        <div class="entity-table-cell property-column">
+                            <input type="text" class="entity-table-field property-column" data-bind="
+                                textInput: name,
+                                attr: { title: nameTooltip, placeholder: namePlaceholder },
+                                css: { 'invalid-field': isInvalidName },
+                                readOnly: !editable,
+                                hasFocus: hasFocus" />
+                        </div>
+                        <div class="entity-table-cell type-column">
+                            <select class="entity-table-field" data-bind="
+                                options: $parent.edmTypes,
+                                optionsAfterRender: $parent.setOptionDisable,
+                                value: type,
+                                enable: editable,
+                                readOnly: !editable">
+                            </select>
+                        </div>
+                        <div class="entity-table-cell value-column">
+                            <input class="entity-table-field" type="text" step=1 data-bind="
+                                textInput: value,
+                                attr: { title: valueTooltip, placeholder: valuePlaceholder },
+                                css: { 'invalid-field': isInvalidValue },
+                                readOnly: !valueEditable,
+                                hasFocus: valueHasFocus" />
+                        </div>
+                        <div class="entity-table-cell action-column" data-bind="if: removable || editable">
+                            <button type="button" title="Edit entity" class="inline-button" data-bind="click: $parent.editAttribute.bind($data, $index())">
+                                <img src="../../../app/media/StorageExplorer/EditEntity_16x.png" alt="...">
+                            </button>
+                            <button type="button" title="Delete entity" class="inline-button" data-bind="click: $parent.removeAttribute.bind($data, $index())">
+                                <img src="../../../app/media/StorageExplorer/Delete_16x.png" alt="X">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="entity-table">
+                <div class="entity-table-row">
+                    <div class="entity-table-cell">
+                        <button type="button" class="inline-button" data-bind="text: addButtonLabel, enable: canAdd, click: insertAttribute" autofocus></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+
+    <div id="editor-panel" class="dialog-panel" data-bind="with: editingProperty, event: { keyup: onKeyup }" tabindex="0">
+        <div class="title" data-bind="text: name"></div>
+
+        <div class="content">
+            <textarea id="editor-area" rows="21" data-bind="value: value"></textarea>
+        </div>
+
+        <div class="buttons">
+            <input type="button" data-bind="value: closeButtonLabel, click: $root.finishEditingAttribute" />
+        </div>
+    </div>
+</body>
+
+</html>

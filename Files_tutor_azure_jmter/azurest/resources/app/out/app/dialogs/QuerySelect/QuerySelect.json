@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 500,
+        "width": 500
+    },
+    "view": "app/dialogs/QuerySelect/QuerySelectView.html",
+    "viewModel": "app/dialogs/QuerySelect/QuerySelectViewModel"
+}

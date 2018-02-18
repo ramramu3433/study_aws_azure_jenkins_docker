@@ -1,0 +1,177 @@
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  /*[{scrollbar-background}]*/
+  border: 1px solid transparent;
+  /*[1px solid {scrollbar-border}]*/
+}
+::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  /*[{scrollbar-thumb-background}]*/
+  border: 1px solid transparent;
+  /*[1px solid {scrollbar-thumb-border}]*/
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: transparent;
+  /*[{scrollbar-thumb-hover-background}]*/
+}
+::-webkit-scrollbar-thumb:active {
+  background-color: transparent;
+  /*[{scrollbar-thumb-active-background}]*/
+}
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+  /*[{plugin-background-color}]*/
+}
+* {
+  box-sizing: border-box;
+  margin: 0px;
+  padding: 0px;
+}
+html {
+  height: 100%;
+  width: 100%;
+}
+.container {
+  background-color: #e6e7e8;
+  /*[{plugin-background-color}]*/
+  color: #000000;
+  /*[{plugin-color}]*/
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+}
+button {
+  border: none;
+  background: none;
+  color: #3399FF;
+  /*[{environment-panel-hyperlink}]*/
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: inline;
+}
+button:focus,
+button:hover {
+  border: none;
+  color: transparent;
+  /*[{environment-panel-hyperlink-hover}]*/
+  text-decoration: underline;
+}
+.header.strip {
+  background-color: #EEEEF2;
+  /*[{common-controls-inner-tab-inactive-background}]*/
+  display: flex;
+  flex: 0 0 auto;
+  overflow: auto;
+}
+.header.strip h1 {
+  font-size: 100%;
+  font-weight: 500;
+  float: left;
+}
+.header.strip .dismiss-buttons {
+  margin-left: 10px;
+  float: left;
+}
+.header.strip .dismiss-buttons button {
+  margin: 9px 9px;
+}
+.activity-log {
+  flex: 1 1 auto;
+  overflow: auto;
+}
+.activity-log [role="treegrid"] {
+  border-spacing: 0;
+  padding: 0 10px 10px 10px;
+}
+.activity-log .header-column {
+  width: auto;
+}
+.activity-log .message-column {
+  width: auto;
+}
+.activity-log .progress-column {
+  width: auto;
+}
+.activity-log .actions-column {
+  width: 100%;
+}
+.activity-log .log-entry[aria-level="1"] .expander {
+  margin-left: 18px;
+}
+.activity-log .log-entry[aria-level="2"] .expander {
+  margin-left: 36px;
+}
+.activity-log .log-entry[aria-level="3"] .expander {
+  margin-left: 54px;
+}
+.activity-log .log-entry:not(:last-child) [role="rowheader"],
+.activity-log .log-entry:not(:last-child) [role="gridcell"] {
+  border-bottom: 1px solid #CCCEDB;
+  /*[1px solid {datatable-header-cell-active-border}]*/
+}
+.activity-log .log-entry [role="rowheader"],
+.activity-log .log-entry [role="gridcell"] {
+  padding: 2px 4px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.activity-log .log-entry [role="rowheader"] div,
+.activity-log .log-entry [role="gridcell"] div {
+  display: inline-block;
+  vertical-align: middle;
+}
+.activity-log .log-entry [role="rowheader"] .expander {
+  height: 16px;
+  width: 18px;
+}
+.activity-log .log-entry [role="rowheader"] .expander img {
+  height: 16px;
+  width: 16px;
+}
+.activity-log .log-entry [role="rowheader"] .expander.clickable {
+  cursor: pointer;
+}
+.activity-log .log-entry [role="rowheader"] .status {
+  height: 16px;
+  width: 18px;
+}
+.activity-log .log-entry [role="rowheader"] .status img {
+  height: 16px;
+  width: 16px;
+}
+.activity-log .log-entry .title,
+.activity-log .log-entry .message,
+.activity-log .log-entry .progress {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+  text-overflow: ellipsis;
+}
+.activity-log .log-entry .expander,
+.activity-log .log-entry .status,
+.activity-log .log-entry .actions {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.activity-log .log-entry .actions {
+  text-align: right;
+}
+.activity-log .log-entry .actions button {
+  min-width: auto;
+  padding: 0 8px;
+  text-align: left;
+}
+.activity-log .log-entry .more-children-message {
+  text-indent: 0;
+  line-height: 2em;
+}

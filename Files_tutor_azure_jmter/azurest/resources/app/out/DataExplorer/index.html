@@ -1,0 +1,63 @@
+<!DOCTYPE html public "-//W3C//DTD HTML 4.0//en">
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0">
+
+    <title>Azure Cosmos DB Emulator</title>
+
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+
+    <script src="externals/require.js"></script>
+    <script src="built/require-config.js"></script>
+    <script src="externals/jquery.js"></script>
+</head>
+
+<body>
+    <header class="header HeaderBg">
+        <div class="items">
+            <img class="DocDBicon" src="images/CosmosDB_20170524.svg" alt="Azure Cosmos DB" />
+            <a class="createdocdbacnt" href="https://aka.ms/documentdbcreate" target="_blank">
+                Create an Azure Cosmos DB account
+                <img class="rightarrowimg" src="images/Arrow.svg" alt=""/>
+            </a>
+            <span class="title">Azure Cosmos DB Emulator</span>
+        </div>
+    </header>
+
+    <nav class="fixedleftpane">
+        <div id="Quickstart" data-bind="click: quickstart_click, css:{ topSelected: navigationSelection() === 'quickstart' }">
+            <img id="imgiconwidth1" src="images/QuickStart.svg" alt="Open Quick Start">
+            <span class="menuQuickStart">Quickstart</span>
+        </div>
+
+        <div id="Explorer" data-bind="click: explorer_click, css:{ topSelected: navigationSelection() === 'explorer' }">
+            <img id="imgiconwidth1" src="images/Explorer.svg" alt="Open Data Explorer">
+            <span class="menuExplorer">Explorer</span>
+        </div>
+
+        <div>
+            <a class="feedbackstyle" href="mailto:askdocdb@microsoft.com?subject=Cosmos%20DB%20Emulator%20Feedback">
+                <img id="imgiconwidth1" src="images/Feedback.svg" alt="Send feedback">
+                <span class="menuExplorer">Feedback</span>
+            </a>
+        </div>
+    </nav>
+
+    <iframe name="quickstart" class="iframe" src="quickstart.html" / data-bind="visible: navigationSelection() === 'quickstart'">
+    </iframe>
+
+    <iframe name="explorer" class="iframe" src="explorer.html" / data-bind="visible: navigationSelection() === 'explorer'">
+    </iframe>
+
+    <iframe id="correlation" class="iframe" data-bind="attr: { src: correlationSrc }">
+    </iframe>
+
+    <script>
+        require(["built/Index"]);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,17 @@
+.errorDisplay {
+    line-height: 25px;
+    padding: 8px;
+    display: flex;
+}
+
+.errorDisplay .warningContainer {
+    padding: 3px;
+}
+
+.errorDisplay img {
+    height: 14px;
+}
+
+.errorDisplay .msgContainer {
+    padding: 5px;
+}

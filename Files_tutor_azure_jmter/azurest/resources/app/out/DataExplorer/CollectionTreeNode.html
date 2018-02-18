@@ -1,0 +1,219 @@
+<li>
+    <div tabindex="0" class="collectionMenu treeHovermargin highlight" data-bind="
+        click: $data.expandCollapseCollection,
+        clickBubble: false,
+        contextmenuBubble: false,
+        css:{
+            collectionNodeSelected: isCollectionNodeSelected(),
+            contextmenushowing: $data.contextMenu.visible
+        },
+        event: {
+            keydown: onKeyDown,
+            keypress: onKeyPress,
+            contextmenu: $data.contextMenu.show,
+            drop: $data.onDrop,
+            dragover: $data.onDragOver
+        }">
+
+        <span class="context_Menu" data-bind="click: $data.contextMenu.show, clickBubble: false">&hellip;</span>
+        <span data-bind="
+            attr: { 
+                title: $data.id() 
+            },
+            css: {
+                expanded: $data.isCollectionExpanded(),
+                collapsed: !$data.isCollectionExpanded()
+            }">
+            <img src="images/tree-collection.svg" data-bind="
+                attr: {
+                    alt: container.addCollectionText
+                }"/>
+            <!--ko text: $data.id--><!--/ko-->
+        </span>
+    </div>
+
+    <!-- Collection node children - Start -->
+    <ul data-bind="
+        visible: $data.isCollectionExpanded,
+        clickBubble: false">
+
+        <!-- Documents Node - Start -->
+        <li>
+            <div tabindex="0" class="documentsMenu menuHover" data-bind="
+                visible: $root.isPreferredApiDocumentDB,
+                click: $data.onDocumentDBDocumentsClick,
+                event: {
+                    keydown: onDocumentDBDocumentsKeyDown,
+                    keypress: onDocumentDBDocumentsKeyPress
+                },
+                clickBubble: false,
+                css: {
+                    highlight: true,
+                    collectionNodeSelected: isSubNodeSelected(0)
+                }">
+                <span class="paddingRight">Documents</span>
+            </div>
+        </li>
+        <!-- Documents Node - End -->
+
+        <!-- Entitites Node - Start -->
+        <li>
+            <div tabindex="0" class="documentsMenu menuHover" data-bind="
+                visible: $root.isPreferredApiTable,
+                click: $data.onTableEntitiesClick,
+                clickBubble: false,
+                css: {
+                    highlight: true,
+                    collectionNodeSelected: $root.selectedNode && $root.selectedNode() && $root.selectedNode().rid === $data.rid && $data.selectedSubnodeKind() === 0
+                }">
+                <span class="paddingRight">Entities</span>
+            </div>
+        </li>
+        <!-- Entitites Node - End -->
+
+        <!-- Graph Node - Start -->
+        <li>
+            <div tabindex="0" class="documentsMenu menuHover" data-bind="
+                visible: $root.isPreferredApiGraph,
+                click: $data.onGraphDocumentsClick,
+                clickBubble: false,
+                css: {
+                    highlight: true,
+                    collectionNodeSelected: $root.selectedNode && $root.selectedNode() && $root.selectedNode().rid === $data.rid && $data.selectedSubnodeKind() === 0
+                }">
+                <span class="paddingRight">Graph</span>
+            </div>
+        </li>
+        <!-- Graph Node - End -->
+
+        <!-- MongoDB Documents Node - Start -->
+        <li>
+            <div tabindex="0" class="documentsMenu menuHover" data-bind="
+                visible: $root.isPreferredApiMongoDB,
+                click: $data.onMongoDBDocumentsClick,
+                event: {
+                    keydown: onMongoDBDocumentsKeyDown,
+                    keypress: onMongoDBDocumentsKeyPress
+                },
+                clickBubble: false,
+                css: {
+                    highlight: true,
+                    collectionNodeSelected: $root.selectedNode && $root.selectedNode() && $root.selectedNode().rid === $data.rid && $data.selectedSubnodeKind() === 0
+                }">
+                <span class="paddingRight">Documents</span>
+            </div>
+        </li>
+        <!-- MongoDB Documents Node - End -->
+
+        <!-- Scale & Setings Node - Start -->
+        <li>
+            <div tabindex="0" class="menuHover" data-bind="
+                click: $data.onSettingsClick,
+                event: {
+                    keydown: onSettingsKeyDown,
+                    keypress: onSettingsKeyPress
+                },
+                css: {
+                    highlight: true,
+                    collectionNodeSelected: $root.selectedNode && $root.selectedNode() && $root.selectedNode().rid === $data.rid && $data.selectedSubnodeKind() === 1
+                }">
+                <span>
+                    Scale & Settings
+                </span>
+            </div>
+        </li>
+        <!-- Scale & Setings Node - End -->
+
+        <!-- Stored Procedures Node - Start -->
+        <li>
+            <div tabindex="0" class="storedProcedureMenu treeMenu highlight" data-bind="
+                click: $data.expandCollapseStoredProcedures,
+                event: {
+                    keydown: onStoredProceduresKeyDown,
+                    keypress: onStoredProceduresKeyPress
+                },
+                css: {
+                    collectionNodeSelected: isSubNodeSelected(2)
+                }">
+                    <span class="collectionMenuChildren" data-bind="
+                        attr: {
+                            title: $data.id()
+                        },
+                        css: {
+                            expanded: $data.isStoredProceduresExpanded(),
+                            collapsed: !$data.isStoredProceduresExpanded()
+                        }">
+                        Stored Procedures
+                    </span>
+                </div>
+
+            <ul class="treeChildMenuHover" data-bind=" visible: $data.isStoredProceduresExpanded(), foreach: $data.storedProcedures">
+                <stored-procedure-node params="{data: $data}"></stored-procedure-node>
+            </ul>
+        </li>
+        <!-- Stored Procedures Node - End -->
+
+        <!-- User Defined Functions Node - Start -->
+        <li>
+            <div tabindex="0" class="userDefinedMenu treeMenu highlight" data-bind="
+                click: $data.expandCollapseUserDefinedFunctions,
+                event: {
+                    keydown: onUserDefinedFunctionsKeyDown,
+                    keypress: onUserDefinedFunctionsKeyPress
+                },
+                css: {
+                    collectionNodeSelected: isSubNodeSelected(3)
+                }">
+                <div>
+                    <span class="collectionMenuChildren" data-bind="
+                    attr: {
+                        title: $data.id()
+                    },
+                    css: {
+                        expanded: $data.isUserDefinedFunctionsExpanded(),
+                        collapsed: !$data.isUserDefinedFunctionsExpanded()
+                    }">
+                        User Defined Functions
+                    </span>
+                </div>
+            </div>
+
+            <ul class="treeChildMenuHover" data-bind="visible: $data.isUserDefinedFunctionsExpanded(), foreach: $data.userDefinedFunctions">
+                <user-defined-function-node params="{data: $data}"></user-defined-function-node>
+            </ul>
+        </li>
+        <!-- User Defined Functions Node - End -->
+
+        <!-- Triggers Node - Start -->
+        <li>
+            <div tabindex="0" class="triggersMenu treeMenu highlight" data-bind="
+                click: $data.expandCollapseTriggers,
+                event: {
+                    keydown: onTriggersKeyDown,
+                    keypress: onTriggersKeyPress
+                },
+                css: {
+                    collectionNodeSelected: isSubNodeSelected(4)
+                }">
+                <div>
+                    <span class="collectionMenuChildren" data-bind="
+                        attr: {
+                            title: $data.id()
+                        },
+                        css: {
+                            expanded: $data.isTriggersExpanded(),
+                            collapsed: !$data.isTriggersExpanded()
+                        }">
+                        Triggers
+                    </span>
+                </div>
+            </div>
+
+            <ul class="treeChildMenuHover" data-bind="visible: $data.isTriggersExpanded(), foreach: $data.triggers">
+                <trigger-node params="{data: $data}"></trigger-node>
+            </ul>
+        </li>
+        <!-- Triggers Node - End -->
+    </ul>
+    <!-- Collection node children - End -->
+</li>

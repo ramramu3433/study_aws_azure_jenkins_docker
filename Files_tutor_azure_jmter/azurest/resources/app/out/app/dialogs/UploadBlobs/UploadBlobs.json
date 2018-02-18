@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 375,
+        "width": 500
+    },
+    "view": "app/dialogs/UploadBlobs/UploadBlobsView.html",
+    "viewModel": "app/dialogs/UploadBlobs/UploadBlobsViewModel"
+}

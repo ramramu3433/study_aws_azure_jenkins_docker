@@ -1,0 +1,54 @@
+<div class="context-menu-background" data-bind="visible: contextMenu.visible, click: contextMenu.hide"></div>
+
+<div class="context-menu" data-bind="visible: contextMenu.visible, attr:{ id: contextMenu.elementId }">
+    <div class="context-menu-option" data-bind="
+        visible: container.isPreferredApiDocumentDB, 
+        click: onNewQueryClick">
+        <img class="commandIcon" src="images/AddQuery.svg" alt="New SQL query">New SQL Query
+    </div>
+
+    <div class="context-menu-option" data-bind="
+        visible: container.isPreferredApiGraph,
+        click: onNewGraphClick">
+        <img class="commandIcon" src="images/AddGraphQuery_16x16.svg" alt="New graph query">New Graph Query
+    </div>
+
+    <div class="context-menu-option" data-bind="
+        visible: container.isPreferredApiGraph,
+        click: onNewQueryClick">
+        <img class="commandIcon" src="images/AddSqlQuery_16x16.svg" alt="New SQL query">New SQL Query
+    </div>
+
+    <div class="context-menu-option" data-bind="
+        visible: container.isPreferredApiMongoDB,
+        click: onNewMongoQueryClick">
+        <img class="commandIcon" src="images/AddQuery.svg" alt="New Mongo query">New Mongo Query
+    </div>
+    
+    <div class="context-menu-option" data-bind="
+        visible: container.isPreferredApiMongoDB,
+        click: onNewMongoShellClick">
+        <img class="commandIcon" src="images/Mongoshell1.svg" alt="New Mongo shell">New Mongo Shell
+    </div>
+
+    <div class="context-menu-option" data-bind="
+        click: onNewStoredProcedureClick">
+        <img class="commandIcon" src="images/AddStoredProcedure.svg" alt="New stored procedure">New Stored Procedure
+    </div>
+
+    <div class="context-menu-option" data-bind="
+        click: onNewUserDefinedFunctionClick">
+        <img class="commandIcon" src="images/AddUdf.svg" alt="New user defined function">New User Defined Function
+    </div>
+
+    <div class="context-menu-option" data-bind="
+        click: onNewTriggerClick">
+        <img class="commandIcon" src="images/AddTrigger.svg" alt="New trigger">New Trigger
+    </div>
+
+    <div class="context-menu-option" data-bind="
+        click: onDeleteCollectionContextMenuClick">
+        <img class="commandIcon" src="images/delete.svg" alt="Delete collection">Delete Collection
+    </div>
+
+</div>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - Properties</title>
+    <link rel="stylesheet" href="./FlobProperties.css" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="dialogTitle">
+        <div class="title" id="dialogTitle" data-bind="text: propertiesLabel"></div>
+
+        <div class="content">
+            <div class="scroll-box properties">
+                <div class="property-table">
+                    <!-- ko foreach: properties -->
+                    <div class="property-table-row">
+                        <div class="property-table-cell name">
+                            <input type="text" tabindex="-1" data-bind="value: displayName" readonly/>
+                        </div>
+                        <div class="property-table-cell value">
+                            <input type="text" data-bind="value: displayValue, attr: { 'aria-label': displayName }" readonly />
+                        </div>
+                        <div class="property-table-cell actions"></div>
+                    </div>
+                    <!-- /ko -->
+                    <!-- ko foreach: editableProperties -->
+                    <div class="property-table-row">
+                        <div class="property-table-cell name">
+                            <input type="text" tabindex="-1" data-bind="value: displayName" readonly/>
+                        </div>
+                        <div class="property-table-cell value">
+                            <input type="text" data-bind="textInput: displayValue, attr: { 'aria-label': displayName }, css: { invalid: !isValueValid() }"
+                            />
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                </div>
+            </div>
+
+            <h2 id="metadataLabel" data-bind="text: metadataLabel"></h2>
+            <div class="scroll-box metadata">
+                <div class="property-table">
+                    <span id="noMetadataLabel" data-bind="if: metadata().length === 0">No metadata available</span>
+
+                    <!-- ko if: !readOnly() -->
+                    <!-- ko foreach: metadata -->
+                    <div class="property-table-row">
+                        <div class="property-table-cell name">
+                            <input type="text" tabindex="0" aria-labelledby="metadataLabel" data-bind="textInput: displayName, attr: { title: nameError },  css: { invalid: !isNameValid() }"
+                            />
+                        </div>
+                        <div class="property-table-cell value">
+                            <input type="text" tabindex="0" data-bind="textInput: displayValue, attr: { title: valueError, 'aria-label': displayName }, css: { invalid: !isValueValid() }"
+                            />
+                        </div>
+                        <div class="property-table-cell actions">
+                            <button data-bind="hasFocus: isRemoveButtonFocused, click: $parent.removeMetadata.bind($parent, $index()), attr: { title: deleteMetadataButton }">
+                                <img src="../../media/StorageExplorer/Delete_16x.png" />
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                    <!-- /ko -->
+
+                    <!-- ko if: readOnly -->
+                    <!-- ko foreach: metadata -->
+                    <div class="property-table-row">
+                        <div class="property-table-cell name">
+                            <input type="text" data-bind="value: displayName" readonly />
+                        </div>
+                        <div class="property-table-cell value">
+                            <input type="text" data-bind="value: displayValue, attr: { title: displayName }" readonly />
+                        </div>
+                        <div class="property-table-cell actions"></div>
+                    </div>
+                    <!-- /ko -->
+                    <!-- /ko -->
+
+                </div>
+            </div>
+            <div class="table-buttons">
+                <input aria-describedby="noMetadataLabel" type="button" data-bind="value: addLabel, click: addMetadata, enable: !readOnly()"
+                />
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+</body>
+
+</html>

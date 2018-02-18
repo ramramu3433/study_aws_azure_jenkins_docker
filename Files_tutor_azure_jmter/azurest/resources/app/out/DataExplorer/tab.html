@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html class="page" lang="en" xmlns="http://www.w3.org/1999/xhtml" aria-label="Data Explorer">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <meta charset="utf-8" />
+    <title>Azure Cosmos DB</title>
+    <link rel="stylesheet" href="../CloudHub/css/StorageExplorer/fulldatatables.css" data-plugin-theme="true" />
+    <link rel="stylesheet" href="../CloudHub/css/StorageExplorer/site.css" data-plugin-theme="true" />
+    <link rel="stylesheet" href="../CloudHub/css/StorageExplorer/toolbar.css" data-plugin-theme="true" />
+
+    <script type="text/javascript" src="externals/documentdbclient-1.14.0.edit.js"></script>
+    <script type="text/javascript" src="externals/daytona.js"></script>
+    <script type="text/javascript">
+        // Dev12 back-compat fix
+        if (typeof Microsoft === "undefined") {
+            Microsoft = { Plugin: Plugin };
+        } else if (!Microsoft.Plugin) {
+            Microsoft.Plugin = Plugin;
+        }
+
+        if (Microsoft.Plugin) {
+            // Attach to Error event at global level.
+            // If an exception is thrown Daytona crashes,
+            // we need to handle error as soon as possible.
+            window.TelemetryMarshaler = Microsoft.Plugin.Utilities.JSONMarshaler.attachToPublishedObject("Telemetry", {}, true);
+            window.onerror = function (errorMsg, url, lineNumber) {
+                try {
+                    // Load the marshaler for telemetry
+                    var marshaler = window.TelemetryMarshaler;
+
+                    // Check if we loaded the marshaler
+                    if (!!marshaler) {
+                        // Get rid of possible PII from
+                        // the url as it is a local path.
+                        // We only need the file name.
+                        var file;
+                        if (!!url) {
+                            var parts = url.split("/");
+                            file = parts[parts.length - 1];
+                        }
+
+                        // Send telemetry event with
+                        // error information.
+                        marshaler._call(
+                            "sendEvent",
+                            "CloudHub.Error",
+                            {
+                                name: "Global",
+                                message: errorMsg,
+                                file: file,
+                                lineNumber: lineNumber
+                            });
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+
+                return false;
+            };
+
+            // Attach to Daytona's pluginready event at a global level
+            window.pluginReady = (function () {
+                var pluginReady = false;
+                var pluginReadyEventName = "pluginready";
+
+                function onPluginReady() {
+                    Microsoft.Plugin.removeEventListener(pluginReadyEventName, onPluginReady);
+                    pluginReady = true;
+                };
+                Microsoft.Plugin.addEventListener(pluginReadyEventName, onPluginReady);
+                return function (callback) {
+                    if (!pluginReady) {
+                        var callbackWrapper = function () {
+                            Microsoft.Plugin.removeEventListener(pluginReadyEventName, callbackWrapper);
+                            callback();
+                        }
+                        Microsoft.Plugin.addEventListener(pluginReadyEventName, callbackWrapper);
+                    } else {
+                        callback();
+                    }
+                }
+            }());
+        }
+    </script>
+
+    <script>
+        function getParameterByName(name) {
+            var url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+            var results = regex.exec(url);
+            if (!results) {
+                return null;
+            }
+            if (!results[2]) {
+                return '';
+            }
+
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        cosmosDbDataExplorerVersion = getParameterByName("v") || new Date().getTime();
+
+        function loadCss(urls) {
+            var urlsArray = (Array.isArray(urls)) ? urls : [urls];
+
+            for (var i = 0; i < urlsArray.length; i++) {
+                var link = document.createElement("link");
+                link.rel = "stylesheet";
+                link.type = "text/css";
+                link.href = urlsArray[i];
+                document.getElementsByTagName("head")[0].appendChild(link);
+            }
+        }
+
+        function loadScripts(urls) {
+            var urlsArray = (Array.isArray(urls)) ? urls : [urls];
+            for (var i = 0; i < urlsArray.length; i++) {
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.src = urlsArray[i];
+                document.getElementsByTagName("head")[0].appendChild(script);
+            }
+        }
+    </script>
+
+    <script src="externals/require.js"></script>
+    <script src="externals/jquery.min.js"></script>
+
+    <script>
+        loadCss([
+            "externals/bootstrap.css",
+            "css/StorageExplorer.css",
+            "css/tree.css",
+            "css/forms.css",
+            "css/menus.css",
+            "css/messagebox.css",
+            "css/graphExplorer.css",
+            "css/TableStyles/queryBuilder.css",
+            "externals/jquery.contextMenu.css",
+            "css/TableStyles/EntityEditor.css",
+            "css/TableStyles/CustomizeColumns.css",
+            "externals/jquery.typeahead.min.css"
+        ]);
+
+        loadScripts([
+            "built/require-config.js",
+            "externals/vs/loader.js",
+            "externals/bootstrap.js",
+            "externals/underscore-min.js",
+            "externals/jquery.contextMenu.js",
+            "externals/jquery.typeahead.min.js"
+        ]);
+    </script>
+</head>
+
+<body class="container">
+    <div id="divExplorer">
+        <!-- ko if: currentTab.tabKind === 0 -->
+        <documents-tab params="{data: currentTab}"></documents-tab>
+        <!-- /ko -->
+        <!-- ko if: currentTab.tabKind === 11 -->
+        <mongo-documents-tab params="{data: currentTab}"></mongo-documents-tab>
+        <!-- /ko -->
+        <!-- ko if: currentTab.tabKind === 1 -->
+        <settings-tab params="{data: currentTab}"></settings-tab>
+        <!-- /ko -->
+        <!-- ko if: currentTab.tabKind === 2 -->
+        <stored-procedure-tab params="{data: currentTab}"></stored-procedure-tab>
+        <!-- /ko -->
+        <!-- ko if: currentTab.tabKind === 3 -->
+        <user-defined-function-tab params="{data: currentTab}"></user-defined-function-tab>
+        <!-- /ko -->
+        <!-- ko if: currentTab.tabKind === 4 -->
+        <trigger-tab params="{data: currentTab}"></trigger-tab>
+        <!-- /ko -->
+    </div>
+
+    <script>
+        require(["./built/Platform/Daytona/Tab"]);
+    </script>
+
+</body>
+
+</html>

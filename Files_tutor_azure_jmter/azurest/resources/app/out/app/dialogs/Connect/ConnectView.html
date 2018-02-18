@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html class="page" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - Connect</title>
+
+    <link rel="stylesheet" href="./Connect.css" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" data-bind="with: connectOptionsPanel" role="dialog" aria-labelledby="connectOptionsPanelTitle">
+        <div class="title" id="connectOptionsPanelTitle" data-bind="text: title"></div>
+
+        <div class="content">
+            <div class="row" tabindex="0" data-bind="attr:{'aria-label': connectOptionsLabel}">
+                <label for="connectionOption" data-bind="text: connectOptionsLabel"></label>
+            </div>
+
+            <div class="row radio-group" data-bind="foreach: connectOptions">
+                <div>
+                    <label>
+                        <input type="radio" for="connectionOption" name="connectionOption" data-bind="value: name, checked: $parent.selectedConnectOption"
+                        />
+                        <span data-bind="text: label"></span>
+                    </label>
+                </div>
+
+                <!-- ko if: hasDropdown -->
+                <div class="radio-group-subgroup row">
+                    <label for="azureEnvironment" class="secondary-label" data-bind="text: dropdown().label"></label>
+                    <select id="azureEnvironment" class="radio-group-subgroup-select" data-bind="options: dropdown().options, optionsText: 'displayValue',
+                        enable: $parent.selectedConnectOption() == name, value: dropdown().selectedOption" role="combobox"></select>
+                </div>
+                <!-- /ko -->
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="visible: isVisible, value: caption, click: onClick, enable: isEnabled, hasFocus: isFocused"
+            />
+        </div>
+    </div>
+
+    <div id="add-with-sas-panel" class="dialog-panel" data-bind="with: addWithSasPanel" role="dialog" aria-labelledby="addWithSasPanelTitle">
+        <div class="title" id="addWithSasPanelTitle" data-bind="text: title"></div>
+
+        <div class="content">
+            <div class="row radio-group">
+                <div data-bind="attr: { title: connectionStringTooltip }">
+                    <input type="radio" id="connectionStringSection" name="connectionOption" value="connectionString" data-bind="checked: selectedSection"
+                    />
+                    <label for="connectionStringSection" data-bind="text: connectionStringSectionLabel"></label>
+                </div>
+                <div data-bind="attr: { title: sasUriTooltip }">
+                    <input type="radio" id="sasUriSection" name="connectionOption" value="sasUri" data-bind="checked: selectedSection" />
+                    <label for="sasUriSection" data-bind="text: sasUriSectionLabel"></label>
+                </div>
+            </div>
+
+            <div data-bind="if: isConnectionStringSectionEnabled">
+                <div class="row">
+                    <label for="connection-string-input" data-bind="text: connectionStringInputLabel"></label>
+                    <input type="text" id="connection-string-input" data-bind="
+                        textInput: connectionString,
+                        css: { 'invalid-field': !!connectionStringErrorMessage() },
+                        event: { keydown: $parent.onKeypressed }
+                        " />
+                </div>
+                <div class="row">
+                    <label for="connection-string-label" data-bind="text: connectionStringLabelLabel"></label>
+                    <input type="text" id="connection-string-label" data-bind="
+                        textInput: connectionStringLabel,
+                        css: { 'invalid-field': !!connectionStringLabelErrorMessage() },
+                        event: { keydown: $parent.onKeypressed }
+                        " />
+                </div>
+            </div>
+
+            <div data-bind="if: isSasUriSectionEnabled">
+                <div class="row">
+                    <label for="sas-uri" data-bind="text: sasUriInputLabel"></label>
+                    <input type="text" id="sas-uri" data-bind="
+                        textInput: sasUri,
+                        css: { 'invalid-field': !!sasUriErrorMessage() },
+                        event: { keydown: $parent.onKeypressed }
+                        " />
+                </div>
+                <div class="row">
+                    <label for="sas-uri-label" data-bind="text: sasUriLabelLabel"></label>
+                    <input type="text" id="sas-uri-label" data-bind="
+                        textInput: sasUriLabel,
+                        css: { 'invalid-field': !!sasUriLabelErrorMessage() },
+                        enable: isSasUriLabelEnabled,
+                        event: { keydown: $parent.onKeypressed },
+                        attr: { title: sasUriLabelTooltip, 'aria-describedby': sasUriLabelTooltip }
+                        " />
+                </div>
+                <div class="row">
+                    <label for="sas-uri-blob-endpoint" data-bind="text: sasUriBlobEndpointLabel"></label>
+                    <input type="text" id="sas-uri-blob-endpoint" data-bind="
+                        textInput: sasUriBlobEndpoint,
+                        css: { 'invalid-field': !isSasUriBlobEndpointValid() },
+                        enable: isSasUriBlobEndpointEnabled,
+                        event: { keydown: $parent.onKeypressed },
+                        attr: { title: sasUriBlobEndpointTooltip, 'aria-describedby': sasUriBlobEndpointTooltip }
+                        " />
+                </div>
+
+                <div class="row">
+                    <label for="sas-uri-file-endpoint" data-bind="text: sasUriFileEndpointLabel"></label>
+                    <input type="text" id="sas-uri-file-endpoint" data-bind="
+                        textInput: sasUriFileEndpoint,
+                        css: { 'invalid-field':! isSasUriFileEndpointValid() },
+                        enable: isSasUriFileEndpointEnabled,
+                        event: { keydown: $parent.onKeypressed },
+                        attr: { title: sasUriFileEndpointTooltip, 'aria-describedby': sasUriFileEndpointTooltip }
+                        " />
+                </div>
+                <div class="row">
+                    <label for="sas-uri-queue-endpoint" data-bind="text: sasUriQueueEndpointLabel"></label>
+                    <input type="text" id="sas-uri-queue-endpoint" data-bind="
+                        textInput: sasUriQueueEndpoint,
+                        css: { 'invalid-field': !isSasUriQueueEndpointValid() },
+                        enable: isSasUriQueueEndpointEnabled,
+                        event: { keydown: $parent.onKeypressed },
+                        attr: { title: sasUriQueueEndpointTooltip, 'aria-describedby': sasUriQueueEndpointTooltip }
+                        " />
+                </div>
+                <div class="row">
+                    <label for="sas-uri-table-endpoint" data-bind="text: sasUriTableEndpointLabel"></label>
+                    <input type="text" id="sas-uri-table-endpoint" data-bind="
+                        textInput: sasUriTableEndpoint,
+                        css: { 'invalid-field': !isSasUriTableEndpointValid() },
+                        enable: isSasUriTableEndpointEnabled
+                        event: { keydown: $parent.onKeypressed },
+                        attr: { title: sasUriTableEndpointTooltip, 'aria-describedby': sasUriTableEndpointTooltip }
+                        " />
+                </div>
+                <!-- /ko -->
+            </div>
+
+            <div class="note" role="alert" aria-atomic="true" data-bind="visible: !!errorMessage()">
+                <img src="../../media/StorageExplorer/StatusInvalid_16x.png" />
+                <label class="warning" data-bind="text: errorMessage"></label>
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="visible: isVisible, value: caption, click: onClick, enable: isEnabled, hasFocus: isFocused"
+            />
+        </div>
+    </div>
+
+    <div id="add-with-key-panel" class="dialog-panel" data-bind="with: addWithKeyPanel" role="dialog" aria-labelledby="addWithKeyPanelTitle">
+        <div class="title" id="addWithKeyPanelTitle" data-bind="text: title"></div>
+
+        <div class="content">
+            <div class="row" tabindex="0">
+                <label>Enter information to connect to the Microsoft Azure storage account</label>
+            </div>
+            <div class="row">
+                <label for="accountName">Account name:</label>
+                <input type="text" id="accountName" data-bind="textInput: accountName, attr: { placeholder: accountNamePlaceholder },
+                css: { 'invalid-field': !isAccountNameValid() }, event: { keydown: $parent.onKeypressed }" />
+            </div>
+            <div class="row">
+                <label for="accountKey">Account key:</label>
+                <input type="text" id="accountKey" data-bind="textInput: accountKey, attr: { placeholder: accountKeyPlaceholder },
+                css: { 'invalid-field': !isAccountKeyValid() }, event: { keydown: $parent.onKeypressed }" />
+            </div>
+            <div class="inline-group" data-bind="visible: warningMessage">
+                <label class="warning" role="alert" aria-atomic="true" data-bind="text: warningMessage"></label>
+            </div>
+
+            <div class="row" tabindex="-1">
+                <label id="storageEndpoints">Storage endpoints domain:</label>
+                <select id="endpointOptionsSelect" data-bind="options: endpointOptions, optionsText: 'displayValue', value: selectedEndpointsDomain, attr:{'aria-label': endpointOptionsLabel}"
+                    role="combobox"></select>
+                <input type="text" data-bind="textInput: enteredEndpointsDomain, attr: { placeholder: endpointsDomainPlaceholder }, event: { keydown: $parent.onKeypressed }, visible: selectedEndpointsDomain().value === ''"
+                />
+            </div>
+
+            <div class="inline-group inline-group-left">
+                <input class="inlinecheckbox" type="checkbox" id="ishttpcheckbox" data-bind="checked: useHttp, event: { keydown: $parent.onKeypressed }"
+                />
+                <label for="ishttpcheckbox">Use HTTP (Not recommended)</label>
+            </div>
+
+            <div class="inline-group">
+                <a href="#" data-bind="click: openStatement">Online privacy statement</a>
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="visible: isVisible, value: caption, click: onClick, enable: isEnabled, hasFocus: isFocused"
+            />
+        </div>
+    </div>
+
+    <div id="az-stack-env-panel" class="dialog-panel" data-bind="with: azureStackEnvironmentPanel" role="dialog" aria-labelledby="azureStackEnvironmentPanelTitle">
+        <div class="title" id="azureStackEnvironmentPanelTitle" data-bind="text: title"></div>
+
+        <div class="content">
+            <div class="row" tabindex="0">
+                <label data-bind="text: prompt"></label>
+            </div>
+
+            <div class="row" data-bind="visible: customEnvironmentOptions().length > 1">
+                <label for="customEnvironmentSelect" data-bind="text: customEnvironmentSelectLabel"></label>
+                <select id="customEnvironmentSelect" data-bind="options: customEnvironmentOptions, optionsText: 'environmentName',
+                value: selectedCustomEnvironmentOption" role="combobox"></select>
+            </div>
+
+            <!-- ko if: !disableInput() -->
+            <table id="table-info" class="table-info">
+                <tbody data-bind="foreach: inputViewModels">
+                    <tr>
+                        <td class="one-px" data-bind="attr: { 'id': 'td-' + id }">
+                            <label class="warning" data-bind="attr: { title: $parent.requiredText }, style: { visibility: isRequired === true ? 'initial' : 'hidden'}">*</label>
+                            <label class="cell-label" data-bind="text: label"></label>
+                        </td>
+                        <td data-bind="attr: { 'id': 'td-' + id }">
+                            <input class="cell-input" type="text" data-bind="textInput: observable, event: { keydown: $parent.onKeypressed }, css: { 'invalid-field': isInvalid() }"
+                            />
+                        </td>
+                        <tr>
+                            <tr data-bind="visible: isHelpLinkVisible">
+                                <td></td>
+                                <td align="right" id="td-armEndpointHelpLink">
+                                    <a style="vertical-align:text-top" data-bind="click: $parent.onClickArmEndpointHelpLink" href="#">How do I get the ARM endpoint?</a>
+                                </td>
+                            </tr>
+                </tbody>
+            </table>
+
+            <div class="inline-group" data-bind="visible: environmentErrorMessage">
+                <label class="warning" data-bind="text: environmentErrorMessage"></label>
+            </div>
+
+            <div class="inline-group" data-bind="visible: connectStatusPrompt">
+                <label data-bind="text: connectStatusPrompt"></label>
+            </div>
+            <!-- /ko -->
+            <!-- ko if: disableInput() -->
+            <div class="row" tabindex="0">
+                <table id="table-info" class="table-info">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="cell-label">Authority:</div>
+                            </td>
+                            <td>
+                                <div class="cell-data" data-bind="text: selectedHost"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="cell-label">Sign in resource id:</div>
+                            </td>
+                            <td>
+                                <div class="cell-data" data-bind="text: selectedResourceId"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="cell-label">Graph endpoint:</div>
+                            </td>
+                            <td>
+                                <div class="cell-data" data-bind="text: selectedGraphEndpoint"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="cell-label">ARM resource id:</div>
+                            </td>
+                            <td>
+                                <div class="cell-data" data-bind="text: selectedArmId"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="cell-label">ARM endpoint:</div>
+                            </td>
+                            <td>
+                                <div class="cell-data" data-bind="text: selectedArmEndpoint"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="cell-label">Tenant Id:</div>
+                            </td>
+                            <td>
+                                <div class="cell-data" data-bind="text: selectedTenantIds"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <div class="row">
+                    <input type="button" data-bind="click: duplicateEnvironment, value: duplicateButtonText" class="environment-management-button"
+                    />
+                    <br>
+                    <input type="button" data-bind="click: deleteEnvironment, value: deleteButtonText" class="environment-management-button"
+                    />
+                    <img style="width: 24px; height: 24px;" data-bind="visible: deleting, attr: { src: '../../../app/media/Common/Halo_ProgressSpinner.svg' }"
+                    />
+                </div>
+            </div>
+            <!-- /ko -->
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="visible: isVisible, value: caption, click: onClick, enable: isEnabled, hasFocus: isFocused"
+            />
+        </div>
+    </div>
+
+    <div id="custom-env-panel" class="dialog-panel" data-bind="with: createEnvironmentPanel" role="dialog" aria-labelledby="createEnvironmentPanelTitle">
+        <div class="title" id="createEnvironmentPanelTitle" data-bind="text: title"></div>
+
+        <div class="content">
+            <div class="row" tabindex="0">
+                <label data-bind="text: prompt"></label>
+            </div>
+
+            <div class="row" data-bind="visible: customEnvironmentOptions().length > 1">
+                <label for="customEnvironmentSelect" data-bind="text: customEnvironmentSelectLabel"></label>
+                <select id="customEnvironmentSelect" data-bind="options: customEnvironmentOptions, optionsText: 'environmentName',
+                value: selectedCustomEnvironmentOption" role="combobox"></select>
+            </div>
+
+            <!-- ko if: !disableInput() -->
+            <table id="table-info" class="table-info">
+                <tbody data-bind="foreach: inputViewModels">
+                    <tr>
+                        <td class="one-px" data-bind="attr: { 'id': 'td-' + id }">
+                            <label class="warning" data-bind="attr: { title: $parent.requiredText }, style: { visibility: isRequired === true ? 'initial' : 'hidden'}">*</label>
+                            <label class="cell-label" data-bind="text: label"></label>
+                        </td>
+                        <td data-bind="attr: { 'id': 'td-' + id }">
+                            <input class="cell-input" type="text" data-bind="textInput: observable, event: { keydown: $parent.onKeypressed }, css: { 'invalid-field': isInvalid() }"
+                            />
+                        </td>
+                        <tr>
+                            <tr data-bind="visible: isHelpLinkVisible">
+                                <td></td>
+                                <td align="right" id="td-armEndpointHelpLink">
+                                    <a style="vertical-align:text-top" data-bind="click: $parent.onClickArmEndpointHelpLink" href="#">How do I get the ARM endpoint?</a>
+                                </td>
+                            </tr>
+                </tbody>
+            </table>
+
+            <div class="inline-group" data-bind="visible: environmentErrorMessage">
+                <label class="warning" data-bind="text: environmentErrorMessage"></label>
+            </div>
+
+            <div class="inline-group" data-bind="visible: connectStatusPrompt">
+                <label data-bind="text: connectStatusPrompt"></label>
+            </div>
+            <!-- /ko -->
+            <!-- ko if: disableInput() -->
+            <div class="row" tabindex="0">
+                <table id="table-info" class="table-info">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="cell-label">Authority:</div>
+                            </td>
+                            <td>
+                                <div class="cell-data" data-bind="text: selectedHost"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="cell-label">Sign in resource id:</div>
+                            </td>
+                            <td>
+                                <div class="cell-data" data-bind="text: selectedResourceId"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="cell-label">Graph endpoint:</div>
+                            </td>
+                            <td>
+                                <div class="cell-data" data-bind="text: selectedGraphEndpoint"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="cell-label">ARM resource id:</div>
+                            </td>
+                            <td>
+                                <div class="cell-data" data-bind="text: selectedArmId"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="cell-label">ARM endpoint:</div>
+                            </td>
+                            <td>
+                                <div class="cell-data" data-bind="text: selectedArmEndpoint"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="cell-label">Tenant Id:</div>
+                            </td>
+                            <td>
+                                <div class="cell-data" data-bind="text: selectedTenantIds"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <div class="row">
+                    <input type="button" data-bind="click: duplicateEnvironment, value: duplicateButtonText" class="environment-management-button"
+                    />
+                    <br>
+                    <input type="button" data-bind="click: deleteEnvironment, value: deleteButtonText" class="environment-management-button"
+                    />
+                    <img style="width: 24px; height: 24px;" data-bind="visible: deleting, attr: { src: '../../../app/media/Common/Halo_ProgressSpinner.svg' }"
+                    />
+                </div>
+            </div>
+            <!-- /ko -->
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="visible: isVisible, value: caption, click: onClick, enable: isEnabled, hasFocus: isFocused"
+            />
+        </div>
+    </div>
+
+    <div id="summary-panel" class="dialog-panel" data-bind="with: summaryPanel" role="dialog" aria-labelledby="summaryPanelTitle">
+        <div class="title" id="summaryPanelTitle" data-bind="text: title"></div>
+
+        <div class="content">
+            <div class="row" tabindex="0">
+                <label for="table-info">The following settings will be used to connect to your storage account:</label>
+            </div>
+
+            <div class="row" tabindex="0">
+                <table id="table-info" class="table-info">
+                    <tbody data-bind="foreach: values">
+                        <tr>
+                            <td>
+                                <div class="cell-label" data-bind="text: label"></div>
+                            </td>
+                            <td>
+                                <div class="cell-data" data-bind="text: value, attr: { title: value }"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="note" tabindex="0">
+                <img src="../../../app/media/Common/QueryInformation_16x.png" />
+                <span class="text" data-bind="text: securityNote"></span>
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="visible: isVisible, value: caption, click: onClick, enable: isEnabled, hasFocus: isFocused"
+            />
+        </div>
+    </div>
+
+    <div id="await-auth-panel" class="dialog-panel" data-bind="with: awaitAuthPanel" role="dialog" aria-labelledby="awaitAuthPanelTitle">
+        <div class="content">
+            <h1 id="awaitAuthPanelTitle" data-bind="text: title" class="sign-in-title"></h1>
+            <img class="sign-in-spinner" data-bind="attr: { src: '../../../app/media/Common/Halo_ProgressSpinner.svg' }" />
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="visible: isVisible, value: caption, click: onClick, enable: isEnabled, hasFocus: isFocused"
+            />
+        </div>
+    </div>
+
+
+</body>
+
+<script>
+    require("../Common/DialogView");
+
+</script>
+
+</html>

@@ -1,0 +1,8 @@
+<span class="commandButton" data-bind="setTemplateReady: true, css: { commandDisabled: disabled }, event: { keypress: onKeyPress }, attr: { title: tooltipText, tabindex: tabIndex }, click: commandClickCallback, visible: visible">
+    <img class="commandIcon" data-bind="
+        attr: {
+            src: iconSrc,
+            alt: commandButtonLabel
+        }"></img>
+    <span data-bind="text: commandButtonLabel"></span>
+</span>

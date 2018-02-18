@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 500,
+        "width": 700
+    },
+    "view": "./app/dialogs/CorsSettings/CorsSettingsView.html",
+    "viewModel": "./app/dialogs/CorsSettings/CorsSettingsViewModel"
+}

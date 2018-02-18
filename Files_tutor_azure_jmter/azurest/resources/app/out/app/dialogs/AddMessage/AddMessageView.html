@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html class="page" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - Add Message</title>
+
+    <link rel="stylesheet" href="./AddMessage.css" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="dialogTitle">
+        <div class="title" id="dialogTitle" data-bind="text: titleLabel"></div>
+
+        <div class="content">
+            <div class="row">
+                <label for="messageText" data-bind="text: messageTextLabel"></label>
+                <textarea id="messageText" rows="13" data-bind="textInput: messageText" autofocus></textarea>
+            </div>
+
+            <div class="row">
+                <label id="timeToLiveLabel" data-bind="text: timeToLiveLabel"></label>
+                <div class=".inline-block-group">
+                    <input type="number" min="0" aria-describedby="timeToLiveLabel" aria-labeledby="timeToLiveLabel" data-bind="
+                        textInput: timeToLive,
+                        css: { 'invalid-field': !isTtlValid() },
+                        integerOnly" />
+                    <select data-bind="options: timeUnits, value: selectedTimeUnit" aria-label="Time unit" role="combobox"></select>
+                </div>
+                <div>
+                    <input id="base64Message" type="checkbox" data-bind="checked: isBase64Checked" />
+                    <label for="base64Message" data-bind="text: base64MessageLabel"></label>
+                </div>
+            </div>
+            <div class="row" data-bind="style: { visibility: isTtlValid() ? 'hidden': 'visible' }" tabindex="0">
+                <label class="warning" role="alert" aria-atomic="true" data-bind="text: ttlInvalidWarning"></label>
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+</body>
+
+<script>
+    require("../Common/DialogView");
+
+</script>
+
+</html>

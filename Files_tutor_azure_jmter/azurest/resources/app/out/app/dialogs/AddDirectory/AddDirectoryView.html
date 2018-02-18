@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html class="page" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Create New Directory</title>
+
+    <link rel="stylesheet" href="./AddDirectory.css" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel">
+        <div class="title" id="dialogTitle" data-bind="text: titleLabel"></div>
+
+        <div class="content">
+            <div class="row">
+                <label for="dir" data-bind="text: directoryNameLabel"></label>
+                <input type="text" id="dir" aria-describedby="warning" data-bind="textInput: directoryName, selectedText: selectedInputText, onEnterKey: createDirectory"
+                    autofocus/>
+            </div>
+
+            <div class="row" data-bind="style: { visibility: isNameValid() ? 'hidden': 'visible' } " tabindex="0">
+                <label class="warning" role="alert" aria-atomic="true" data-bind="text: invalidDirectoryNameWarning"></label>
+            </div>
+            <div class="note" data-bind="style: { visibility: isVirtualDirectoryWarningVisible ? 'visible' : 'hidden' }">
+                <img src="../../media/StorageExplorer/QueryInformation_16x.png" />
+                <label role="alert" aria-atomic="true" data-bind="text: virtualDirectoryWarning"></label>
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+</body>
+<script>
+    require("../Common/DialogView");
+
+</script>
+
+</html>

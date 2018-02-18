@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - Feedback Survey</title>
+
+    <link rel="stylesheet" href="./Nps.css" data-plugin-theme="true" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="dialogTitle">
+        <div class="title" id="dialogTitle" data-bind="text: greetingText"></div>
+
+        <div class="content">
+            <p>
+                <span data-bind="text: linkInviteHeadText"></span>
+                <a data-bind="text: linkCaption, attr: { href: linkUrl, title: linkTooltip }, click: onLink"></a>
+                <span data-bind="text: linkInviteTailText"></span>
+            </p>
+
+            <div id="nps-dialog-donotshow-check" class="dontShowOption">
+                <input type="checkbox" id="nps-dialog-donotshow" data-bind="checked: doNotShow" />
+                <label for="nps-dialog-donotshow" class="nps-dialog-checkbox checkbox-label" data-bind="text: doNotShowAgainText"></label>
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled"></input>
+        </div>
+    </div>
+</body>
+
+</html>

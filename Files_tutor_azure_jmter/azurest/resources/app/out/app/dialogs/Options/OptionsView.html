@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer</title>
+
+    <link rel="stylesheet" href="./Options.css" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="dialogTitle" aria-describedby="message">
+        <div class="title" id="dialogTitle" data-bind="text: title"></div>
+
+        <div class="content">
+            <div id="message" class="row" data-bind="text: message"></div>
+
+            <div class="option-select" data-bind="foreach: options">
+                <div class="option">
+                    <input type="radio" name="optionGroup" data-bind="attr: { id: id }, checkedValue: value, checked: $parent.selectedOption"
+                    />
+                    <label data-bind="attr: { for: id }">
+                        <span data-bind="text: title"> </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled"></input>
+        </div>
+    </div>
+</body>
+
+</html>

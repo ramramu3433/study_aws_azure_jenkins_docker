@@ -1,0 +1,69 @@
+<li>
+    <div tabindex="0" class="databaseMenu treeHovermargin highlight" data-bind="
+        click: $data.expandCollapseDatabase,
+        event: {
+            keydown: onKeyDown,
+            keypress: onKeyPress,
+            contextmenu: $data.contextMenu.show
+        },
+        clickBubble: false,
+        contextmenuBubble: false,
+        css:{
+            contextmenushowing: $data.contextMenu.visible
+        }">
+        <div>
+            <span class="databaseId" data-bind="
+            attr: {
+                title: $data.id()
+            },
+            css: {
+                expanded: $data.isDatabaseExpanded(),
+                collapsed: !$data.isDatabaseExpanded()
+            }">
+                <img src="images/Azure-Cosmos-DB.svg" alt="Database"/>
+                <!--ko text: $data.id--><!--/ko-->
+            </span>
+        </div>
+        <div class="databaseMenuEllipsis">
+            <span class="context_Menu" data-bind="
+                    click: $data.contextMenu.show,
+                    clickBubble: false
+                ">&hellip;</span>
+        </div>
+    </div>
+
+    <ul data-bind=" visible: $data.isDatabaseExpanded, foreach: $data.collections">
+        <collection-node params="{data: $data}"></collection-node>
+        <collection-node-context-menu params="{data: $data}"></collection-node-context-menu>
+    </ul>
+
+    <!-- Database Context Menu - Start -->
+    <div class="context-menu-background" data-bind="
+        visible: $data.contextMenu.visible,
+        click: $data.contextMenu.hide">
+    </div>
+
+    <div class="context-menu" data-bind="
+        attr:{
+            id: $data.contextMenu.elementId
+        },
+        visible: $data.contextMenu.visible">
+
+        <div class="context-menu-option" data-bind="
+            click: $data.openAddCollection
+        ">
+            <img class="commandIcon" src="images/AddCollection.svg" data-bind="
+                attr: { 
+                    alt: $root.addCollectionText
+                }">
+            <span data-bind="
+                    text: $root.addCollectionText"></span>
+        </div>
+
+        <div class="context-menu-option" data-bind="
+            click: onDeleteDatabaseContextMenuClick">
+            <img class="commandIcon" src="images/delete.svg" alt="Delete database">Delete Database
+        </div>
+    </div>
+    <!-- Database Context Menu - End -->
+</li>

@@ -1,0 +1,21 @@
+.group-div {
+  margin-top: 8px;
+}
+.query-clause-cell {
+  text-align: left;
+  vertical-align: middle;
+}
+.query-clause-field {
+  width: 100%;
+}
+.query-clause-field[readonly] {
+  background-color: #EEEEF2;
+  border: 1px solid #CCCEDB;
+  width: 100%;
+}
+.top-input {
+  margin-left: 20px;
+}
+.top-div {
+  display: flex;
+}

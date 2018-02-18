@@ -1,0 +1,454 @@
+<!-- HTML Template for graph-explorer knockoutjs component -->
+<div class="graphExplorerContainer">
+    <div class="buttonContainer spanmenupaddingleft" data-bind="visible:!isTabsContentExpanded()">
+        <span class="spanmenu" data-bind="visible:graphStatus() !== 0,
+                                          click:showNewVertexEditor,
+                                          css:{ disabled:rightPaneContent() !== 0 }">
+            <img class="commandIcon" src="images/new-vertex.svg" />New Vertex
+        </span>
+        <span class="spanmenu" data-bind="visible:graphStatus() !== 0, click:openStyling, css:{ disabled:rightPaneContent() !== 0 }">
+            <img class="commandIcon" src="images/style.svg" />Style
+        </span>
+    </div>
+    <div class="queryContainer" data-bind="visible:!isTabsContentExpanded()">
+        <input-typeahead class="queryTypeahead" params="{
+            choices:latestPartialQueries,
+            inputValue:query,
+            placeholder:'g.V().has(&quot;name&quot;, &quot;value&quot;)',
+            submitFct:onInputTypeaheadSubmit.bind($data)
+            }"></input-typeahead>
+        <button class="filterbtnstyle queryButton" data-bind="click:submitQuery, enable:isValidQuery">Apply Filter</button>
+        <span class="filterclose" data-bind="click:onClearFilterClick">
+            <img class="refreshcol" src="images/close-black.svg">
+        </span>
+    </div>
+
+    <ul class="nav nav-pills queryResultNav" data-bind="visible:graphStatus() !== 0 && !isTabsContentExpanded()">
+        <li role="presentation" data-bind="visible:enableShowGraph, click:showGraph, css:{ active:isShowGraph() }"><a href>Graph</a></li>
+        <li role="presentation" data-bind="click:showJson, css:{ active:isShowJson() }"><a href>JSON</a></li>
+    </ul>
+
+    <json-editor class="graphJsonEditor" data-bind="visible:graphStatus() !== 0 && isShowJson()" params="{ content:jsonEditorContent, isReadOnly:true }"></json-editor>
+
+    <div class="graphContainer" data-bind="visible:graphStatus() !== 0 && isShowGraph()">
+        <!-- LEFT PANE -->
+        <div class="leftPane" data-bind="visible:!isResultsCollapsed()">
+            <div class="id leftPaneResults">Results</div>
+            <div class="leftPaneContent contentScroll">
+                <div class="leftPaneContainer">
+                    <div data-bind="visible:graphStatus() === 1">None</div>
+                    <table class="table table-hover">
+                        <tbody>
+                            <!-- ko foreach:possibleRootNodes -->
+                            <tr class="pointer" data-bind="
+                            click:$parent.selectRootNode.bind($parent, $data.id),
+                            css: {
+                                gridRowSelected: $parent.selectedRootId() === $data.id,
+                                disabled: $parent.rightPaneContent() !== 0
+                            }">
+                                <td class="resultItem">
+                                    <a data-bind="text:$data.caption, attr: { title: $data.caption }"></a>
+                                </td>
+                            </tr>
+                            <!-- /ko -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <!-- LEFT PANE END -->
+
+        <!-- MIDDLE PANE -->
+        <div class="middlePane">
+            <div class="graphTitle">
+                <span class="id">Graph</span>
+                <span class="padimgcolrefresh pull-right expandIcon" data-bind="click:toggleExpandGraph">
+                        <img class="refreshcol" data-bind="attr: {
+                            src:isTabsContentExpanded()?'images/Collapse_arrow_14x14.svg':'images/Expand_14x14.svg' }">
+                </span>
+            </div>
+            <svg id="maingraph" data-bind="d3forcegraph: {graphData:graphData}">
+                <defs>
+                    <g id="loadMoreIcon">
+                        <!-- svg load more icon inlined as-is here: remove the style="fill:#374649;" so we can override it -->
+                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                            width="30px" height="16px" viewBox="0 0 30 16" style="enable-background:new 0 0 30 16;" xml:space="preserve">
+                            <g style="opacity:1;">
+                                <g>
+                                    <g style="opacity:0.4;">
+
+                                        <ellipse transform="matrix(0.9903 -0.1393 0.1393 0.9903 -1.4513 2.1015)" cx="14.3" cy="11.4" rx="4.1"
+                                            ry="4.1"/>
+                                    </g>
+                                    <g style="opacity:0.4;">
+
+                                        <ellipse transform="matrix(0.3256 -0.9455 0.9455 0.3256 11.2761 30.3703)" cx="26.9" cy="7.3" rx="3.1"
+                                            ry="3.1" />
+                                    </g>
+                                    <line style="opacity:0.5;fill:none;stroke:#BABCBE;stroke-miterlimit:10;" x1="14.4" y1="7.3" x2="14.6" y2="2.5" />
+                                    <line style="opacity:0.5;fill:none;stroke:#BABCBE;stroke-miterlimit:10;" x1="17.6" y1="1.1" x2="24.5" y2="5.4" />
+                                    <g style="opacity:0.4;">
+
+                                        <ellipse transform="matrix(0.932 -0.3625 0.3625 0.932 -0.9642 1.3456)" cx="3.1" cy="3.2" rx="3.1" ry="3.1"
+                                        />
+                                    </g>
+                                    <line style="opacity:0.5;fill:none;stroke:#BABCBE;stroke-miterlimit:10;" x1="10.6" y1="1.1" x2="6.1" y2="2.5" />
+                                </g>
+                            </g>
+                        </svg>
+            <!-- End of load more icon -->
+
+            <!-- Make whole area clickable instead of the shape -->
+            <rect x="0px" y="0px" width="32px" height="17px" style="fill-opacity:0;fill:orange"></rect>
+
+            </g>
+            </defs>
+            </svg>
+            <div class="graphModal" data-bind="visible:isExecuting">
+                <p><img src="images/win_hr_loader_black.gif" /></p>
+            </div>
+        </div>
+        <!-- MIDDLE PANE END -->
+
+        <!-- RIGHT PANE -->
+        <collapsible-panel class="rightPane" params="{
+                collapsedTitle:collapsedRightPaneTitle,
+                expandedTitle:expandedRightPaneTitle,
+                isCollapsed: isPropertiesCollapsed }">
+            <div data-bind="visible:highlightedNode" class="rightPaneHeader">
+                <!-- This is the delete with confirm stuff -->
+                <span class="pull-right" data-bind="visible:rightPaneContent() === 0">
+                    <span class="rightPaneHeaderTrashIcon rightPaneBtns" data-bind="visible:!isDeleteConfirm(), click:isDeleteConfirm.bind($data,true)">
+                        <img class="refreshcol" src="images/delete.svg">
+                    </span>
+                <span class="deleteConfirm" data-bind="visible:isDeleteConfirm">Delete this vertex?
+                        <span class="rightPaneCheckMark rightPaneBtns" data-bind="click:deleteHighlightedNode">
+                            <img class="refreshcol" src="images/check.svg">
+                        </span>
+                <span class="rightPaneDiscardBtn rightPaneBtns" data-bind="click:isDeleteConfirm.bind($data,false)">
+                            <img class="refreshcol discardBtn" src="images/cancel.svg">
+                        </span>
+                </span>
+                </span>
+            </div>
+            <div data-bind="visible:highlightedNode" class="rightPaneContent contentScroll">
+                <div class="rightPaneContainer">
+                    <div class="pull-right editPencilAlign" data-bind="visible:isPropertiesExpanded">
+                        <span data-bind="visible:highlightedNode() && rightPaneContent() === 0">
+                        <!-- Edit -->
+                        <span class="rightPaneEditIcon rightPaneBtns" data-bind="click:showPropertyEditor, visible:!isDeleteConfirm()">
+                            <img class="refreshcol" src="images/edit.svg">
+                        </span>
+                        </span>
+
+                        <span class="rightPaneCheckMark rightPaneBtns" data-bind="click:updateVertexProperties, visible:rightPaneContent() === 1">
+                            <img class="refreshcol" src="images/check.svg">
+                        </span>
+                        <span class="rightPaneDiscardBtn rightPaneBtns" data-bind="click:discardPropertyChanges, visible:rightPaneContent() === 1 || rightPaneContent() === 2">
+                            <img class="refreshcol discardBtn" src="images/cancel.svg">
+                        </span>
+                    </div>
+                    <div class="sectionHeader" data-bind="click: expandCollapseProperties">
+                        <span data-bind="css: {
+                            expanded: isPropertiesExpanded(),
+                            collapsed: !isPropertiesExpanded()
+                        }">
+                    </span>
+                        <span class="sectionTitle">Properties</span>
+                    </div>
+
+                    <div class="sectionContent" id="propertiesContent">
+                        <!-- Read-only version -->
+                        <table class="edgesTable roPropertyTable" data-bind="visible:rightPaneContent() === 0 || rightPaneContent() === 3 || rightPaneContent() === 4, with:highlightedNode">
+                            <tbody>
+                                <tr>
+                                    <td class="labelCol">id</td>
+                                    <td><span data-bind="text:id"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="labelCol">label</td>
+                                    <td><span data-bind="text:label"></span></td>
+                                </tr>
+                                <!-- ko foreach:{ data:Object.keys(properties), as: '_propkey' } -->
+                                <tr>
+                                    <td class="labelCol" data-bind="text:_propkey"></td>
+                                    <td><span data-bind="text:$parent.properties[_propkey]"></span></td>
+                                </tr>
+                                <!-- /ko -->
+                            </tbody>
+                        </table>
+
+                        <!-- Editable version -->
+                        <table class="edgesTable" data-bind="visible:rightPaneContent() === 1">
+                            <tbody>
+                                <!-- ko with:highlightedNode -->
+                                <tr>
+                                    <td class="labelCol">label</td>
+                                    <td data-bind="text:label"></td>
+                                </tr>
+                                <!-- /ko -->
+                                <!-- ko foreach:{ data:editedProperties().existingProperties, as: '_keyval' } -->
+                                <tr>
+                                    <td class="labelCol" data-bind="text:_keyval.key"></td>
+                                    <td class="valueCol">
+                                        <input class="edgeInput" type="text" data-bind="textInput:_keyval.value" placeholder="Value" />
+                                    </td>
+                                    <td>
+                                        <select class="typeSelect" required data-bind="options:$parent.propertyTypes, value:type"></select>
+                                    </td>
+                                    <td class="actionCol">
+                                        <span class="rightPaneTrashIcon rightPaneBtns" data-bind="click:$parent.removeExistingProperty.bind($parent, _keyval.key)">
+                                        <img class="refreshcol rightPaneTrashIconImg" src="images/delete.svg">
+                                    </span>
+                                    </td>
+                                </tr>
+                                <!-- /ko -->
+                                <!-- ko foreach:{ data:editedProperties().addedProperties, as: '_keyval' } -->
+                                <tr>
+                                    <td class="labelCol">
+                                        <input type="text" data-bind="textInput:_keyval.key" placeholder="Key" />
+                                    </td>
+                                    <td class="valueCol">
+                                        <input class="edgeInput" type="text" data-bind="textInput:_keyval.value" placeholder="Value" />
+                                    </td>
+                                    <td>
+                                        <select class="typeSelect" required data-bind="options:$parent.propertyTypes, value:type"></select>
+                                    </td>
+                                    <td class="actionCol">
+                                        <span class="rightPaneTrashIcon rightPaneBtns" data-bind="click:$parent.removeAddedProperty.bind($parent, $index)">
+                                            <img class="refreshcol rightPaneTrashIconImg" src="images/delete.svg">
+                                    </span>
+                                    </td>
+                                </tr>
+                                <!-- /ko -->
+                                <tr>
+                                    <td colspan="3" class="rightPaneAddPropertyBtnPadding"><span class="rightPaneAddPropertyBtn rightPaneBtns" data-bind="click:addProperty">
+                                <img class="refreshcol rightPaneAddPropertyImg" src="images/Add-property.svg"> Add Property</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- SOURCES -->
+                    <div class="pull-right editPencilAlign" data-bind="visible:isSourcesExpanded">
+                        <!-- Edit -->
+                        <span class="rightPaneEditIcon rightPaneBtns" data-bind="click:showSourcesEditor, visible:highlightedNode() && rightPaneContent() === 0 && !isDeleteConfirm()">
+                        <img class="refreshcol" src="images/edit.svg">
+                    </span>
+
+                        <span data-bind="visible:rightPaneContent() === 3">
+                        <span class="rightPaneCheckMark rightPaneBtns" data-bind="click:updateVertexSources">
+                            <img class="refreshcol" src="images/check.svg">
+                        </span>
+                        <span class="rightPaneDiscardBtn rightPaneBtns" data-bind="click:discardPropertyChanges">
+                            <img class="refreshcol discardBtn" src="images/cancel.svg">
+                        </span>
+                        </span>
+                    </div>
+                    <div class="sectionHeader" data-bind="click: expandCollapseSources, visible:rightPaneContent() === 0 || rightPaneContent() === 1 || rightPaneContent() === 3 || rightPaneContent() === 4">
+                        <span data-bind="css: {
+                            expanded: isSourcesExpanded(),
+                            collapsed: !isSourcesExpanded()
+                        }">
+                    </span>
+                        <span class="sectionTitle">Sources</span>
+                    </div>
+                    <div class="sectionContent" id="sourcesContent">
+                        <!-- The read-only version -->
+                        <div data-bind="visible:isSourcesExpanded && (rightPaneContent() === 0 || rightPaneContent() === 1 || rightPaneContent() === 4)">
+                            <span data-bind="visible:highlightedNode() && (!highlightedNode().sources || highlightedNode().sources.length===0)">No sources found</span>
+                            <table class="edgesTable" data-bind="with:highlightedNode, visible:highlightedNode() && highlightedNode().sources && highlightedNode().sources.length > 0">
+                                <thead class="propertyTableHeader">
+                                    <tr>
+                                        <td>Source</td>
+                                        <td class="edgeLabel">Edge label</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- ko foreach:{ data:sources, as: '_source' } -->
+                                    <tr>
+                                        <td>
+                                            <a class="clickableLink" data-bind="text:_source.name, click:$parents[1].selectNode.bind($parents[1], _source.id)"></a>
+                                        </td>
+                                        <td class="labelCol" data-bind="text:_source.edgeLabel"></td>
+                                    </tr>
+                                    <!-- /ko -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- The editable version -->
+                        <div data-bind="visible:rightPaneContent() === 3">
+                            <table class="edgesTable" data-bind="with:editedSources">
+                                <thead class="propertyTableHeader">
+                                    <tr>
+                                        <td>Source</td>
+                                        <td>Edge label</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- ko foreach:{ data:currentNeighbors, as: '_source' } -->
+                                    <tr>
+                                        <td><span data-bind="text:_source.name"></span></td>
+                                        <td class="labelCol"><span class="editSeeInPadding" data-bind="text:_source.edgeLabel"></span></td>
+                                        <td class="actionCol">
+                                            <span class="rightPaneTrashIcon rightPaneBtns" data-bind="click:$parents[1].removeCurrentSourceEdge.bind($parents[1], $index())">
+                                                <img class="refreshcol rightPaneTrashIconImg" src="images/delete.svg">
+                                        </span>
+                                        </td>
+                                    </tr>
+                                    <!-- /ko -->
+                                    <!-- Add sources -->
+                                    <!-- ko foreach:{ data:$parent.editedSources().addedEdges, as: '_edge' } -->
+                                    <tr>
+                                        <td class="valueCol">
+                                            <input-typeahead params="{
+                                                choices:$parents[1].possibleVertices,
+                                                inputValue:_edge.inputOutV,
+                                                selection:_edge.selectedOutV,
+                                                placeholder:'Enter source',
+                                                typeaheadOverrideOptions: { dynamic: false }
+                                                }"></input-typeahead>
+                                        </td>
+                                        <td class="labelCol">
+                                            <input-typeahead params="{
+                                                choices:$parents[1].possibleEdgeLabels,
+                                                inputValue:_edge.label,
+                                                placeholder:'Label',
+                                                typeaheadOverrideOptions: { dynamic: false }
+                                                }"></input-typeahead>
+                                        </td>
+                                        <td class="actionCol">
+                                            <span class="rightPaneTrashIcon rightPaneBtns">
+                                                <img class="refreshcol rightPaneTrashIconImg" src="images/delete.svg"
+                                                    data-bind="click:$parents[1].removeAddedEdgeToSource.bind($parents[1], $index)">
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <!-- /ko -->
+                                    <tr>
+                                        <td colspan="2" class="rightPaneAddPropertyBtnPadding"><span class="rightPaneAddPropertyBtn rightPaneBtns" data-bind="click:$parent.addNewEdgeToSource.bind($parent, vertexId)">
+                                        <img class="refreshcol rightPaneAddPropertyImg" src="images/Add-property.svg"> Add Source</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Sources content -->
+
+                    <!-- TARGETS -->
+                    <div class="pull-right editPencilAlign" data-bind="visible:isTargetsExpanded">
+                        <!-- Edit -->
+                        <span class="rightPaneEditIcon rightPaneBtns" data-bind="click:showTargetsEditor, visible:highlightedNode() && rightPaneContent() === 0 && !isDeleteConfirm()">
+                        <img class="refreshcol" src="images/edit.svg">
+                    </span>
+
+                        <span data-bind="visible:rightPaneContent() === 4">
+                        <span class="rightPaneCheckMark rightPaneBtns" data-bind="click:updateVertexTargets">
+                            <img class="refreshcol" src="images/check.svg">
+                        </span>
+                        <span class="rightPaneDiscardBtn rightPaneBtns" data-bind="click:discardPropertyChanges">
+                            <img class="refreshcol discardBtn" src="images/cancel.svg">
+                        </span>
+                        </span>
+                    </div>
+                    <div class="sectionHeader" data-bind="click: expandCollapseTargets, visible:rightPaneContent() === 0 || rightPaneContent() === 1 || rightPaneContent() === 3 || rightPaneContent() === 4">
+                        <span data-bind="css: {
+                            expanded: isTargetsExpanded(),
+                            collapsed: !isTargetsExpanded()
+                        }">
+                    </span>
+                        <span class="sectionTitle">Targets</span>
+                    </div>
+                    <div class="sectionContent" id="targetsContent">
+                        <!-- The read-only version -->
+                        <div data-bind="visible:isTargetsExpanded && (rightPaneContent() === 0 || rightPaneContent() === 1 || rightPaneContent() === 3)">
+                            <span data-bind="visible:highlightedNode() && (!highlightedNode().targets || highlightedNode().targets.length===0)">No targets found</span>
+                            <table class="edgesTable" data-bind="with:highlightedNode, visible:highlightedNode() && highlightedNode().targets && highlightedNode().targets.length > 0">
+                                <thead class="propertyTableHeader">
+                                    <tr>
+                                        <td>Target</td>
+                                        <td class="edgeLabel">Edge label</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- ko foreach:{ data:targets, as: '_target' } -->
+                                    <tr>
+                                        <td>
+                                            <a class="clickableLink" data-bind="text:_target.name, click:$parents[1].selectNode.bind($parents[1], _target.id)"></a>
+                                        </td>
+                                        <td class="labelCol" data-bind="text:_target.edgeLabel"></td>
+                                    </tr>
+                                    <!-- /ko -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- The editable version -->
+                        <div data-bind="visible:rightPaneContent() === 4">
+                            <table class="edgesTable" data-bind="with:editedTargets">
+                                <thead class="propertyTableHeader">
+                                    <tr>
+                                        <td>Target</td>
+                                        <td>Edge label</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- ko foreach:{ data:currentNeighbors, as: '_target' } -->
+                                    <tr>
+                                        <td><span data-bind="text:_target.name"></span></td>
+                                        <td class="labelCol"><span class="editSeeInPadding" data-bind="text:_target.edgeLabel"></span></td>
+                                        <td class="actionCol">
+                                            <span class="rightPaneTrashIcon rightPaneBtns" data-bind="click:$parents[1].removeCurrentTargetEdge.bind($parents[1], $index())">
+                                                <img class="refreshcol rightPaneTrashIconImg" src="images/delete.svg">
+                                        </span>
+                                        </td>
+                                    </tr>
+                                    <!-- /ko -->
+                                    <!-- Add targets -->
+                                    <!-- ko foreach:{ data:$parent.editedTargets().addedEdges, as: '_edge' } -->
+                                    <tr>
+                                        <td class="valueCol">
+                                            <input-typeahead params="{
+                                                choices:$parents[1].possibleVertices,
+                                                inputValue:_edge.inputInV,
+                                                selection:_edge.selectedInV,
+                                                placeholder:'Enter target',
+                                                typeaheadOverrideOptions: { dynamic: false }
+                                                }"></input-typeahead>
+                                        </td>
+                                        <td class="labelCol">
+                                            <input-typeahead params="{
+                                                choices:$parents[1].possibleEdgeLabels,
+                                                inputValue:_edge.label,
+                                                placeholder:'Label',
+                                                typeaheadOverrideOptions: { dynamic: false }
+                                                }"></input-typeahead>
+                                        </td>
+                                        <td class="actionCol">
+                                            <span class="rightPaneTrashIcon rightPaneBtns">
+                                                <img class="refreshcol rightPaneTrashIconImg" src="images/delete.svg"
+                                                    data-bind="click:$parents[1].removeAddedEdgeToTarget.bind($parents[1], $index)">
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <!-- /ko -->
+                                    <tr>
+                                        <td colspan="2" class="rightPaneAddPropertyBtnPadding"><span class="rightPaneAddPropertyBtn rightPaneBtns" data-bind="click:$parent.addNewEdgeToTarget.bind($parent, vertexId)">
+                                        <img class="refreshcol rightPaneAddPropertyImg" src="images/Add-property.svg"> Add Target</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Targets content -->
+
+                </div>
+            </div>
+        </collapsible-panel>
+        <!-- RIGHT PANE END -->
+
+    </div>
+    <!-- graph container -->
+</div>

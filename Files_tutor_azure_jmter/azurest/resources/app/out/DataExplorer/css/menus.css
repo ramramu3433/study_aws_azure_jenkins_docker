@@ -1,0 +1,34 @@
+.context-menu-background {
+    z-index: 1000;
+    position: fixed;
+    cursor: default;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+}
+
+.context-menu {
+    z-index: 1001;
+    position: fixed;
+    background: white;
+    border: solid 1px gainsboro;
+    box-shadow: 4px 4px 4px -2px #888888;
+    padding: 8px 0px 8px 0px;
+    line-height: 25px;
+}
+
+.context-menu:hover {
+    padding-left: 0px;
+}
+
+.context-menu-option {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.context-menu-option:hover {
+    background-color: #EEE;
+}

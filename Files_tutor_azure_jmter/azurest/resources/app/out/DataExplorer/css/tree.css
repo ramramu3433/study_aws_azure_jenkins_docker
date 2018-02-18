@@ -1,0 +1,296 @@
+.main {
+    width: 100%;
+    float: left;
+    transition: all .0s ease-in-out;
+    -ms-transition: all 0s ease-in-out;
+    -webkit-transition: all 0s ease-in-out;
+    -moz-transition: all .0s ease-in-out;
+    height: 100vh;
+    background-color: white;
+    border-left: 0px solid white;
+}
+
+.mainslide {
+    width: 100%;
+}
+
+.resourcetree {
+    float: left;
+    width: 240px;
+    height: 100vh;
+}
+
+.userSelectNone {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.treeHovermargin {
+    margin-left: 16px;
+}
+
+.menuHover {
+    margin-left: -12px;
+    padding-left: 14px!important;
+}
+
+.highlight {
+    padding: 2px;
+    outline: 0;
+}
+
+.highlight:hover {
+    background-color: #e6f8fe;
+}
+
+.highlight:focus {
+    padding: 1px 1px 1px 1px;
+    background-color: #F2F2F2;
+    border: solid 1px #00ABEC;
+    outline: 0;
+}
+
+.contextmenushowing {
+    background-color: #EEE;
+}
+
+.collectionstree ul {
+    list-style-type: none;
+    padding-left: 0px;
+}
+
+.collectionstree ul ul {
+    padding-left: 0px;
+}
+
+.collectionstree ul ul ul {
+    padding-left: 28px;
+}
+
+.collectionstree ul ul ul ul {
+    padding-left: 0px;
+}
+
+.collectionstree li {
+    display: block;
+    cursor: pointer;
+    list-style-type: none;
+    line-height: 25px;
+}
+
+.paddingRight {
+    padding-right: 28px;
+}
+
+.context_Menu {
+    padding-right: 6px;
+    font-weight: bold;
+    font-size: 18px;
+    position: relative;
+    top: -5px;
+    left: 0px;
+    float: right;
+    display: none;
+    padding-left: 6px!important;
+}
+
+.databaseMenuEllipsis {
+    position: relative;
+    top: -25px;
+}
+
+.collectionMenuEllipsis {
+    position: relative;
+    top: -25px;
+}
+
+.databaseMenu:hover .context_Menu {
+    display: block;
+}
+
+.collectionMenu {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.collectionMenu:hover .context_Menu {
+    display: block;
+}
+
+.documentsMenu:hover .context_Menu {
+    display: block;
+}
+
+.treeMenu {
+    margin-left: -12px;
+}
+
+.treeChildMenu {
+    margin-left: -24px;
+    display: flex;
+}
+
+.treeChildMenuHover {
+    margin-left: -12px;
+}
+
+.storedProcedureMenu:hover .context_Menu {
+    display: block;
+}
+
+.childMenu {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 84px;
+    width: calc(100% - 29px);
+    width: -moz-calc(100% - 29px);
+    width: -webkit-calc(100% - 29px);
+    width: -o-calc(100% - 29px);
+    width: calc(100% - 29px);
+}
+
+.storedChildMenu:hover .context_Menu {
+    display: block;
+}
+
+.contextmenu6 {
+    top: -29px;
+}
+
+.userDefinedMenu:hover .contextmenu6 {
+    display: block;
+}
+
+.userDefinedchildMenu:hover .context_Menu {
+    display: block;
+}
+
+.triggersMenu:hover .context_Menu {
+    display: block;
+}
+
+.triggersChildMenu:hover .context_Menu {
+    display: block;
+}
+
+.databaseId {
+    font-size: 14px;
+}
+
+.collectionstree li span {
+    padding-left: 0px;
+}
+
+.collectionstree li li span {
+    padding-left: 19px;
+}
+
+.collectionstree li li li span {
+    padding-left: 43px;
+}
+
+.collectionstree li li li li span {
+    padding-left: 86px;
+}
+
+.collectionstree img {
+    width: 16px;
+    height: 16px;
+    vertical-align: text-top;
+}
+
+.collapsed::before {
+    content: "\23F5";
+    margin-left: 0px;
+    font-size: 15px;
+}
+
+.expanded::before {
+    content: '\23F7';
+    margin-left: 0px;
+    font-size: 15px;
+}
+
+.collectionMenuChildren {
+    padding-left: 35px!important;
+}
+
+.main-nav {
+    width: 100vh;
+    height: 45px;
+    background: white;
+    transform-origin: left top;
+    -webkit-transform-origin: left top;
+    -ms-transform-origin: left top;
+    transform: rotate(-90deg) translateX(-100%);
+    -webkit-transform: rotate(-90deg) translateX(-100%);
+    -ms-transform: rotate(-90deg) translateX(-100%);
+}
+
+.main-nav-img {
+    width: 16px;
+    height: 16px;
+    margin: -32px 0 0 0;
+    transform: rotate(-90deg) translateX(-100%);
+    -webkit-transform: rotate(-90deg) translateX(-100%);
+    -ms-transform: rotate(-90deg) translateX(-100%);
+}
+
+.main-nav-img.main-nav-sub-img {
+    width: 16px;
+    height: 16px;
+    margin: 0px 0px 0 0;
+    transform: rotate(180deg) translateX(0%);
+    -webkit-transform: rotate(180deg) translateX(0%);
+    -ms-transform: rotate(180deg) translateX(0%);
+    position: absolute;
+    right: -8px;
+    top: 16px;
+}
+
+ul.nav {
+    margin: 0 auto;
+    margin-top: 0px;
+    margin-left: 0px;
+}
+
+.mini ul.nav li {
+    float: right;
+    line-height: 25px;
+    height: auto;
+    margin-top: 6px;
+}
+
+.spancolchildstyle {
+    padding: 4px;
+}
+
+.contextmenubutton {
+    float: right;
+    display: none;
+}
+
+.highlight:hover>.contextmenubutton {
+    display: unset;
+}
+
+.highlight:hover>.contextmenubutton::after {
+    content: "\2026";
+    font-size: 12px;
+}
+
+.showEllipsis {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.collectionTreeScrollable {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: calc(100vh - 72px);
+    padding-right: 10px;
+}

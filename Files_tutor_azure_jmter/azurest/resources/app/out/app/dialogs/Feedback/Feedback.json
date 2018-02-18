@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 475,
+        "width": 500
+    },
+    "view": "app/dialogs/Feedback/FeedbackView.html",
+    "viewModel": "app/dialogs/Feedback/FeedbackViewModel"
+}

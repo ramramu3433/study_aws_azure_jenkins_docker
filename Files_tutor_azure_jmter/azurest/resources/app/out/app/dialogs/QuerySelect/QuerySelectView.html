@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - Select Columns</title>
+
+    <link rel="stylesheet" href="./QuerySelect.css" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="dialogTitle" aria-describedby="instructionLabel">
+        <div class="title" id="dialogTitle" data-bind="text: titleLabel"></div>
+
+        <div class="content">
+            <div class="row">
+                <label id="instructionLabel" data-bind="text: instructionLabel"></label>
+            </div>
+
+            <div class="row">
+                <label id="availableColumnsLabel" data-bind="text: availableColumnsLabel"></label>
+                <div class="column-options">
+                    <ul data-bind="foreach: columnOptions" aria-labelledby="availableColumnsLabel" tabindex="0">
+                        <!-- ko template: {if: editable} -->
+                        <li class="list-item" data-bind="attr: { title: columnName }, click: $parent.handleClick ">
+                            <input type="checkbox" data-bind="attr: { title: columnName }, checked: selected" />
+                            <span data-bind="text: columnName"></span>
+                        </li>
+                        <!--/ko-->
+                        <!-- ko template: {ifnot: editable} -->
+                        <li class="list-item" data-bind="attr: { title: columnName } ">
+                            <input type="checkbox" disabled data-bind="checked: selected" />
+                            <span data-bind="text: columnName"></span>
+                        </li>
+                        <!--/ko-->
+                    </ul>
+                    <div class="column-options-buttons">
+                        <input type="button" data-bind="value: selectAllLabel, click: selectAll, enable: canSelectAll" />
+                        <input type="button" data-bind="value: clearAllLabel, click: clearAll, enable: anyColumnSelected" autofocus />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row-label" data-bind="style: { visibility: anyColumnSelected() ? 'hidden': 'visible' }">
+                <label class="warning" role="alert" aria-atomic="true" data-bind="text: noColumnSelectedWarning"></label>
+            </div>
+
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" autofocus/>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,370 @@
+<link rel="stylesheet" href="../../../css/StorageExplorer/HtmlPages/releaseNotes.css" data-plugin-theme="true" />
+<style>
+    * {
+        box-sizing: content-box;
+        font-size: 12px;
+        font-family: 'Segoe UI', 'WeblySeek', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    body {
+        background: var(--plugin-background-color);
+        color: var(--plugin-color);
+
+        /* Supress horizontal scrollbar in EULA */
+        overflow-x: hidden;
+    }
+
+    a {
+        color: var(--environment-panel-hyperlink);
+    }
+
+    ::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: var(--scrollbar-background);
+        border: 1px solid var(--scrollbar-border);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: var(--scrollbar-thumb-background);
+        border: 1px solid var(--scrollbar-thumb-border);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: var(--scrollbar-thumb-hover-background);
+    }
+
+    ::-webkit-scrollbar-thumb:active {
+        background-color: var(--scrollbar-thumb-active-background);
+    }
+
+    ::-webkit-scrollbar-corner {
+        background-color: var(--plugin-background-color);
+    }
+
+    @font-face {
+        font-family: 'WeblySeek';
+        src: url('../font/ws/weblysleekuisb.eot');
+        /* IE9 Compat Modes */
+        src: url('../font/ws/weblysleekuisb.eot?#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('../font/ws/weblysleekuisb.woff') format('woff'),
+        /* Pretty Modern Browsers */
+        url('../font/ws/weblysleekuisb.ttf') format('truetype'),
+        /* Safari, Android, iOS */
+        url('../font/ws/weblysleekuisb.svg#WeblySleek') format('svg');
+        /* Legacy iOS */
+    }
+
+    body {
+        font-family: 'Segoe UI', 'WeblySeek', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 12px;
+        line-height: 1.5;
+        margin: 0;
+        padding: 0;
+    }
+
+    @media screen and (min-width: 64em) {
+        .single-video {
+            width: 400px;
+            height: 250px;
+            padding-bottom: 10px;
+        }
+    }
+
+    @media screen and (min-width: 42em) and (max-width: 64em) {
+        .single-video {
+            width: 320px;
+            height: 200px;
+            padding-bottom: 10px;
+        }
+    }
+
+    @media screen and (max-width: 42em) {
+        .single-video {
+            width: 320px;
+            height: 200px;
+            padding-bottom: 10px;
+        }
+    }
+
+    .main-content :first-child {
+        margin-top: 0;
+    }
+
+    .main-content h1,
+    .main-content h2,
+    .main-content h3,
+    .main-content h4,
+    .main-content h5,
+    .main-content h6 {
+        font-weight: normal;
+        margin-bottom: 0;
+        margin-top: 0;
+    }
+
+    .main-content p {
+        margin-bottom: 1em;
+    }
+
+    .main-content code {
+        font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        font-size: .9rem;
+        border-radius: .3rem;
+    }
+
+    .main-content pre {
+        font: 1rem Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+        margin-top: 0;
+        margin-bottom: 1rem;
+        word-wrap: normal;
+        border-radius: .3rem;
+    }
+
+    .main-content pre>code {
+        font-size: .9rem;
+        margin: 0;
+        padding: 0;
+        white-space: pre;
+        word-break: normal;
+        border: 0;
+        background: transparent;
+    }
+
+    .main-content .highlight {
+        margin-bottom: 1rem;
+    }
+
+    .main-content .highlight pre {
+        margin-bottom: 0;
+        word-break: normal;
+    }
+
+    .main-content .highlight pre,
+    .main-content pre {
+        font-size: .9rem;
+        line-height: 1.45;
+        overflow: auto;
+        padding: .8rem;
+        border-radius: .3rem;
+    }
+
+    .main-content pre code,
+    .main-content pre tt {
+        line-height: inherit;
+        display: inline;
+        overflow: initial;
+        max-width: initial;
+        margin: 0;
+        padding: 0;
+        word-wrap: normal;
+        border: 0;
+        background-color: transparent;
+    }
+
+    .main-content pre code:before,
+    .main-content pre code:after,
+    .main-content pre tt:before,
+    .main-content pre tt:after {
+        content: normal;
+    }
+
+    .main-content ul,
+    .main-content ol {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .main-content blockquote {
+        margin-left: 0;
+    }
+
+    .main-content blockquote> :first-child {
+        margin-top: 0;
+    }
+
+    .main-content blockquote> :last-child {
+        margin-bottom: 0;
+    }
+
+    .main-content table {
+        display: block;
+        overflow: auto;
+        width: 100%;
+        word-break: normal;
+        word-break: keep-all;
+    }
+
+    .main-content table th {
+        font-weight: bold;
+    }
+
+    .main-content table th,
+    .main-content table td {
+        padding: .5rem 1rem;
+    }
+
+    .main-content dl {
+        padding: 0;
+    }
+
+    .main-content dl dt {
+        font-size: 1rem;
+        font-weight: bold;
+        margin-top: 1rem;
+        padding: 0;
+    }
+
+    .main-content dl dd {
+        margin-bottom: 1rem;
+        padding: 0;
+    }
+
+    .main-content hr {
+        height: 2px;
+        margin: 1rem 0;
+        padding: 0;
+        border: 0;
+    }
+
+    @media screen and (min-width: 64em) {
+        .main-content {
+            font-size: 1.1rem;
+            margin: 0 auto;
+            padding: 2rem 6rem 0rem 2rem;
+        }
+    }
+
+    @media screen and (min-width: 42em) and (max-width: 64em) {
+        .main-content {
+            font-size: 1.1rem;
+            padding: 2rem 4rem;
+        }
+    }
+
+    @media screen and (max-width: 42em) {
+        .main-content {
+            font-size: 1.1rem;
+            padding: 2rem 1rem;
+        }
+    }
+
+    .main-content ul {
+        text-align: left;
+    }
+
+    .whatsNew {
+        font: 1.1rem 'Segoe UI', 'WeblySeek', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-weight: normal;
+        padding-bottom: 10px;
+    }
+
+    .whatsNew h1 {
+        font-size: 2.5rem;
+        padding-bottom: 5px;
+    }
+
+    .whatsNew h2 {
+        font-size: 1.5rem;
+        padding-bottom: 5px;
+    }
+
+    /*.whatsNew h3
+    {
+    }*/
+
+    header .logo {
+        display: block;
+        float: left;
+        height: 20px;
+    }
+
+    .row-divider {
+        border-top: 1px solid var(--plugin-color);
+        margin-top: 0rem;
+        margin-bottom: 1rem;
+        margin-left: left;
+        margin-right: right;
+    }
+</style>
+<section class="whatsNew main-content">
+    <div class="whatsNew">
+        <h1>January 2018 (Version 0.9.4)</h1>
+    </div>
+
+    <div class="row-divider"> </div>
+
+    <div>
+        <p>Welcome to the January 2018 release of Microsoft Azure Storage Explorer. This is a minor release on top of 0.9.3
+            that provides a security fix.</p>
+    </div>
+
+    <div class="whatsNew">
+        <h2>New</h2>
+        <ul>
+            <li>Fixed a security issue. Please upgrade to this version at your earliest convenience.</li>
+        </ul>
+    </div>
+
+    <div class="whatsNew">
+        <h2>Fixes</h2>
+        <ul>
+            <li>Old activities were not appropriately being cleaned up. This affected the performance of long running jobs. They
+                are now being cleaned up correctly.</li>
+            <li>Actions involving large numbers of files and directories would occasionally cause Storage Explorer to freeze.
+                Requests to Azure for File Shares are now throttled to limit system resource use. </li>
+        </ul>
+    </div>
+
+    <div class="whatsNew">
+        <h2>Known Issues</h2>
+        <ul>
+            <li>Storage Explorer does not support ADFS accounts.</li>
+            <li>Shortcut keys for "View Explorer" and "View Account Management" should be Ctrl/Cmd+Shift+E and Ctrl/Cmd+Shift+A
+                respectively.
+            </li>
+            <li>When targeting Azure Stack, uploading certain files as append blobs may fail.</li>
+            <li>After clicking "Cancel" on a task, it may take a while for that task to cancel. This is because we are using
+                the cancel filter workaround described
+                <a href="#" data-bind="click:
+                function(data, event) { openInBrowser('https://github.com/Azure/azure-storage-node/issues/317')}">here</a>.
+            </li>
+            <li>If you choose the wrong PIN/Smartcard certificate, then you will need to restart in order to have Storage Explorer
+                forget that decision.</li>
+            <li>The account settings panel may show that you need to reenter credentials to filter subscriptions.</li>
+            <li>Renaming blobs (individually or inside a renamed blob container) does not preserve snapshots. All other properties
+                and metadata for blobs, files and entities are preserved during a rename.</li>
+            <li>Although Azure Stack doesn't currently support Files Shares, a File Shares node still appears under an attached
+                Azure Stack storage account.</li>
+            <li>The Electron shell used by Storage Explorer has trouble with some GPU (graphics processing unit) hardware acceleration.
+                If Storage Explorer is displaying a blank (empty) main window, you can try launching Storage Explorer from
+                the command line and disabling GPU acceleration by adding the `--disable-gpu` switch:
+            </li>
+            <blockquote>
+                <code>
+                        ./StorageExplorer.exe --disable-gpu<br/>
+                    </code>
+            </blockquote>
+            <li>For users on Ubuntu 14.04, you will need to ensure GCC is up to date - this can be done by running the following
+                commands, and then restarting your machine:</li>
+            <blockquote>
+                <code>
+                    sudo add-apt-repository ppa:ubuntu-toolchain-r/test<br/>
+                    sudo apt-get update<br/>
+                    sudo apt-get upgrade<br/>
+                    sudo apt-get dist-upgrade<br/>
+                </code>
+            </blockquote>
+            <li>For users on Ubuntu 17.04, you will need to install GConf - this can be done by running the following commands,
+                and then restarting your machine:</li>
+            <blockquote>
+                <code>
+                    sudo apt-get install libgconf-2-4<br/>
+                    </code>
+            </blockquote>
+        </ul>
+    </div>
+</section>

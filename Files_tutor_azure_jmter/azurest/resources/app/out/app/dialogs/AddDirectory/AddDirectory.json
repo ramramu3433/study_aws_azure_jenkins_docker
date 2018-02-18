@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 300,
+        "width": 500
+    },
+    "view": "app/dialogs/AddDirectory/AddDirectoryView.html",
+    "viewModel": "app/dialogs/AddDirectory/AddDirectoryViewModel"
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - Rename</title>
+
+    <link rel="stylesheet" href="./Rename.css" data-plugin-theme="true" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="default-panel-title">
+        <div class="title" id="default-panel-title" data-bind="text: title"></div>
+
+        <div class="content">
+            <div class="row">
+                <label for="newName" data-bind="text: newNameLabel"></label>
+                <input type="text" id="newName" data-bind="textInput: newName, selectedText: selectedInputText, onEnterKey: submit" aria-describedby="note"
+                />
+            </div>
+
+            <div class="note">
+                <img src="../../media/StorageExplorer/QueryInformation_16x.png" />
+                <span data-bind="text: renameNote"></span>
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+</body>
+
+</html>

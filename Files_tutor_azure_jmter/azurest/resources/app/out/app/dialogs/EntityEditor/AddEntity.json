@@ -1,0 +1,8 @@
+{
+    "dimensions": {
+        "height": 510,
+        "width": 700
+    },
+    "view": "app/dialogs/EntityEditor/EntityEditorView.html",
+    "viewModel": "app/dialogs/EntityEditor/AddEntityViewModel"
+}

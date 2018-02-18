@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Microsoft Azure Storage Explorer - Custom Timestamp Query</title>
+
+    <link rel="stylesheet" href="./CustomizeTimestamp.css" />
+</head>
+
+<body>
+    <div id="default-panel" class="dialog-panel" role="dialog" aria-labelledby="dialogTitle">
+        <div class="title" id="dialogTitle" data-bind="text: titleLabel"></div>
+
+        <div class="content">
+            <div class="last-timestamp">
+                <div class="last-radio-row">
+                    <input id="last-radio-label" class="radio-query-type" type="radio" name="queryType" value="last" data-bind="checked: queryType"></input>
+                    <label for="last-radio-label" data-bind="text: lastLabel"></label>
+                </div>
+                <div class="last-row">
+                    <input class="last-number" type="number" min="0" data-bind="textInput: lastNumber, attr: { title: lastTimeInputTitle }"></input>
+                    <select class="last-time-unit" data-bind="options: timeUnits, value: lastTimeUnit" title="last number of unit"></select>
+                </div>
+            </div>
+
+            <div class="range-timestamp">
+                <div class="from-button-row">
+                    <input id="from-radio-label" class="timestamp-type" type="radio" name="queryType" value="range" data-bind="checked: queryType"></input>
+                    <label for="from-radio-label" data-bind="text: rangeLabel"></label>
+                </div>
+
+                <div class="range-timestamp-inputs">
+                    <div class="range-row">
+                        <label for="range-from-label" class="range-label" data-bind="text: fromLabel"></label>
+                        <input id="range-from-label" class="range-input" type="datetime-local" step="1" data-bind="value: startTimestamp, css: { 'invalid-field': isInvalidStartTimestamp }, attr: { title: startTimestampTooltip }"></input>
+                    </div>
+
+                    <div class="range-row">
+                        <label for="range-to-label" class="range-label" data-bind="text: toLabel"></label>
+                        <input id="range-to-label" class="range-input" type="datetime-local" step="1" data-bind="value: endTimestamp, css: { 'invalid-field': isInvalidEndTimestamp }, attr: { title: endTimestampTooltip }"></input>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timezone">
+                <div>
+                    <label class="timezone-label" data-bind="text: timezoneLabel"></label>
+                </div>
+
+                <div class="timezone-picker">
+                    <div>
+                        <input id="timezone-local-label" class="timezone-type" type="radio" name="timeZone" value="local" data-bind="checked: timeZone"></input>
+                        <label for="timezone-local-label" data-bind="text: localLabel"></label>
+                    </div>
+
+                    <div>
+                        <input id="timezone-utc-label" class="timezone-type" type="radio" name="timeZone" value="utc" data-bind="checked: timeZone"></input>
+                        <label for="timezone-utc-label" data-bind="text: utcLabel"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons" data-bind="foreach: buttons">
+            <input type="button" data-bind="value: caption, click: onClick, enable: isEnabled" />
+        </div>
+    </div>
+</body>
+
+</html>

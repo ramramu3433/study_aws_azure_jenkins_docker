@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html class="page" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+
+    <link href="./css/site.css" rel="stylesheet" />
+</head>
+
+<!-- Avoid the selection of the body element when a dialog is open -->
+
+<body data-bind="attr: {'tabindex': (isDialogOpen()? '-1': '0')}">
+
+    <!-- ko with: infoBarViewModel -->
+    <div class="infoBar" aria-live="assertive" aria-labelledby="message" data-bind="css: { 'transition-in': isShowing(), 'hidden': !isShowing() }, accessibility: { escape: closeClicked }">
+        <div class="message-left-side message-overflow-ellipsis">
+            <span id="message" data-bind="text: message, attr: { title: message }"></span>
+        </div>
+
+        <div class="message-right-side">
+            <!-- ko foreach: links -->
+            <a class="action-button" tabindex="0" role="button" data-bind="text: $data, click: function() { $parent.linkClicked($index()); }, accessibility: { enter: function() { $parent.linkClicked($index()); } }"></a>
+
+            <!-- /ko -->
+            <a class="action-button" tabindex="0" role="button" data-bind="click: closeClicked, text: closeText, accessibility: { enter: closeClicked }"></a>
+        </div>
+    </div>
+    <!-- /ko -->
+    <div class="splash">
+        <img src="./images/StorageExplorerLetterpress-color.svg"></img>
+        <br /> Loading ...
+    </div>
+
+    <div class="shell">
+        <div class="panel vertical-toolbar">
+            <div class="content">
+                <div class="button view-resources" tabindex="0" role="menuitem" aria-label="Toggle Explorer" title="Toggle Explorer" data-bind="click: toggleTreeView, icon: '../../images/TreeView.svg', accessibility: { enter: toggleTreeView }, css: {active: isTreeviewActive}"></div>
+                <div class="button account-management" tabindex="0" role="menuitem" aria-label="Manage Accounts" title="Manage Accounts"
+                    data-bind="click: toggleAccountPanel, icon: '../../images/User.svg', accessibility: { enter: toggleAccountPanel }, css: {active: isAccountManagementActive}"></div>
+                <div class="toolbar-divider"> </div>
+                <div class="button add-account" tabindex="0" role="menuitem" aria-label="Add Account" title="Add Account" data-bind="click: launchConnectDialog, icon: '../../images/ConnectOutline.svg', accessibility: { enter: launchConnectDialog }"></div>
+                <div class="button feedback" tabindex="0" role="menuitem" aria-label="Send Feedback" title="Send Feedback" data-bind="click: sendFeedback, icon: '../../images/UserVoice.svg', accessibility: { enter: sendFeedback }"></div>
+            </div>
+        </div>
+        <div class="panel left">
+            <div class="divider vertical"></div>
+            <div class="content">
+                <div class="content" data-bind="daytona: cloudExplorerPlugin"> </div>
+            </div>
+            <div class="drag-surface"></div>
+        </div>
+        <div class="panel right" data-bind="style: { bottom: rightPanelBottom }">
+            <div class="content" data-bind="css: { 'showing-tab': !!editorPanelViewModel.activeTab() }">
+                <!-- ko template: { name: 'tabPanelTemplate', data: editorPanelViewModel } -->
+                <!-- /ko -->
+            </div>
+            <div class="drag-surface"></div>
+        </div>
+        <div class="panel bottom" data-bind="style: { height: bottomPanelHeight }">
+            <div class="divider horizontal"></div>
+            <div class="content">
+                <!-- ko template: { name: 'tabPanelTemplate', data: activityPanelViewModel } -->
+                <!-- /ko -->
+            </div>
+            <div class="drag-surface"></div>
+            <!-- This div is to ensure that it is the last element of the right side panel and pressing tab should put focus back to the
+                 first interactive element of the left vertical bar. -->
+            <div class="focus-guard" tabindex="0"></div>
+        </div>
+        <div class="modal hidden">
+            <div class="centered">
+                <div class="dialog">
+                    <div class="daytona" data-bind="daytona: daytonaDialogViewModel, visible: showDaytonaDialog"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/html" id="tabPanelTemplate">
+        <!-- ko ifnot: activeTab() -->
+        <div class="letterpress" data-bind="icon: '../../images/StorageExplorerLetterpress.svg'"></div>
+        <!-- /ko -->
+
+        <div role="tablist" class="tab-container" data-bind="css: { 'temporary-active': (!!activeTab() && activeTab().isTemporary) }">
+            <!-- ko template: { name: 'tabTemplate', data: temporaryTab, if: !!temporaryTab() } -->
+            <!-- /ko -->
+            <!-- ko template: { name: 'tabTemplate', foreach: openTabs } -->
+            <!-- /ko -->
+            <span class="tab-spacer" data-bind="visible: !!activeTab()"></span>
+            <div tabindex="0" role="button" class="expander" data-bind="visible: showExpander, click: toggle , icon: expanderIcon(), accessibility: { enter: toggle }"></div>
+        </div>
+        <!-- ko foreach: cachedTabs -->
+        <!-- ko if: environment === 'iframe-daytona' -->
+        <div class="tab-content" data-bind="visible: isActive, daytona: plugin"></div>
+        <!-- /ko -->
+        <!-- ko ifnot: environment === 'iframe-daytona' -->
+        <div class="tab-content" data-bind="visible: isActive, webview: $data"></div>
+        <!-- /ko -->
+        <!-- /ko -->
+    </script>
+
+    <script type="text/html" id="tabTemplate">
+        <span class="tab" role="presentation" tabindex="0" data-bind="
+            attr: { 'aria-label': 'tab, ' + displayName() },
+            css: { active: isActive, temporary: isTemporary},
+            click: (data, event) => { $parent.openTab(data, false); },
+            event: {
+                dblclick: (data, event) => { $parent.openTab(data, true); },
+                keydown: $parent.tabKeyDown,
+                focus: $parent.tabFocus,
+                contextmenu: $parent.openTabContextMenu
+            }">
+            <!-- ko if: hasIcon() -->
+            <span class="tab-icon"  data-bind="style: { 'background-image': tabIconBackground }" ></span>
+        <!-- /ko -->
+        <span class="tab-name" data-bind="attr: { title: fullName }, text: displayName"></span>
+        <span class="tab-button-container">
+                <span class="tab-button preview-tab-icon" role="tab" tabindex="0" title="Keep Open" data-bind="
+                    click: $parent.promoteTemporaryTab,
+                    visible: isTemporary,
+                    event: { keydown: $parent.enterKeyDown },
+                    clickBubble: false">
+                    <div data-bind="icon: '../../images/PreviewTab.svg'"></div>
+                </span>
+        <span class="tab-button close-tab-icon" role="tab" tabindex="0" title="Close" data-bind="
+                    click: $parent.closeTab,
+                    event: { keydown: $parent.enterKeyDown },
+                    clickBubble: false,
+                    visible: $parent.canCloseTabs">
+                    <div data-bind="icon: '../../images/Close.svg'"></div>
+                </span>
+        </span>
+        </span>
+    </script>
+
+    <script type="text/javascript">
+        // Load index file with require to avoid resolving module paths from
+        // electron node modules and falling back to their parents folders before
+        // our own node modules. This solves the problem where the app is executed
+        // from a child folder of another installation of the app and we end up
+        // loading modules from both places.
+        require("./index.js");
+    </script>
+</body>
+
+</html>

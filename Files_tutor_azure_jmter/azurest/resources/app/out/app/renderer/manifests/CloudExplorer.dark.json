@@ -1,0 +1,624 @@
+{
+    "start_url": "../../../CloudHub/html/CloudExplorer/index.html",
+    "domain": "http://cloudexplorer.microsoft.com/",
+    "webhost": {
+        "themed_images": {
+            "AccountFilterIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AccountFilterIcon.png",
+                "background_color": "plugin-background-color"
+            },
+            "AzureIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\Azure_PNG_Azure_24 blue.png",
+                "background_color": "plugin-background-color"
+            },
+            "CheckMarkIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\Checkmark_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "BlueClearSearchIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\BlueClearSearchIcon.png",
+                "background_color": "plugin-background-color"
+            },
+            "DropdownExpandIconBlue": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\GlyphDown_linkBlueNoHalo_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DropdownExpandIconGray": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\GlyphDown_71GrayNoHalo_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DropdownExpandIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\GlyphDown_noHalo_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "ExpandChevronDown": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\ExpandChevronDown_lightGrey_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "ExpandChevronUp": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\ExpandChevronUp_lightGrey_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "RefreshIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\Refresh_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "RestartIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\Restart_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "SearchIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\GlyphSearch_lightGrayNoHalo_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "TreeViewCollapsedIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\Halo_GlyphRight.svg",
+                "background_color": "plugin-background-color"
+            },
+            "TreeViewCollapsedWhiteIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\Halo_GlyphRight.svg",
+                "background_color": "plugin-background-color"
+            },
+            "TreeViewExpandedIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\Halo_GlyphDownRight.svg",
+                "background_color": "plugin-background-color"
+            },
+            "TreeViewExpandedWhiteIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\Halo_GlyphDownRight.svg",
+                "background_color": "plugin-background-color"
+            },
+            "UserInformationDefaultImage": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\UserInformationDefaultImage.png",
+                "background_color": "plugin-background-color"
+            },
+            "DefaultResourceIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDefaultResource_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "ApiAppsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureAPIApp_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "ApplicationInsightsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\ApplicationInsights_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "ApplicationInsightsSearchIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\ApplicationInsightsSearch_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "AvailabilitySetsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureAvailabilitySet_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataFactoriesIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataFactory_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataFactoryLinkedServiceGroupIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataFactoryLinkedServiceGroup_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataFactoryTableGroupIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataFactoryTableGroup_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataFactoryPipelineGroupIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataFactoryPipelineGroup_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataFactoryLinkedServiceIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataFactoryLinkedService_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataFactoryTableIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataFactoryTable_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataFactoryPipelineIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataFactoryPipeline_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DeploymentSlotsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDeploymentSlots_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DisableDebuggingIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\DisableDebugging_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DisableDiagnosticsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\DisableDiagnostics_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DocumentDBAccountsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDocumentDB_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DocumentDBDatabasesIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDocumentDBDatabase_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DocumentDBCollectionsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDocumentDBCollection_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DocumentDBDocumentsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDocumentDBDocument_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DownloadIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\DownloadIcon.png",
+                "background_color": "plugin-background-color"
+            },
+            "EnableDebuggingIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\EnableDebugging_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "EnableDiagnosticsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\EnableDiagnostics_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "GatewaysIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureGateway_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "GenericFileIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\GenericFile_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "GenericFolderIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\GenericFolder_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "HDInsightIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureHDInsight_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "LoadBalancersIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureLoadBalancer_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "LogicAppsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureLogicApp_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "MobileAppsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureMobileApp_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "MySQLDatabaseIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureMySQLDatabase_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "NetworkInterfaceIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureNetworkInterface_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "NetworkSecurityGroupIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureNetworkSecurityGroup_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "NotificationHubsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureNotificationHub_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "OpenInPortalIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\OpenInPortal_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "OpenInSQLServerObjectExplorerIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\OpenInSQLServerObjectExplorer_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "OpenIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\Open_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "OpenWebsiteIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\OpenInBrowser_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "RedisCacheIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureRedisCache_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "ReservedIPAddressIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureReservedIPAddress_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "ResourceGroupIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureResourceGroup_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "SchedulerJobCollectionsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureSchedulerJob_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "SearchServicesIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureCloudSearch_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "SettingsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\Settings_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "SQLDatabaseIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureSQLDatabase_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "SQLDatabaseServersIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureSQLServer_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "StartDebuggingIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AttachDebugger_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "StartIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\StartIcon.png",
+                "background_color": "plugin-background-color"
+            },
+            "StartProfilerIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\StartProfiler_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "StartStreamingLogsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\StartStreamingLogsIcon_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "StatusInvalidIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\StatusInvalid_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "StopIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\StopIcon.png",
+                "background_color": "plugin-background-color"
+            },
+            "StopProfilerIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\StopProfiler_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "StopStreamingLogsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\StopStreamingLogs_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "StorageAccountIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureStorageAccount_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "StorageAccountBlobContainerIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureBlob_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "StorageAccountFileShareIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureFileShare_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "StorageAccountQueueIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureQueue_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "StorageAccountTableIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureTable_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "StorageAccountCreateIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureFileShare_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "StorageAccountDeleteIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\Remove_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "StorageAccountOpenIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\Open_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "TeamProjectIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureTeam_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "ViewDiagnosticsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\ViewDiagnostics_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "VirtualMachineIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureVirtualMachine_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "VirtualMachineExtensionIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureVirtualMachineExtension_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "VirtualMachineScaleSetIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureVirtualMachineScaleSet_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "VirtualNetworkIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureVirtualNetworkIPAddress_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "WebHostingIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureWebHostingPlan_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "WebjobIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureWebjob_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "WebsiteIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureWebsite_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "ServiceFabricIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\ServiceFabric_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "AzureActiveDirectoryIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureActiveDirectory_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DeleteApplicationIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\Remove_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataLakeAnalyticsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataLakeAnalytics_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataLakeAnalyticsCatalogAssemblyIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataLakeAnalyticsCatalogAssembly_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataLakeAnalyticsCatalogDatabaseIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataLakeAnalyticsCatalogDatabase_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataLakeAnalyticsCatalogDatabasesIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataLakeAnalyticsCatalogDatabases_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataLakeAnalyticsCatalogSchemaIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataLakeAnalyticsCatalogSchema_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataLakeAnalyticsCatalogTableIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataLakeAnalyticsCatalogTable_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataLakeAnalyticsCatalogTVFIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataLakeAnalyticsCatalogTVF_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataLakeAnalyticsJobsIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataLakeAnalyticsJobs_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataLakeAnalyticsLinkedStorageIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataLakeAnalyticsLinkedStorage_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataLakeAnalyticsLinkedStoragesIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataLakeAnalyticsLinkedStorages_16x.png",
+                "background_color": "plugin-background-color"
+            },
+            "DataLakeStoreIcon": {
+                "bitmap_source": "..\\..\\..\\CloudHub\\images\\CloudExplorer\\AzureDataLakeStore_16x.png",
+                "background_color": "plugin-background-color"
+            }
+        },
+        "theme_token_aliases": {
+            "common-controls-button-background": {
+                "category": "c01072a1-a915-4abf-89b7-e2f9e8ec4c7f",
+                "key_type": "BackgroundColor",
+                "name": "Button"
+            },
+            "common-controls-button-border": {
+                "category": "c01072a1-a915-4abf-89b7-e2f9e8ec4c7f",
+                "key_type": "BackgroundColor",
+                "name": "ButtonBorder"
+            },
+            "common-controls-button-border-hover": {
+                "category": "c01072a1-a915-4abf-89b7-e2f9e8ec4c7f",
+                "key_type": "BackgroundColor",
+                "name": "ButtonBorderHover"
+            },
+            "common-controls-button-foreground": {
+                "category": "c01072a1-a915-4abf-89b7-e2f9e8ec4c7f",
+                "key_type": "ForegroundColor",
+                "name": "Button"
+            },
+            "common-controls-button-hover-background": {
+                "category": "c01072a1-a915-4abf-89b7-e2f9e8ec4c7f",
+                "key_type": "BackgroundColor",
+                "name": "ButtonHover"
+            },
+            "common-controls-button-hover-foreground": {
+                "category": "c01072a1-a915-4abf-89b7-e2f9e8ec4c7f",
+                "key_type": "ForegroundColor",
+                "name": "ButtonHover"
+            },
+            "common-controls-inner-tab-active-background": {
+                "category": "c01072a1-a915-4abf-89b7-e2f9e8ec4c7f",
+                "key_type": "BackgroundColor",
+                "name": "InnerTabActiveBackground"
+            },
+            "common-controls-inner-tab-active-border": {
+                "category": "c01072a1-a915-4abf-89b7-e2f9e8ec4c7f",
+                "key_type": "BackgroundColor",
+                "name": "InnerTabActiveBorder"
+            },
+            "common-controls-inner-tab-active-text": {
+                "category": "c01072a1-a915-4abf-89b7-e2f9e8ec4c7f",
+                "key_type": "BackgroundColor",
+                "name": "InnerTabActiveText"
+            },
+            "common-controls-inner-tab-inactive-background": {
+                "category": "c01072a1-a915-4abf-89b7-e2f9e8ec4c7f",
+                "key_type": "BackgroundColor",
+                "name": "InnerTabInactiveBackground"
+            },
+            "common-controls-inner-tab-inactive-border": {
+                "category": "c01072a1-a915-4abf-89b7-e2f9e8ec4c7f",
+                "key_type": "BackgroundColor",
+                "name": "InnerTabInactiveBorder"
+            },
+            "common-controls-inner-tab-inactive-hover-background": {
+                "category": "c01072a1-a915-4abf-89b7-e2f9e8ec4c7f",
+                "key_type": "BackgroundColor",
+                "name": "InnerTabInactiveHoverBackground"
+            },
+            "common-controls-inner-tab-inactive-hover-text": {
+                "category": "c01072a1-a915-4abf-89b7-e2f9e8ec4c7f",
+                "key_type": "BackgroundColor",
+                "name": "InnerTabInactiveHoverText"
+            },
+            "common-controls-inner-tab-inactive-hover-border": {
+                "category": "c01072a1-a915-4abf-89b7-e2f9e8ec4c7f",
+                "key_type": "BackgroundColor",
+                "name": "InnerTabInactiveHoverBorder"
+            },
+            "common-controls-inner-tab-inactive-text": {
+                "category": "c01072a1-a915-4abf-89b7-e2f9e8ec4c7f",
+                "key_type": "BackgroundColor",
+                "name": "InnerTabInactiveText"
+            },
+            "environment-commandbar-border": {
+                "category": "624ed9c3-bdfd-41fa-96c3-7c824ea32e3d",
+                "key_type": "BackgroundColor",
+                "name": "CommandBarBorder"
+            },
+            "environment-commandbar-hover": {
+                "category": "624ed9c3-bdfd-41fa-96c3-7c824ea32e3d",
+                "key_type": "BackgroundColor",
+                "name": "CommandBarHover"
+            },
+            "environment-commandbar-hover-over-selected": {
+                "category": "624ed9c3-bdfd-41fa-96c3-7c824ea32e3d",
+                "key_type": "BackgroundColor",
+                "name": "CommandBarHoverOverSelected"
+            },
+            "environment-commandbar-hover-over-selected-icon-border": {
+                "category": "624ed9c3-bdfd-41fa-96c3-7c824ea32e3d",
+                "key_type": "BackgroundColor",
+                "name": "CommandBarHoverOverSelectedIconBorder"
+            },
+            "environment-commandbar-mouse-over-background-begin": {
+                "category": "624ed9c3-bdfd-41fa-96c3-7c824ea32e3d",
+                "key_type": "BackgroundColor",
+                "name": "CommandBarMouseOverBackgroundBegin"
+            },
+            "environment-commandbar-text-hover": {
+                "category": "624ed9c3-bdfd-41fa-96c3-7c824ea32e3d",
+                "key_type": "BackgroundColor",
+                "name": "CommandBarTextHover"
+            },
+            "environment-commandbar-text-hover-over-selected": {
+                "category": "624ed9c3-bdfd-41fa-96c3-7c824ea32e3d",
+                "key_type": "BackgroundColor",
+                "name": "CommandBarTextHoverOverSelected"
+            },
+            "environment-commandbar-toolbar-separator": {
+                "category": "624ed9c3-bdfd-41fa-96c3-7c824ea32e3d",
+                "key_type": "BackgroundColor",
+                "name": "CommandBarToolBarSeparator"
+            },
+            "environment-designer-watermark": {
+                "category": "624ed9c3-bdfd-41fa-96c3-7c824ea32e3d",
+                "key_type": "BackgroundColor",
+                "name": "DesignerWatermark"
+            },
+            "environment-panel-hyperlink": {
+                "category": "624ed9c3-bdfd-41fa-96c3-7c824ea32e3d",
+                "key_type": "BackgroundColor",
+                "name": "PanelHyperlink"
+            },
+            "environment-panel-hyperlink-disabled": {
+                "category": "624ed9c3-bdfd-41fa-96c3-7c824ea32e3d",
+                "key_type": "BackgroundColor",
+                "name": "PanelHyperlinkDisabled"
+            },
+            "environment-panel-hyperlink-hover": {
+                "category": "624ed9c3-bdfd-41fa-96c3-7c824ea32e3d",
+                "key_type": "BackgroundColor",
+                "name": "PanelHyperlinkHover"
+            },
+            "environment-page-sidebar-expander-separator": {
+                "category": "624ed9c3-bdfd-41fa-96c3-7c824ea32e3d",
+                "key_type": "BackgroundColor",
+                "name": "PageSideBarExpanderSeparator"
+            },
+            "search-control-disabled-border": {
+                "category": "f1095fad-881f-45f1-8580-589e10325eb8",
+                "key_type": "BackgroundColor",
+                "name": "DisabledBorder"
+            },
+            "search-control-disabled-background": {
+                "category": "f1095fad-881f-45f1-8580-589e10325eb8",
+                "key_type": "BackgroundColor",
+                "name": "Disabled"
+            },
+            "search-control-disabled-foreground": {
+                "category": "f1095fad-881f-45f1-8580-589e10325eb8",
+                "key_type": "ForegroundColor",
+                "name": "Disabled"
+            },
+            "search-control-focused-border": {
+                "category": "f1095fad-881f-45f1-8580-589e10325eb8",
+                "key_type": "BackgroundColor",
+                "name": "FocusedBorder"
+            },
+            "search-control-focused-background": {
+                "category": "f1095fad-881f-45f1-8580-589e10325eb8",
+                "key_type": "BackgroundColor",
+                "name": "FocusedBackground"
+            },
+            "search-control-focused-foreground": {
+                "category": "f1095fad-881f-45f1-8580-589e10325eb8",
+                "key_type": "ForegroundColor",
+                "name": "FocusedBackground"
+            },
+            "search-control-mouse-over-border": {
+                "category": "f1095fad-881f-45f1-8580-589e10325eb8",
+                "key_type": "BackgroundColor",
+                "name": "MouseOverBorder"
+            },
+            "search-control-mouse-over-background": {
+                "category": "f1095fad-881f-45f1-8580-589e10325eb8",
+                "key_type": "BackgroundColor",
+                "name": "MouseOverBackground"
+            },
+            "search-control-mouse-over-foreground": {
+                "category": "f1095fad-881f-45f1-8580-589e10325eb8",
+                "key_type": "ForegroundColor",
+                "name": "MouseOverBackground"
+            },
+            "search-control-unfocused-border": {
+                "category": "f1095fad-881f-45f1-8580-589e10325eb8",
+                "key_type": "BackgroundColor",
+                "name": "UnfocusedBorder"
+            },
+            "search-control-unfocused-background": {
+                "category": "f1095fad-881f-45f1-8580-589e10325eb8",
+                "key_type": "BackgroundColor",
+                "name": "Unfocused"
+            },
+            "search-control-unfocused-foreground": {
+                "category": "f1095fad-881f-45f1-8580-589e10325eb8",
+                "key_type": "ForegroundColor",
+                "name": "Unfocused"
+            },
+            "tree-view-highlighted-span-background": {
+                "category": "92ecf08e-8b13-4cf4-99e9-ae2692382185",
+                "key_type": "BackgroundColor",
+                "name": "HighlightedSpan"
+            },
+            "tree-view-highlighted-span-foreground": {
+                "category": "92ecf08e-8b13-4cf4-99e9-ae2692382185",
+                "key_type": "ForegroundColor",
+                "name": "HighlightedSpan"
+            }
+        }
+    }
+}
