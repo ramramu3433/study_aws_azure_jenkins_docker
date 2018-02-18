@@ -1,0 +1,42 @@
+{
+  "appId": "e4d5b25f-dc03-4217-bd64-d03ffdeebdc2", ---> clientid
+  "displayName": "azure-cli-2018-02-18-10-58-06",
+  "name": "http://azure-cli-2018-02-18-10-58-06",
+  "password": "d0658f56-7b31-4e27-932f-28b6f7af113b", ---> secret 
+  "tenant": "1adb62a9-d916-4fb4-8e33-74e6f348ddec"    ---> tenant-id
+}
+d835bb88-390c-4c23-b425-e4d06fb01540
+
+
+jenkins slave in azure cloud
+
+install azure vm agents plugins 
+
+to automatically create slaves you need a service principal to created for your resource group and that should have owner (or) contributor role
+az group create --name <> --location <>
+az ad sp create-for-rbac --scopes="subscriptionid"/"resource_group"
+
+in manage system configure cloud ,
+
+add vm template about which kind of vm , you are going to use 
+
+info needed
+OS
+user
+password
+type
+region
+storage account details
+workspace name and tools to be installed..
+
+
+** admin name should not contain
+admin
+ error messages list in the following link for azure instance.
+https://docs.microsoft.com/en-us/azure/virtual-machines/linux/error-messages
+there are resolutions for each the error messages also..
+
+
+
+
+
